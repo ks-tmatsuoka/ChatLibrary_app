@@ -15,7 +15,27 @@ namespace Entap.Chat
     {
         #region AddRange
         /// <summary>
-        /// ObservableCollection型のデータに、IEnumerable型のデータを追加する
+        /// ObservableCollection型のデータに、IEnumerable型のデータを挿入する
+        /// </summary>
+        public static void InsertRange<T>(this ObservableCollection<T> source, int index, IEnumerable<T> collection)
+        {
+            if (ValidateCollectionCount(source, collection))
+            {
+                return;
+            }
+
+            var property = GetItemsPropertyInfo<T>();
+            var method = GetOnCollectionResetMethodInfo<T>();
+
+            if (property.GetValue(source) is List<T> list)
+            {
+                list.InsertRange(index, collection);
+                method.Invoke(source, null);
+            }
+        }
+
+        /// <summary>
+        /// ObservableCollection型のデータの末尾に、IEnumerable型のデータを追加する
         /// </summary>
         public static void AddRange<T>(this ObservableCollection<T> source, IEnumerable<T> collection)
         {
@@ -24,8 +44,8 @@ namespace Entap.Chat
                 return;
             }
 
-            var property = typeof(ObservableCollection<T>).GetProperty("Items", BindingFlags.NonPublic | BindingFlags.Instance);
-            var method = typeof(ObservableCollection<T>).GetMethod("OnCollectionReset", BindingFlags.NonPublic | BindingFlags.Instance);
+            var property = GetItemsPropertyInfo<T>();
+            var method = GetOnCollectionResetMethodInfo<T>();
 
             if (property.GetValue(source) is List<T> list)
             {
@@ -49,6 +69,9 @@ namespace Entap.Chat
 
             return false;
         }
+
+        static PropertyInfo GetItemsPropertyInfo<T>() => typeof(ObservableCollection<T>).GetProperty("Items", BindingFlags.NonPublic | BindingFlags.Instance);
+        static MethodInfo GetOnCollectionResetMethodInfo<T>() => typeof(ObservableCollection<T>).GetMethod("OnCollectionReset", BindingFlags.NonPublic | BindingFlags.Instance);
         #endregion
     }
 }
