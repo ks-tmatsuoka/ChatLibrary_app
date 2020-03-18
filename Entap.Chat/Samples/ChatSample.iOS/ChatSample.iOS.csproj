@@ -130,6 +130,14 @@
       <Project>{2912D06E-1365-440B-BC64-9FEE2DAC40C0}</Project>
       <Name>ChatSample</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Entap.Chat\Entap.Chat.csproj">
+      <Project>{48B2D21A-33C7-4844-B07F-5D2536A49A90}</Project>
+      <Name>Entap.Chat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Entap.Chat.iOS\Entap.Chat.iOS.csproj">
+      <Project>{3F830091-81D1-4669-9E15-0779680F062C}</Project>
+      <Name>Entap.Chat.iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

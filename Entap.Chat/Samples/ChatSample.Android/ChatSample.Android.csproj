@@ -91,6 +91,14 @@
       <Project>{2912D06E-1365-440B-BC64-9FEE2DAC40C0}</Project>
       <Name>ChatSample</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Entap.Chat\Entap.Chat.csproj">
+      <Project>{48B2D21A-33C7-4844-B07F-5D2536A49A90}</Project>
+      <Name>Entap.Chat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Entap.Chat.Android\Entap.Chat.Android.csproj">
+      <Project>{CEF5BD11-758C-40D0-B16B-D1BD223BE9FF}</Project>
+      <Name>Entap.Chat.Android</Name>
+    </ProjectReference>
   </ItemGroup>
  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
