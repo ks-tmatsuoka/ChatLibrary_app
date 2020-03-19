@@ -8,7 +8,7 @@ using Xamarin.Forms.Platform.Android;
 namespace Entap.Chat.Android
 {
     [Preserve(AllMembers = true)]
-    public class ChatListViewRenderer : CollectionViewRenderer
+    public class ChatListViewRenderer : ListViewRenderer
     {
         public ChatListViewRenderer(Context context) : base(context)
         {

@@ -7,7 +7,7 @@ using Xamarin.Forms.Platform.iOS;
 namespace Entap.Chat.iOS
 {
     [Preserve(AllMembers = true)]
-    public class ChatListViewRenderer : CollectionViewRenderer
+    public class ChatListViewRenderer : ListViewRenderer
     {
     }
 }

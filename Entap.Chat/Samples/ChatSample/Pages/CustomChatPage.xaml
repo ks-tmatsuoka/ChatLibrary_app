@@ -9,23 +9,27 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <DataTemplate x:Key="textMessageTemplate" x:DataType="chat:TextMessage">
-                <StackLayout
-                    Spacing="0"
-                    HorizontalOptions="FillAndExpand"
-                    HeightRequest="100"
-                    BackgroundColor="Aqua">
-                    <Label
-                        HorizontalOptions="CenterAndExpand"
-                        VerticalOptions="CenterAndExpand"
-                        Text="{Binding Text}"
-                        FontSize="20"/>
-                </StackLayout>
+                <ViewCell>
+                    <StackLayout
+                        Spacing="0"
+                        HorizontalOptions="FillAndExpand"
+                        HeightRequest="100"
+                        BackgroundColor="Aqua">
+                        <Label
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="CenterAndExpand"
+                            Text="{Binding Text}"
+                            FontSize="20"/>
+                    </StackLayout>
+                </ViewCell>
             </DataTemplate>
             <DataTemplate x:Key="imageMessageTemplate" x:DataType="chat:ImageMessage">
-                <Image
-                    HeightRequest="150"
-                    Source="{Binding ImageUrl}"
-                />
+                <ViewCell>
+                    <Image
+                        HeightRequest="150"
+                        Source="{Binding ImageUrl}"
+                    />
+                </ViewCell>
             </DataTemplate>
             <chat:MessageDataTemplateSelector
                 x:Key="messageDataTemplateSelector"

@@ -9,7 +9,7 @@ using Xamarin.Forms.Internals;
 namespace Entap.Chat
 {
     [Preserve(AllMembers = true)]
-    public class ChatListView : CollectionView
+    public class ChatListView : ListView
     {
         ObservableCollection<MessageBase> _messages;
         public ChatListView()
@@ -19,10 +19,7 @@ namespace Entap.Chat
 
         void Init()
         {
-            Scrolled += OnScrolled;
-
-            RemainingItemsThreshold = 5;
-
+            HasUnevenRows = true;
             Task.Run(async() =>
             {
                 var messages = await Settings.Current.Messaging.GetMessagesAsync(-1, 20);
@@ -35,7 +32,7 @@ namespace Entap.Chat
                 {
                     ItemsSource = _messages;
                     await Task.Delay(100);
-                    ScrollTo(last, null, ScrollToPosition.Start, false);
+                    ScrollTo(last, ScrollToPosition.Start, false);
                 });
             });
         }
@@ -62,55 +59,55 @@ namespace Entap.Chat
             });
         }
 
-        int _firstVisibleItemIndex = 0;
-        int _lastVisibleItemIndex = 0;
-        void OnScrolled(object sender, ItemsViewScrolledEventArgs e)
-        {
+        //int _firstVisibleItemIndex = 0;
+        //int _lastVisibleItemIndex = 0;
+        //void OnScrolled(object sender, ItemsViewScrolledEventArgs e)
+        //{
 
-            ScrollDirection direction;
-            if (e.VerticalDelta < 0)
-                direction = ScrollDirection.Up;
-            else if (e.VerticalDelta > 0)
-                direction = ScrollDirection.Down;
-            else
-                direction = ScrollDirection.None;
+        //    ScrollDirection direction;
+        //    if (e.VerticalDelta < 0)
+        //        direction = ScrollDirection.Up;
+        //    else if (e.VerticalDelta > 0)
+        //        direction = ScrollDirection.Down;
+        //    else
+        //        direction = ScrollDirection.None;
 
-            switch (direction)
-            {
-                case ScrollDirection.Up:
-                    if (_firstVisibleItemIndex == e.FirstVisibleItemIndex) break;
+        //    switch (direction)
+        //    {
+        //        case ScrollDirection.Up:
+        //            if (_firstVisibleItemIndex == e.FirstVisibleItemIndex) break;
 
-                    if (_firstVisibleItemIndex > RemainingItemsThreshold &&
-                        e.FirstVisibleItemIndex <= RemainingItemsThreshold)
-                    {
-                        System.Diagnostics.Debug.WriteLine("Reached Up: " + e.FirstVisibleItemIndex + "  " + _firstVisibleItemIndex);
-                        var first = _messages.First();
-                        LoadMessages(first.Id - 1);
-                    }
-                    _firstVisibleItemIndex = e.FirstVisibleItemIndex;
+        //            if (_firstVisibleItemIndex > RemainingItemsThreshold &&
+        //                e.FirstVisibleItemIndex <= RemainingItemsThreshold)
+        //            {
+        //                System.Diagnostics.Debug.WriteLine("Reached Up: " + e.FirstVisibleItemIndex + "  " + _firstVisibleItemIndex);
+        //                var first = _messages.First();
+        //                LoadMessages(first.Id - 1);
+        //            }
+        //            _firstVisibleItemIndex = e.FirstVisibleItemIndex;
 
-                    break;
-                case ScrollDirection.Down:
-                    if (_lastVisibleItemIndex == e.LastVisibleItemIndex) break;
+        //            break;
+        //        case ScrollDirection.Down:
+        //            if (_lastVisibleItemIndex == e.LastVisibleItemIndex) break;
 
-                    var thresholdIndex = _messages.Count - 1 - RemainingItemsThreshold;
-                    if (_lastVisibleItemIndex < thresholdIndex &&
-                        e.LastVisibleItemIndex >= thresholdIndex)
-                    {
-                        System.Diagnostics.Debug.WriteLine("Reached Down: " + e.LastVisibleItemIndex + " " + _lastVisibleItemIndex);
-                        var last = _messages.Last();
-                        LoadNewMessages(last.Id + 1);
-                    }
-                    _lastVisibleItemIndex = e.LastVisibleItemIndex;
-                    break;
-            }
-        }
+        //            var thresholdIndex = _messages.Count - 1 - RemainingItemsThreshold;
+        //            if (_lastVisibleItemIndex < thresholdIndex &&
+        //                e.LastVisibleItemIndex >= thresholdIndex)
+        //            {
+        //                System.Diagnostics.Debug.WriteLine("Reached Down: " + e.LastVisibleItemIndex + " " + _lastVisibleItemIndex);
+        //                var last = _messages.Last();
+        //                LoadNewMessages(last.Id + 1);
+        //            }
+        //            _lastVisibleItemIndex = e.LastVisibleItemIndex;
+        //            break;
+        //    }
+        //}
 
-        enum ScrollDirection
-        {
-            Up,
-            Down,
-            None
-        }
+        //enum ScrollDirection
+        //{
+        //    Up,
+        //    Down,
+        //    None
+        //}
     }
 }
