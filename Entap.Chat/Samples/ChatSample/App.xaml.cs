@@ -1,6 +1,5 @@
 ﻿using System;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace ChatSample
 {
@@ -11,6 +10,9 @@ namespace ChatSample
             InitializeComponent();
 
             MainPage = new NavigationPage(new MainPage());
+
+            var messaging = new Messaging();
+            Entap.Chat.Settings.Current.Init(messaging);
         }
 
         protected override void OnStart()
