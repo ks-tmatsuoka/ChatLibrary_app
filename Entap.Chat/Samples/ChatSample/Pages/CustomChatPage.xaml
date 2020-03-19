@@ -6,11 +6,60 @@
     xmlns:chat="clr-namespace:Entap.Chat;assembly=Entap.Chat"
     x:Class="ChatSample.CustomChatPage">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="textMessageTemplate" x:DataType="chat:TextMessage">
+                <StackLayout
+                    Spacing="0"
+                    HorizontalOptions="FillAndExpand"
+                    HeightRequest="100"
+                    BackgroundColor="Aqua">
+                    <Label
+                        HorizontalOptions="CenterAndExpand"
+                        VerticalOptions="CenterAndExpand"
+                        Text="{Binding Text}"
+                        FontSize="20"/>
+                </StackLayout>
+            </DataTemplate>
+            <DataTemplate x:Key="imageMessageTemplate" x:DataType="chat:ImageMessage">
+                <Image
+                    HeightRequest="150"
+                    Source="{Binding ImageUrl}"
+                />
+            </DataTemplate>
+            <chat:MessageDataTemplateSelector
+                x:Key="messageDataTemplateSelector"
+                TextMessageTemplate="{StaticResource textMessageTemplate}"
+                ImageMessageTemplate="{StaticResource imageMessageTemplate}"
+            />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.BindingContext>
         <local:CustomChatPageViewModel />
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
-        <chat:ChatListView />
+        <!--<chat:ChatListView>
+            <chat:ChatListView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout
+                        Spacing="0"
+                        HorizontalOptions="FillAndExpand"
+                        HeightRequest="100"
+                        BackgroundColor="Aqua">
+                        <Label
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="CenterAndExpand"
+                            Text="{Binding Id}"
+                            FontSize="20"/>
+                    </StackLayout>
+                </DataTemplate>
+            </chat:ChatListView.ItemTemplate>
+        </chat:ChatListView>-->
+        <chat:ChatListView
+            ItemTemplate="{StaticResource messageDataTemplateSelector}"
+        />
     </ContentPage.Content>
+
 </ContentPage>
