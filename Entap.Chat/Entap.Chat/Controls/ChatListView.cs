@@ -11,6 +11,8 @@ namespace Entap.Chat
     [Preserve(AllMembers = true)]
     public class ChatListView : ListView
     {
+        const int RemainingItemsThreshold = 150;
+
         ObservableCollection<MessageBase> _messages;
         public ChatListView()
         {
@@ -19,6 +21,8 @@ namespace Entap.Chat
 
         void Init()
         {
+            Scrolled += OnScrolled;
+
             HasUnevenRows = true;
             Task.Run(async() =>
             {
@@ -57,6 +61,47 @@ namespace Entap.Chat
                 var messages = await Settings.Current.Messaging.GetNewMessagesAsync(messageId, 20);
                 _messages.AddRange(messages);
             });
+        }
+        double _scrollY;
+        void OnScrolled(object sender, ScrolledEventArgs e)
+        {
+            ScrollDirection direction;
+            if (e.ScrollY < _scrollY)
+                direction = ScrollDirection.Up;
+            else if (e.ScrollY > _scrollY)
+                direction = ScrollDirection.Down;
+            else
+                direction = ScrollDirection.None;
+
+            System.Diagnostics.Debug.WriteLine($"direction : {direction}  x : {e.ScrollX}  y : {e.ScrollY}");
+
+            switch (direction)
+            {
+                case ScrollDirection.Up:
+                    if (_scrollY > RemainingItemsThreshold &&
+                        e.ScrollY <= RemainingItemsThreshold)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Reached Up: " + e.ScrollY + "  " + _scrollY);
+                        var first = _messages.First();
+                        LoadMessages(first.Id - 1);
+                    }
+
+                    break;
+                //case ScrollDirection.Down:
+                //    if (_lastVisibleItemIndex == e.LastVisibleItemIndex) break;
+
+                //    var thresholdIndex = _messages.Count - 1 - RemainingItemsThreshold;
+                //    if (_lastVisibleItemIndex < thresholdIndex &&
+                //        e.LastVisibleItemIndex >= thresholdIndex)
+                //    {
+                //        System.Diagnostics.Debug.WriteLine("Reached Down: " + e.LastVisibleItemIndex + " " + _lastVisibleItemIndex);
+                //        var last = _messages.Last();
+                //        LoadNewMessages(last.Id + 1);
+                //    }
+                //    _lastVisibleItemIndex = e.LastVisibleItemIndex;
+                //    break;
+            }
+            _scrollY = e.ScrollY;
         }
 
         //int _firstVisibleItemIndex = 0;
@@ -103,11 +148,11 @@ namespace Entap.Chat
         //    }
         //}
 
-        //enum ScrollDirection
-        //{
-        //    Up,
-        //    Down,
-        //    None
-        //}
+        enum ScrollDirection
+        {
+            Up,
+            Down,
+            None
+        }
     }
 }
