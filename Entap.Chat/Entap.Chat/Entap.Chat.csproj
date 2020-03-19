@@ -17,5 +17,6 @@
     <Folder Include="Interfaces\" />
     <Folder Include="Models\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Constants\" />
   </ItemGroup>
 </Project>
