@@ -11,7 +11,7 @@ namespace Entap.Chat
     [Preserve(AllMembers = true)]
     public class ChatListView : ListView
     {
-        const int RemainingItemsThreshold = 150;
+        const int RemainingItemsThreshold = 5;
 
         ObservableCollection<MessageBase> _messages;
         public ChatListView()
@@ -21,7 +21,9 @@ namespace Entap.Chat
 
         void Init()
         {
-            Scrolled += OnScrolled;
+            //Scrolled += OnScrolled;
+            ItemAppearing += OnItemAppearing;
+            //ItemDisappearing += OnItemDisappearing;
 
             HasUnevenRows = true;
             Task.Run(async() =>
@@ -35,11 +37,13 @@ namespace Entap.Chat
                 Device.BeginInvokeOnMainThread(async () =>
                 {
                     ItemsSource = _messages;
-                    await Task.Delay(100);
-                    ScrollTo(last, ScrollToPosition.Start, false);
+                    ScrollTo(last, ScrollToPosition.End, false);
+                    
                 });
             });
         }
+
+        
 
         void LoadMessages(int messageId)
         {
@@ -54,14 +58,64 @@ namespace Entap.Chat
             });
         }
 
+        bool _isRunningGetNewMessage = false;
         void LoadNewMessages(int messageId)
         {
             Task.Run(async () =>
             {
                 var messages = await Settings.Current.Messaging.GetNewMessagesAsync(messageId, 20);
                 _messages.AddRange(messages);
+                _isRunningGetNewMessage = false;
             });
         }
+
+        int _lastAppearingIndex;
+        void OnItemAppearing(object sender, ItemVisibilityEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("OnItemAppearing  index :" + e.ItemIndex);
+            ScrollDirection direction;
+            if (e.ItemIndex < _lastAppearingIndex)
+                direction = ScrollDirection.Up;
+            else if (e.ItemIndex > _lastAppearingIndex)
+                direction = ScrollDirection.Down;
+            else
+                direction = ScrollDirection.None;
+
+            switch (direction)
+            {
+                case ScrollDirection.Up:
+                    if (_lastAppearingIndex > RemainingItemsThreshold &&
+                        e.ItemIndex <= RemainingItemsThreshold)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Reached Up: " + e.ItemIndex + "  " + _lastAppearingIndex);
+                        var first = _messages.First();
+                        LoadMessages(first.Id - 1);
+                    }
+                    break;
+                case ScrollDirection.Down:
+                    if (_isRunningGetNewMessage) break;
+
+                    var thresholdIndex = _messages.Count - 1 - RemainingItemsThreshold;
+                    if (_lastAppearingIndex < thresholdIndex &&
+                        e.ItemIndex >= thresholdIndex)
+                    {
+                        _isRunningGetNewMessage = true;
+
+                        System.Diagnostics.Debug.WriteLine("Reached Up: " + e.ItemIndex + "  " + _lastAppearingIndex);
+                        var last = _messages.Last();
+                        LoadNewMessages(last.Id + 1);
+                    }
+                    break;
+            }
+
+            _lastAppearingIndex = e.ItemIndex;
+        }
+
+        void OnItemDisappearing(object sender, ItemVisibilityEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("OnItemDisappearing  index :" + e.ItemIndex);
+        }
+
         double _scrollY;
         void OnScrolled(object sender, ScrolledEventArgs e)
         {
