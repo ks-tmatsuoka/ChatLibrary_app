@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ChatSample.SekiCustomChatPage"
+    xmlns:local="clr-namespace:ChatSample"
+    xmlns:chat="clr-namespace:Entap.Chat;assembly=Entap.Chat">
+    <ContentPage.BindingContext>
+        <local:SekiCustomChatPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <AbsoluteLayout
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+        <chat:ChatListView_Seki
+            RemainingItemsThreshold="5"
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="White">
+            <chat:ChatListView_Seki.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout
+                            Spacing="0"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="Fill"
+                            BackgroundColor="{Binding BgColor}">
+                            <Label
+                                Margin="16,10,16,10"
+                                HorizontalOptions="FillAndExpand"
+                                HorizontalTextAlignment="Center"
+                                Text="{Binding Text}"
+                                FontSize="20"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </chat:ChatListView_Seki.ItemTemplate>
+        </chat:ChatListView_Seki>
+    </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

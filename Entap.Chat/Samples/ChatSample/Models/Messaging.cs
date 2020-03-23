@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Entap.Chat;
+using Xamarin.Forms;
+
 namespace ChatSample
 {
     public class Messaging : IMessaging
@@ -41,6 +45,58 @@ namespace ChatSample
                     messages.Add(new ImageMessage { Id = id + i });
             }
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
+        }
+
+
+
+        public Task<IEnumerable<SekiTestModel>> GetMessagesAsync(ObservableCollection<SekiTestModel> itemsSorce)
+        {
+            var messages = new List<SekiTestModel>();
+            var firstMsg = itemsSorce.FirstOrDefault();
+            int index = firstMsg.Id;
+            if (index <= 0)
+                return Task.FromResult<IEnumerable<SekiTestModel>>(messages);
+
+            for (int i = index - 1; i > index - 21; i--)
+            {
+                if (i <= 0)
+                    break;
+                if (i % 3 == 0)
+                {
+                    if (i % 2 == 0)
+                        messages.Add(new SekiTestModel { Id = i, Text = "" + Environment.NewLine + i.ToString() + Environment.NewLine + "", BgColor = Color.Aqua });
+                    else
+                        messages.Add(new SekiTestModel { Id = i, Text = "" + Environment.NewLine + "" + Environment.NewLine + i.ToString() + Environment.NewLine + "" + Environment.NewLine + "", BgColor = Color.Yellow });
+                }
+                else
+                    messages.Add(new SekiTestModel { Id = i, Text = i.ToString() });
+            }
+
+            return Task.FromResult<IEnumerable<SekiTestModel>>(messages);
+        }
+
+        public Task<IEnumerable<SekiTestModel>> GetNewMessagesAsync(ObservableCollection<SekiTestModel> itemsSorce)
+        {
+            var messages = new List<SekiTestModel>();
+            var lastMsg = itemsSorce.LastOrDefault();
+            int index = lastMsg.Id;
+
+            if (index >= 300)
+                return Task.FromResult<IEnumerable<SekiTestModel>>(messages);
+
+            for (int i = index + 1; i <= index + 20; i++)
+            {
+                if (i % 3 == 0)
+                {
+                    if (i % 2 == 0)
+                        messages.Add(new SekiTestModel { Id = i, Text = "" + Environment.NewLine + i.ToString() + Environment.NewLine + "", BgColor = Color.Aqua });
+                    else
+                        messages.Add(new SekiTestModel { Id = i, Text = "" + Environment.NewLine + "" + Environment.NewLine + i.ToString() + Environment.NewLine + "" + Environment.NewLine + "", BgColor = Color.Yellow });
+                }
+                else
+                    messages.Add(new SekiTestModel { Id = i, Text = i.ToString() });
+            }
+            return Task.FromResult<IEnumerable<SekiTestModel>>(messages);
         }
     }
 }

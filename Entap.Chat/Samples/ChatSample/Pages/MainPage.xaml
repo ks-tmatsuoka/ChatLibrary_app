@@ -25,5 +25,11 @@
             Command="{Binding PushPageCommand}"
             CommandParameter="{x:Type local:CustomChatPage}"
         />
+
+        <Button
+            Text="サンプル（カスタマイズ_関）"
+            Command="{Binding PushPageCommand}"
+            CommandParameter="{x:Type local:SekiCustomChatPage}"
+        />
     </StackLayout>
 </ContentPage>
