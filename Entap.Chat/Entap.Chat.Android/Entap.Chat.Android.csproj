@@ -50,6 +50,8 @@
     <Compile Include="Platform.cs" />
     <Compile Include="Renderers\ChatListViewRenderer.cs" />
     <Compile Include="DependencyService\DisplayService_Droid.cs" />
+    <Compile Include="Renderers\DynamicResizedEditorRenderer_Droid.cs" />
+    <Compile Include="Renderers\CustomContentViewRenderer_Droid.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

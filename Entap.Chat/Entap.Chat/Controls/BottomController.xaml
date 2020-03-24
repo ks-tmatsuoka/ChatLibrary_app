@@ -1,5 +1,101 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Entap.Chat.Controls.BottomController">
-    <ContentView.Content>
-    </ContentView.Content>
-</ContentView>
+<local:CustomContentView
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Entap.Chat"
+    x:Class="Entap.Chat.BottomController">
+    <local:CustomContentView.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="textMessageTemplate" x:DataType="local:TextMessage">
+                <ViewCell>
+                    <StackLayout
+                        Spacing="0"
+                        HorizontalOptions="FillAndExpand"
+                        HeightRequest="100"
+                        BackgroundColor="Aqua">
+                        <Label
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="CenterAndExpand"
+                            Text="{Binding Text}"
+                            FontSize="20"/>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="imageMessageTemplate" x:DataType="local:ImageMessage">
+                <ViewCell>
+                    <Image
+                        HeightRequest="150"
+                        Source="{Binding ImageUrl}"
+                    />
+                </ViewCell>
+            </DataTemplate>
+            <local:MessageDataTemplateSelector
+                x:Key="messageDataTemplateSelector"
+                TextMessageTemplate="{StaticResource textMessageTemplate}"
+                ImageMessageTemplate="{StaticResource imageMessageTemplate}"
+            />
+        </ResourceDictionary>
+    </local:CustomContentView.Resources>
+
+    <Grid
+        x:Name="Grid"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand"
+        ColumnSpacing="0"
+        RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <local:ChatListView
+            x:Name="ChatListView"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            ItemTemplate="{StaticResource messageDataTemplateSelector}"/>
+        <StackLayout
+            x:Name="Controller"
+            Grid.Row="1"
+            Spacing="0"
+            Orientation="Horizontal"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="Black">
+            <Button
+                Margin="10,0,5,0"
+                WidthRequest="48"
+                HeightRequest="48"
+                Text="Cam"
+                VerticalOptions="EndAndExpand"
+                BackgroundColor="Red"/>
+            <Button
+                Margin="5,0,10,0"
+                WidthRequest="48"
+                HeightRequest="48"
+                Text="Lib"
+                VerticalOptions="EndAndExpand"
+                BackgroundColor="Aqua"/>
+            
+            <local:DynamicResizedEditor
+                Margin="5,5,5,5"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="CenterAndExpand"
+                Placeholder="メッセージを入力"
+                PlaceholderColor="LightGray"
+                BackgroundColor="White"
+                CornerRadius="6"
+                MaxDisplayLineCount="5"
+                FontSize="14"
+                MinimumHeightRequest="28"
+            />
+            <Button
+                Margin="5,0,10,0"
+                WidthRequest="48"
+                HeightRequest="48"
+                Text="Send"
+                VerticalOptions="EndAndExpand"
+                BackgroundColor="Yellow"/>
+        </StackLayout>
+    </Grid>
+</local:CustomContentView>

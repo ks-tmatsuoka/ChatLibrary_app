@@ -46,6 +46,8 @@
     <Compile Include="Platform.cs" />
     <Compile Include="Renderers\ChatListViewRenderer.cs" />
     <Compile Include="DependencyServices\DisplayService_iOS.cs" />
+    <Compile Include="Renderers\DynamicResizedEditorRenderer_iOS.cs" />
+    <Compile Include="Renderers\CustomContentViewRenderer_iOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms">
