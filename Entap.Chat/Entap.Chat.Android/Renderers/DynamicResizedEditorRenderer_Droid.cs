@@ -51,7 +51,6 @@ namespace Entap.Chat.Android
         {
             base.OnElementChanged(e); 
 
-            //if (this.Control == null) return;
             if (Control != null && e.NewElement != null)
             {
                 _dynamicResizedEditor = e.NewElement as DynamicResizedEditor;
@@ -61,10 +60,7 @@ namespace Entap.Chat.Android
 
                 var border = new GradientDrawable();
                 border.SetCornerRadius(_dynamicResizedEditor.CornerRadius * _density); //角丸
-
                 border.SetColor(_dynamicResizedEditor.BackgroundColor.ToAndroid());
-                //border.SetStroke(customEditor.BorderWidth, customEditor.BorderColor.ToAndroid()); //線の幅・線の色
-                //this.Control.SetBackgroundColor(Android.Graphics.Color.Argb(0, 0, 0, 0));
                 this.Control.SetBackground(border);
 
                 // SetColorで背景色指定後BackgroundColorをTransparentにしておかないと角丸が見えなくなる
@@ -73,6 +69,7 @@ namespace Entap.Chat.Android
                 _dynamicResizedEditor.Focused += OnFocused;
                 _dynamicResizedEditor.Unfocused += OnUnFocused;
                 SetOneLineSize();
+                Control.SetPadding(12, 0, 12, 0);
             }
         }
 
@@ -103,17 +100,7 @@ namespace Entap.Chat.Android
             {
                 Control.SetTextColor(_dynamicResizedEditor.TextColor.ToAndroid());
             }
-
-            //if (e.PropertyName == DynamicResizedEditor.ForcedMinimumHeightProperty.PropertyName)
-            //{
-            //    var dynamicResizedEditor = Element as DynamicResizedEditor;
-            //    if (dynamicResizedEditor.ForcedMinimumHeight)
-            //    {
-            //        dynamicResizedEditor.HeightRequest = dynamicResizedEditor.MinimumHeightRequest;
-            //        _lineCount = 1;
-            //    }
-            //}
-            if (e.PropertyName == DynamicResizedEditor.HeightRequestProperty.PropertyName)
+            else if (e.PropertyName == DynamicResizedEditor.HeightRequestProperty.PropertyName)
             {
                 var dynamicResizedEditor = Element as DynamicResizedEditor;
                 if (dynamicResizedEditor.HeightRequest > 0)
@@ -127,19 +114,6 @@ namespace Entap.Chat.Android
                     Control.SetSelection(Control.Text.Length);
                 }
             }
-            //if (e.PropertyName == DynamicResizedEditor.IsFocusedProperty.PropertyName)
-            //{
-            //    if (_dynamicResizedEditor.IsFocused)
-            //    {
-            //        if (_dynamicResizedEditor.HeightRequest > 0)
-            //            _dynamicResizedEditor.HeightRequest = -1;
-            //        //// エディターのカーソルを末尾に
-            //        Device.BeginInvokeOnMainThread(() =>
-            //        {
-            //            Control.SetSelection(Control.Text.Length);
-            //        });
-            //    }
-            //}
         }
 
         void OnFocused(object sender, FocusEventArgs e)
@@ -169,11 +143,11 @@ namespace Entap.Chat.Android
         void SetOneLineSize()
         {
             _dynamicResizedEditor.HeightRequest = _dynamicResizedEditor.MinimumHeightRequest;
-            Control.SetPadding(12, 20, 12, 20);
+            //Control.SetPadding(12, 0, 12, 0);
         }
         void SetMultiLineSize()
         {
-            Control.SetPadding(12, 0, 12, 0);
+            //Control.SetPadding(12, 0, 12, 0);
             _dynamicResizedEditor.HeightRequest = -1;
         }
     }
