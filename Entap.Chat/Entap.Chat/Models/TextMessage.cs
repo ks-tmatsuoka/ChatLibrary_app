@@ -7,7 +7,7 @@ namespace Entap.Chat
         {
         }
 
-        //public string Text { get; set; }
-        public string Text => Id.ToString();
+        public string Text { get; set; }
+        //public string Text => Id.ToString();
     }
 }

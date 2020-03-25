@@ -51,7 +51,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <local:ChatListView
-            x:Name="ChatListView"
+            x:Name="ChatList"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand"
             ItemTemplate="{StaticResource messageDataTemplateSelector}"/>
@@ -78,6 +78,7 @@
                 BackgroundColor="Aqua"/>
             
             <local:DynamicResizedEditor
+                x:Name="MsgEditor"
                 Margin="5,5,5,5"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="CenterAndExpand"
@@ -90,6 +91,7 @@
                 MinimumHeightRequest="28"
             />
             <Button
+                x:Name="SendButton"
                 Margin="5,0,10,0"
                 WidthRequest="48"
                 HeightRequest="48"

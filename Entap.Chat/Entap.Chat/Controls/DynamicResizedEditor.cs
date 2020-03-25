@@ -37,32 +37,6 @@ namespace Entap.Chat
         }
         #endregion
 
-        //#region UnfocusCommand BindableProperty
-        //public static readonly BindableProperty UnfocusCommandProperty =
-        //    BindableProperty.Create(nameof(UnfocusCommand), typeof(ICommand), typeof(DynamicResizedEditor), null,
-        //        propertyChanged: (bindable, oldValue, newValue) =>
-        //            ((DynamicResizedEditor)bindable).UnfocusCommand = (ICommand)newValue);
-
-        //public ICommand UnfocusCommand
-        //{
-        //    get { return (ICommand)GetValue(UnfocusCommandProperty); }
-        //    set { SetValue(UnfocusCommandProperty, value); }
-        //}
-        //#endregion
-
-        //#region IsInputAccessoryViewHiddeniOS BindableProperty
-        //public static readonly BindableProperty IsInputAccessoryViewHiddeniOSProperty =
-        //    BindableProperty.Create(nameof(IsInputAccessoryViewHiddeniOS), typeof(bool), typeof(DynamicResizedEditor), false,
-        //        propertyChanged: (bindable, oldValue, newValue) =>
-        //            ((DynamicResizedEditor)bindable).IsInputAccessoryViewHiddeniOS = (bool)newValue);
-
-        //public bool IsInputAccessoryViewHiddeniOS
-        //{
-        //    get { return (bool)GetValue(IsInputAccessoryViewHiddeniOSProperty); }
-        //    set { SetValue(IsInputAccessoryViewHiddeniOSProperty, value); }
-        //}
-        //#endregion
-
         #region MaxDisplayLineCount BindableProperty
         public static readonly BindableProperty MaxDisplayLineCountProperty =
             BindableProperty.Create(nameof(Placeholder), typeof(int), typeof(DynamicResizedEditor), 4,
@@ -75,18 +49,5 @@ namespace Entap.Chat
             set { SetValue(MaxDisplayLineCountProperty, value); }
         }
         #endregion
-
-        //#region ForcedMinimumHeight BindableProperty
-        //public static readonly BindableProperty ForcedMinimumHeightProperty =
-        //    BindableProperty.Create(nameof(Placeholder), typeof(bool), typeof(DynamicResizedEditor), false,
-        //        propertyChanged: (bindable, oldValue, newValue) =>
-        //                            ((DynamicResizedEditor)bindable).ForcedMinimumHeight = (bool)newValue);
-
-        //public bool ForcedMinimumHeight
-        //{
-        //    get { return (bool)GetValue(ForcedMinimumHeightProperty); }
-        //    set { SetValue(ForcedMinimumHeightProperty, value); }
-        //}
-        //#endregion
     }
 }

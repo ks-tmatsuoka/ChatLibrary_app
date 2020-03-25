@@ -154,53 +154,61 @@ namespace Entap.Chat
                 //    }
                 //    _lastVisibleItemIndex = e.LastVisibleItemIndex;
                 //    break;
+                    
             }
             _scrollY = e.ScrollY;
         }
 
-        //int _firstVisibleItemIndex = 0;
-        //int _lastVisibleItemIndex = 0;
-        //void OnScrolled(object sender, ItemsViewScrolledEventArgs e)
-        //{
+        public bool AddTextMessage(MessageBase msg)
+        {
+            _messages.Add(msg);
+            ScrollTo(msg, ScrollToPosition.End, true);
+            return true;
+        }
 
-        //    ScrollDirection direction;
-        //    if (e.VerticalDelta < 0)
-        //        direction = ScrollDirection.Up;
-        //    else if (e.VerticalDelta > 0)
-        //        direction = ScrollDirection.Down;
-        //    else
-        //        direction = ScrollDirection.None;
+        int _firstVisibleItemIndex = 0;
+        int _lastVisibleItemIndex = 0;
+        void OnScrolled(object sender, ItemsViewScrolledEventArgs e)
+        {
 
-        //    switch (direction)
-        //    {
-        //        case ScrollDirection.Up:
-        //            if (_firstVisibleItemIndex == e.FirstVisibleItemIndex) break;
+            ScrollDirection direction;
+            if (e.VerticalDelta < 0)
+                direction = ScrollDirection.Up;
+            else if (e.VerticalDelta > 0)
+                direction = ScrollDirection.Down;
+            else
+                direction = ScrollDirection.None;
 
-        //            if (_firstVisibleItemIndex > RemainingItemsThreshold &&
-        //                e.FirstVisibleItemIndex <= RemainingItemsThreshold)
-        //            {
-        //                System.Diagnostics.Debug.WriteLine("Reached Up: " + e.FirstVisibleItemIndex + "  " + _firstVisibleItemIndex);
-        //                var first = _messages.First();
-        //                LoadMessages(first.Id - 1);
-        //            }
-        //            _firstVisibleItemIndex = e.FirstVisibleItemIndex;
+            switch (direction)
+            {
+                case ScrollDirection.Up:
+                    if (_firstVisibleItemIndex == e.FirstVisibleItemIndex) break;
 
-        //            break;
-        //        case ScrollDirection.Down:
-        //            if (_lastVisibleItemIndex == e.LastVisibleItemIndex) break;
+                    if (_firstVisibleItemIndex > RemainingItemsThreshold &&
+                        e.FirstVisibleItemIndex <= RemainingItemsThreshold)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Reached Up: " + e.FirstVisibleItemIndex + "  " + _firstVisibleItemIndex);
+                        var first = _messages.First();
+                        LoadMessages(first.Id - 1);
+                    }
+                    _firstVisibleItemIndex = e.FirstVisibleItemIndex;
 
-        //            var thresholdIndex = _messages.Count - 1 - RemainingItemsThreshold;
-        //            if (_lastVisibleItemIndex < thresholdIndex &&
-        //                e.LastVisibleItemIndex >= thresholdIndex)
-        //            {
-        //                System.Diagnostics.Debug.WriteLine("Reached Down: " + e.LastVisibleItemIndex + " " + _lastVisibleItemIndex);
-        //                var last = _messages.Last();
-        //                LoadNewMessages(last.Id + 1);
-        //            }
-        //            _lastVisibleItemIndex = e.LastVisibleItemIndex;
-        //            break;
-        //    }
-        //}
+                    break;
+                case ScrollDirection.Down:
+                    if (_lastVisibleItemIndex == e.LastVisibleItemIndex) break;
+
+                    var thresholdIndex = _messages.Count - 1 - RemainingItemsThreshold;
+                    if (_lastVisibleItemIndex < thresholdIndex &&
+                        e.LastVisibleItemIndex >= thresholdIndex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Reached Down: " + e.LastVisibleItemIndex + " " + _lastVisibleItemIndex);
+                        var last = _messages.Last();
+                        LoadNewMessages(last.Id + 1);
+                    }
+                    _lastVisibleItemIndex = e.LastVisibleItemIndex;
+                    break;
+            }
+        }
 
         enum ScrollDirection
         {

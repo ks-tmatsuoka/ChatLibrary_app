@@ -19,7 +19,7 @@ namespace ChatSample
 
                 var mod = (id - i) % 2;
                 if (mod == 0)
-                    messages.Add(new TextMessage { Id = id - i });
+                    messages.Add(new TextMessage { Id = id - i, Text= (id - i).ToString()});
                 else if (mod == 1)
                     messages.Add(new ImageMessage { Id = id - i });
             }
@@ -30,17 +30,25 @@ namespace ChatSample
         public Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int id, int count)
         {
             var messages = new List<MessageBase>();
+            if (id >= 150)
+                return Task.FromResult<IEnumerable<MessageBase>>(messages);
+
             for (int i = 0; i < count; i++)
             {
                 if (id - i < 0) break;
 
                 var mod = (id - i) % 2;
                 if (mod == 0)
-                    messages.Add(new TextMessage { Id = id + i });
+                    messages.Add(new TextMessage { Id = id + i, Text = (id + i).ToString() });
                 else if (mod == 1)
                     messages.Add(new ImageMessage { Id = id + i });
             }
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
+        }
+
+        public Task<bool> SendTextMessage(string text)
+        {
+            return Task.FromResult<bool>(true); ;
         }
     }
 }

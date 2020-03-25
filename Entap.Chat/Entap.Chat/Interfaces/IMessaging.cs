@@ -8,5 +8,6 @@ namespace Entap.Chat
     {
         Task<IEnumerable<MessageBase>> GetMessagesAsync(int index, int count);
         Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int index, int count);
+        Task<bool> SendTextMessage(string text);
     }
 }
