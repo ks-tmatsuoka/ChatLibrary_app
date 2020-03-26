@@ -6,7 +6,8 @@ namespace Entap.Chat
     public class MessageDataTemplateSelector : DataTemplateSelector
     {
         // DataTemplates
-        public DataTemplate TextMessageTemplate { get; set; }
+        public DataTemplate OthersTextMessageTemplate { get; set; }
+        public DataTemplate MyTextMessageTemplate { get; set; }
         public DataTemplate ImageMessageTemplate { get; set; }
 
         public MessageDataTemplateSelector()
@@ -19,8 +20,10 @@ namespace Entap.Chat
 
             switch (message.MessageType)
             {
-                case MessageType.Text:
-                    return TextMessageTemplate;
+                case MessageType.OthersText:
+                    return OthersTextMessageTemplate;
+                case MessageType.MyText:
+                    return MyTextMessageTemplate;
                 case MessageType.Image:
                     return ImageMessageTemplate;
                 default:

@@ -7,7 +7,8 @@ namespace Entap.Chat
     public enum MessageType
     {
         None,
-        Text,
+        OthersText,
         Image,
+        MyText,
     }
 }

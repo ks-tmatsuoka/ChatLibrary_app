@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -35,11 +36,28 @@ namespace Entap.Chat
             this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
         }
 
+        protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            base.OnPropertyChanged(propertyName);
+            if (propertyName == ChatViewBackgroundColorProperty.PropertyName)
+            {
+                ChatList.BackgroundColor = ChatViewBackgroundColor;
+            }
+            else if (propertyName == MyMessageViewBackgroundColorProperty.PropertyName)
+            {
+                ChatList.BackgroundColor = MyMessageViewBackgroundColor;
+            }
+            else if (propertyName == OtherMessageViewBackgroundColorProperty.PropertyName)
+            {
+                ChatList.BackgroundColor = OtherMessageViewBackgroundColor;
+            }            
+        }
+
         async Task SendMessage()
         {
             if (string.IsNullOrEmpty(this.MsgEditor.Text))
                 return;
-            ChatList.AddMessage(new TextMessage { Id = 200, Text = MsgEditor.Text });
+            ChatList.AddMessage(new MyTextMessage { Id = 200, Text = MsgEditor.Text });
             this.MsgEditor.Text = "";
 
             var result = await Settings.Current.Messaging.SendTextMessage(this.MsgEditor.Text);
@@ -76,5 +94,41 @@ namespace Entap.Chat
             ChatList.AddMessage(new ImageMessage { Id = 200, ImageUrl = imgPath });
             var result = await Settings.Current.Messaging.SendImage(bytes);
         }
+
+        #region ChatViewBackgroundColor BindableProperty
+        public static readonly BindableProperty ChatViewBackgroundColorProperty =
+            BindableProperty.Create(nameof(ChatViewBackgroundColor), typeof(Color), typeof(BottomController), Color.Red,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).ChatViewBackgroundColor = (Color)newValue);
+        public Color ChatViewBackgroundColor
+        {
+            get { return (Color)GetValue(ChatViewBackgroundColorProperty); }
+            set { SetValue(ChatViewBackgroundColorProperty, value); }
+        }
+        #endregion
+
+        #region MyMessageViewBackgroundColor BindableProperty
+        public static readonly BindableProperty MyMessageViewBackgroundColorProperty =
+            BindableProperty.Create(nameof(MyMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.Aqua,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).MyMessageViewBackgroundColor = (Color)newValue);
+        public Color MyMessageViewBackgroundColor
+        {
+            get { return (Color)GetValue(MyMessageViewBackgroundColorProperty); }
+            set { SetValue(MyMessageViewBackgroundColorProperty, value); }
+        }
+        #endregion
+
+        #region OtherMessageViewBackgroundColor BindableProperty
+        public static readonly BindableProperty OtherMessageViewBackgroundColorProperty =
+            BindableProperty.Create(nameof(OtherMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.LightSkyBlue,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).OtherMessageViewBackgroundColor = (Color)newValue);
+        public Color OtherMessageViewBackgroundColor
+        {
+            get { return (Color)GetValue(OtherMessageViewBackgroundColorProperty); }
+            set { SetValue(OtherMessageViewBackgroundColorProperty, value); }
+        }
+        #endregion
     }
 }

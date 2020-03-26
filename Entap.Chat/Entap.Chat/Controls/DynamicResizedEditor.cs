@@ -39,7 +39,7 @@ namespace Entap.Chat
 
         #region MaxDisplayLineCount BindableProperty
         public static readonly BindableProperty MaxDisplayLineCountProperty =
-            BindableProperty.Create(nameof(Placeholder), typeof(int), typeof(DynamicResizedEditor), 4,
+            BindableProperty.Create(nameof(MaxDisplayLineCount), typeof(int), typeof(DynamicResizedEditor), 4,
                 propertyChanged: (bindable, oldValue, newValue) =>
                                     ((DynamicResizedEditor)bindable).MaxDisplayLineCount = (int)newValue);
 

@@ -8,7 +8,7 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="textMessageTemplate" x:DataType="chat:TextMessage">
+            <DataTemplate x:Key="textMessageTemplate" x:DataType="chat:OthersTextMessage">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -33,7 +33,7 @@
             </DataTemplate>
             <chat:MessageDataTemplateSelector
                 x:Key="messageDataTemplateSelector"
-                TextMessageTemplate="{StaticResource textMessageTemplate}"
+                OthersTextMessageTemplate="{StaticResource textMessageTemplate}"
                 ImageMessageTemplate="{StaticResource imageMessageTemplate}"
             />
         </ResourceDictionary>

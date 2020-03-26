@@ -19,7 +19,7 @@ namespace ChatSample
 
                 var mod = (id - i) % 2;
                 if (mod == 0)
-                    messages.Add(new TextMessage { Id = id - i, Text= (id - i).ToString()});
+                    messages.Add(new OthersTextMessage { Id = id - i, Text= (id - i).ToString()});
                 else if (mod == 1)
                     messages.Add(new ImageMessage { Id = id - i, ImageUrl= "http://placehold.jp/50x50.png?text=" + (id - i) });
             }
@@ -30,7 +30,7 @@ namespace ChatSample
         public Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int id, int count)
         {
             var messages = new List<MessageBase>();
-            if (id >= 150)
+            if (id >= 120)
                 return Task.FromResult<IEnumerable<MessageBase>>(messages);
 
             for (int i = 0; i < count; i++)
@@ -39,7 +39,7 @@ namespace ChatSample
 
                 var mod = (id - i) % 2;
                 if (mod == 0)
-                    messages.Add(new TextMessage { Id = id + i, Text = (id + i).ToString() });
+                    messages.Add(new OthersTextMessage { Id = id + i, Text = (id + i).ToString() });
                 else if (mod == 1)
                     messages.Add(new ImageMessage { Id = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i) });
             }

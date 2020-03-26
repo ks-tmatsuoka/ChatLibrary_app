@@ -19,5 +19,6 @@
     <Folder Include="Extensions\" />
     <Folder Include="Constants\" />
     <Folder Include="Modules\" />
+    <Folder Include="Behavior\" />
   </ItemGroup>
 </Project>

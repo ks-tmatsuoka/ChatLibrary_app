@@ -3,21 +3,87 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Entap.Chat"
-    x:Class="Entap.Chat.BottomController">
+    x:Class="Entap.Chat.BottomController"
+    x:Name="Content"
+    BackgroundColor="Transparent">
     <local:CustomContentView.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="textMessageTemplate" x:DataType="local:TextMessage">
+            <DataTemplate x:Key="myTextMessageTemplate" x:DataType="local:MyTextMessage">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
+                        Margin="16,6,16,6"
                         HorizontalOptions="FillAndExpand"
-                        HeightRequest="100"
-                        BackgroundColor="Aqua">
+                        BackgroundColor="Transparent"
+                        Orientation="Horizontal">
+                        <StackLayout
+                            x:Name="AAA"
+                            HorizontalOptions="EndAndExpand"
+                            VerticalOptions="EndAndExpand"
+                            Spacing="0"
+                            Margin="0,0,6,0">
+                            <Label
+                                Text="既読"
+                                FontSize="10"/>
+                            <Label
+                                Text="12:00"
+                                FontSize="10"/>
+                            </StackLayout>
+                        <Frame
+                            HasShadow="False"
+                            CornerRadius="8"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
+                            Padding="0">
+                            <Label
+                                Margin="6"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                Text="{Binding Text}"
+                                FontSize="14"/>
+                        </Frame>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="othersTextMessageTemplate" x:DataType="local:OthersTextMessage">
+                <ViewCell>
+                    <StackLayout
+                        Spacing="0"
+                        Margin="16,6,16,6"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Transparent"
+                        Orientation="Horizontal">
+                        <Frame
+                            Margin="1"
+                            HasShadow="False"
+                            CornerRadius="14"
+                            BorderColor="Transparent"
+                            IsClippedToBounds="True"
+                            Padding="0"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=ChatViewBackgroundColor}">
+                            <Image
+                                WidthRequest="30"
+                                HeightRequest="30"
+                                BackgroundColor="DarkGray"
+                                VerticalOptions="StartAndExpand"/>
+                        </Frame>
+                        <Frame
+                            Margin="6,0,6,0"
+                            HasShadow="False"
+                            CornerRadius="8"
+                            Padding="0"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=OtherMessageViewBackgroundColor}">
+                            <Label
+                                Margin="6"
+                                BackgroundColor="AliceBlue"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill"
+                                Text="{Binding Text}"
+                                FontSize="14"/>
+                        </Frame>
                         <Label
-                            HorizontalOptions="CenterAndExpand"
-                            VerticalOptions="CenterAndExpand"
-                            Text="{Binding Text}"
-                            FontSize="20"/>
+                            VerticalOptions="EndAndExpand"
+                            Text="12:00"
+                            FontSize="10"/>
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
@@ -31,7 +97,8 @@
             </DataTemplate>
             <local:MessageDataTemplateSelector
                 x:Key="messageDataTemplateSelector"
-                TextMessageTemplate="{StaticResource textMessageTemplate}"
+                MyTextMessageTemplate="{StaticResource myTextMessageTemplate}"
+                OthersTextMessageTemplate="{StaticResource othersTextMessageTemplate}"
                 ImageMessageTemplate="{StaticResource imageMessageTemplate}"
             />
         </ResourceDictionary>
@@ -42,7 +109,8 @@
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand"
         ColumnSpacing="0"
-        RowSpacing="0">
+        RowSpacing="0"
+        BackgroundColor="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
