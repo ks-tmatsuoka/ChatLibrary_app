@@ -31,16 +31,50 @@ namespace Entap.Chat
             //    await DelayAsync();
             //});
             this.SendButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendButton), async () => await SendMessage());
+            this.SendPhotoButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendPhotoButton), async () => await SendPhoto());
+            this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
         }
 
         async Task SendMessage()
         {
             if (string.IsNullOrEmpty(this.MsgEditor.Text))
                 return;
-            ChatList.AddTextMessage(new TextMessage { Id = 0, Text = MsgEditor.Text });
+            ChatList.AddMessage(new TextMessage { Id = 200, Text = MsgEditor.Text });
             this.MsgEditor.Text = "";
 
             var result = await Settings.Current.Messaging.SendTextMessage(this.MsgEditor.Text);
+        }
+
+        async Task SendPhoto()
+        {
+            var imgPath = await Settings.Current.Messaging.TakePicture();
+            if (string.IsNullOrEmpty(imgPath))
+                return;
+            byte[] bytes = FileManager.ReadBytes(imgPath);
+            string extension = System.IO.Path.GetExtension(imgPath);
+            string name = Guid.NewGuid().ToString() + extension;
+            if (bytes == null || bytes.Length < 1)
+            {
+                return;
+            }
+            ChatList.AddMessage(new ImageMessage { Id = 200, ImageUrl = imgPath });
+            var result = await Settings.Current.Messaging.SendImage(bytes);
+        }
+
+        async Task SendImg()
+        {
+            var imgPath = await Settings.Current.Messaging.SelectImage();
+            if (string.IsNullOrEmpty(imgPath))
+                return;
+            byte[] bytes = FileManager.ReadBytes(imgPath);
+            string extension = System.IO.Path.GetExtension(imgPath);
+            string name = Guid.NewGuid().ToString() + extension;
+            if (bytes == null || bytes.Length < 1)
+            {
+                return;
+            }
+            ChatList.AddMessage(new ImageMessage { Id = 200, ImageUrl = imgPath });
+            var result = await Settings.Current.Messaging.SendImage(bytes);
         }
     }
 }

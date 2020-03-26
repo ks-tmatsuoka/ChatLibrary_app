@@ -24,7 +24,7 @@ namespace Entap.Chat
             //Scrolled += OnScrolled;
             ItemAppearing += OnItemAppearing;
             //ItemDisappearing += OnItemDisappearing;
-
+            SeparatorVisibility = SeparatorVisibility.None;
             HasUnevenRows = true;
             Task.Run(async() =>
             {
@@ -159,7 +159,7 @@ namespace Entap.Chat
             _scrollY = e.ScrollY;
         }
 
-        public bool AddTextMessage(MessageBase msg)
+        public bool AddMessage(MessageBase msg)
         {
             _messages.Add(msg);
             ScrollTo(msg, ScrollToPosition.End, true);

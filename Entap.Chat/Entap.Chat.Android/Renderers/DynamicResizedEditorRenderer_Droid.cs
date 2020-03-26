@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Util;
 using Android.Views;
@@ -19,7 +20,7 @@ namespace Entap.Chat.Android
         DynamicResizedEditor _dynamicResizedEditor;
         int _lineCount;
         float _density;
-        Window _window;
+        SoftInput _startingMode;
 
         public DynamicResizedEditorRenderer_Droid(Context context) : base(context)
         {
@@ -35,18 +36,22 @@ namespace Entap.Chat.Android
                 DisplayMetrics metrics = new DisplayMetrics();
                 _density = metrics.Density;
             }
-
-            _window = ((Activity)context).Window;
-            _window.SetSoftInputMode(SoftInput.AdjustResize);
-
         }
 
-        //protected override void Dispose(bool disposing)
-        //{
-        //    base.Dispose(disposing);
-        //    _window.SetSoftInputMode(SoftInput.AdjustNothing);
-        //}
+        protected override void OnFocusChanged(bool gainFocus, FocusSearchDirection direction, Rect previouslyFocusedRect)
+        {
+            Window window = Context.GetActivity().Window;
+            if (gainFocus)
+            {
+                _startingMode = window.Attributes.SoftInputMode;
+                window.SetSoftInputMode(SoftInput.AdjustPan);
+            }
+            else
+                window.SetSoftInputMode(_startingMode);
 
+            base.OnFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        }
+        
         protected override void OnElementChanged(ElementChangedEventArgs<Editor> e)
         {
             base.OnElementChanged(e); 
@@ -64,7 +69,7 @@ namespace Entap.Chat.Android
                 this.Control.SetBackground(border);
 
                 // SetColorで背景色指定後BackgroundColorをTransparentにしておかないと角丸が見えなくなる
-                _dynamicResizedEditor.BackgroundColor = Color.Transparent;
+                _dynamicResizedEditor.BackgroundColor = Xamarin.Forms.Color.Transparent;
 
                 _dynamicResizedEditor.Focused += OnFocused;
                 _dynamicResizedEditor.Unfocused += OnUnFocused;

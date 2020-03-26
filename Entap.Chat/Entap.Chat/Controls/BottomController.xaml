@@ -63,6 +63,7 @@
             HorizontalOptions="FillAndExpand"
             BackgroundColor="Black">
             <Button
+                x:Name="SendPhotoButton"
                 Margin="10,0,5,0"
                 WidthRequest="48"
                 HeightRequest="48"
@@ -70,6 +71,7 @@
                 VerticalOptions="EndAndExpand"
                 BackgroundColor="Red"/>
             <Button
+                x:Name="SendImgButton"
                 Margin="5,0,10,0"
                 WidthRequest="48"
                 HeightRequest="48"
