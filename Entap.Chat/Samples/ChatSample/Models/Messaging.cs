@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Entap.Chat;
 namespace ChatSample
@@ -21,7 +22,7 @@ namespace ChatSample
                 if (mod == 0)
                     messages.Add(new OthersTextMessage { Id = id - i, Text= (id - i).ToString()});
                 else if (mod == 1)
-                    messages.Add(new ImageMessage { Id = id - i, ImageUrl= "http://placehold.jp/50x50.png?text=" + (id - i) });
+                    messages.Add(new MyImageMessage { Id = id - i, ImageUrl= "http://placehold.jp/50x50.png?text=" + (id - i) });
             }
             messages.Reverse();
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
@@ -41,7 +42,7 @@ namespace ChatSample
                 if (mod == 0)
                     messages.Add(new OthersTextMessage { Id = id + i, Text = (id + i).ToString() });
                 else if (mod == 1)
-                    messages.Add(new ImageMessage { Id = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i) });
+                    messages.Add(new MyImageMessage { Id = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i) });
             }
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
@@ -55,6 +56,8 @@ namespace ChatSample
         {
             var mg = new MediaPluginManager();
             var path = await mg.TakePhotoAsync();
+            if (path is null)
+                return await Task.FromResult<string>("");
             return await Task.FromResult<string>(path);
         }
 
@@ -62,7 +65,8 @@ namespace ChatSample
         {
             var mg = new MediaPluginManager();
             var paths = await mg.PickPhotoAsyncGetPathAndAlbumPath();
-
+            if (paths is null)
+                return await Task.FromResult<string>("");
             byte[] bytes = null;
             string extension = "";
             string sendImgUrl = "";
@@ -82,7 +86,7 @@ namespace ChatSample
             {
                 if (bytes != null && bytes.Length < 1)
                     await App.Current.MainPage.DisplayAlert(null, "こちらの画像は送信できません", "閉じる");
-                return await Task.FromResult<string>(""); ;
+                return await Task.FromResult<string>("");
             }
 
             return await Task.FromResult<string>(sendImgUrl);

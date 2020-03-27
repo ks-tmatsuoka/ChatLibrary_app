@@ -23,7 +23,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="imageMessageTemplate" x:DataType="chat:ImageMessage">
+            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="chat:MyImageMessage">
                 <ViewCell>
                     <Image
                         HeightRequest="150"
@@ -34,7 +34,7 @@
             <chat:MessageDataTemplateSelector
                 x:Key="messageDataTemplateSelector"
                 OthersTextMessageTemplate="{StaticResource textMessageTemplate}"
-                ImageMessageTemplate="{StaticResource imageMessageTemplate}"
+                MyImageMessageTemplate="{StaticResource myImageMessageTemplate}"
             />
         </ResourceDictionary>
     </ContentPage.Resources>

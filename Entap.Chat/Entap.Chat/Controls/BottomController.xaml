@@ -17,7 +17,6 @@
                         BackgroundColor="Transparent"
                         Orientation="Horizontal">
                         <StackLayout
-                            x:Name="AAA"
                             HorizontalOptions="EndAndExpand"
                             VerticalOptions="EndAndExpand"
                             Spacing="0"
@@ -87,19 +86,46 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="imageMessageTemplate" x:DataType="local:ImageMessage">
+            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="local:MyImageMessage">
                 <ViewCell>
-                    <Image
-                        HeightRequest="150"
-                        Source="{Binding ImageUrl}"
-                    />
+                    <StackLayout
+                        Spacing="0"
+                        Margin="16,6,16,6"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Transparent"
+                        Orientation="Horizontal">
+                        <StackLayout
+                            HorizontalOptions="EndAndExpand"
+                            VerticalOptions="EndAndExpand"
+                            Spacing="0"
+                            Margin="0,0,6,0">
+                            <Label
+                                Text="既読"
+                                FontSize="10"/>
+                            <Label
+                                Text="12:00"
+                                FontSize="10"/>
+                            </StackLayout>
+                        <Frame
+                            HasShadow="False"
+                            CornerRadius="8"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
+                            Padding="0">
+                            <Image
+                                Margin="6"
+                                WidthRequest="200"
+                                HeightRequest="200"
+                                Aspect="AspectFit"
+                                Source="{Binding ImageUrl}"/>
+                        </Frame>
+                    </StackLayout>
                 </ViewCell>
             </DataTemplate>
             <local:MessageDataTemplateSelector
                 x:Key="messageDataTemplateSelector"
                 MyTextMessageTemplate="{StaticResource myTextMessageTemplate}"
                 OthersTextMessageTemplate="{StaticResource othersTextMessageTemplate}"
-                ImageMessageTemplate="{StaticResource imageMessageTemplate}"
+                MyImageMessageTemplate="{StaticResource myImageMessageTemplate}"
             />
         </ResourceDictionary>
     </local:CustomContentView.Resources>

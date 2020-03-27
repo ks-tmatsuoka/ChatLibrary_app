@@ -1,9 +1,9 @@
 ﻿using System;
 namespace Entap.Chat
 {
-    public class ImageMessage : MessageBase
+    public class MyImageMessage : MessageBase
     {
-        public ImageMessage() : base (MessageType.Image)
+        public MyImageMessage() : base (MessageType.Image)
         {
         }
 

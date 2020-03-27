@@ -75,7 +75,7 @@ namespace Entap.Chat
             {
                 return;
             }
-            ChatList.AddMessage(new ImageMessage { Id = 200, ImageUrl = imgPath });
+            ChatList.AddMessage(new MyImageMessage { Id = 200, ImageUrl = imgPath });
             var result = await Settings.Current.Messaging.SendImage(bytes);
         }
 
@@ -91,7 +91,7 @@ namespace Entap.Chat
             {
                 return;
             }
-            ChatList.AddMessage(new ImageMessage { Id = 200, ImageUrl = imgPath });
+            ChatList.AddMessage(new MyImageMessage { Id = 200, ImageUrl = imgPath });
             var result = await Settings.Current.Messaging.SendImage(bytes);
         }
 

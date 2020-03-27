@@ -8,7 +8,7 @@ namespace Entap.Chat
         // DataTemplates
         public DataTemplate OthersTextMessageTemplate { get; set; }
         public DataTemplate MyTextMessageTemplate { get; set; }
-        public DataTemplate ImageMessageTemplate { get; set; }
+        public DataTemplate MyImageMessageTemplate { get; set; }
 
         public MessageDataTemplateSelector()
         {
@@ -25,7 +25,7 @@ namespace Entap.Chat
                 case MessageType.MyText:
                     return MyTextMessageTemplate;
                 case MessageType.Image:
-                    return ImageMessageTemplate;
+                    return MyImageMessageTemplate;
                 default:
                     throw new ArgumentException();
             }
