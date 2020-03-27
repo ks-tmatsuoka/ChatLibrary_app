@@ -73,7 +73,7 @@
                             BackgroundColor="{Binding Source={x:Reference Content}, Path=OtherMessageViewBackgroundColor}">
                             <Label
                                 Margin="6"
-                                BackgroundColor="AliceBlue"
+                                BackgroundColor="Transparent"
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Fill"
                                 Text="{Binding Text}"
@@ -105,7 +105,7 @@
                             <Label
                                 Text="12:00"
                                 FontSize="10"/>
-                            </StackLayout>
+                        </StackLayout>
                         <Frame
                             HasShadow="False"
                             CornerRadius="8"
@@ -113,11 +113,62 @@
                             Padding="0">
                             <Image
                                 Margin="6"
-                                WidthRequest="200"
-                                HeightRequest="200"
+                                WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                 Aspect="AspectFit"
                                 Source="{Binding ImageUrl}"/>
                         </Frame>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="othersImageMessageTemplate" x:DataType="local:OthersImageMessage">
+                <ViewCell>
+                    <StackLayout
+                        Spacing="0"
+                        Margin="16,6,16,6"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Transparent"
+                        Orientation="Horizontal">
+                        <Frame
+                            Margin="1"
+                            HasShadow="False"
+                            VerticalOptions="StartAndExpand"
+                            CornerRadius="14"
+                            BorderColor="Transparent"
+                            IsClippedToBounds="True"
+                            Padding="0"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=ChatViewBackgroundColor}">
+                            <Image
+                                WidthRequest="30"
+                                HeightRequest="30"
+                                BackgroundColor="DarkGray"
+                                VerticalOptions="StartAndExpand"/>
+                        </Frame>
+                        <Frame
+                            Margin="6,0,6,0"
+                            HasShadow="False"
+                            CornerRadius="8"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=OtherMessageViewBackgroundColor}"
+                            Padding="0">
+                            <Image
+                                Margin="6"
+                                BackgroundColor="Transparent"
+                                WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                Aspect="AspectFit"
+                                Source="{Binding ImageUrl}"/>
+                        </Frame>
+                        <StackLayout
+                            HorizontalOptions="StartAndExpand"
+                            VerticalOptions="EndAndExpand"
+                            Spacing="0">
+                            <Label
+                                Text=""
+                                FontSize="10"/>
+                            <Label
+                                Text="12:00"
+                                FontSize="10"/>
+                        </StackLayout>
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
@@ -126,6 +177,7 @@
                 MyTextMessageTemplate="{StaticResource myTextMessageTemplate}"
                 OthersTextMessageTemplate="{StaticResource othersTextMessageTemplate}"
                 MyImageMessageTemplate="{StaticResource myImageMessageTemplate}"
+                OthersImageMessageTemplate="{StaticResource othersImageMessageTemplate}"
             />
         </ResourceDictionary>
     </local:CustomContentView.Resources>

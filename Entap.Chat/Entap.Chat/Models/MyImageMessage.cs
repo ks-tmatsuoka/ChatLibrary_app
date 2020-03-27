@@ -3,7 +3,7 @@ namespace Entap.Chat
 {
     public class MyImageMessage : MessageBase
     {
-        public MyImageMessage() : base (MessageType.Image)
+        public MyImageMessage() : base (MessageType.MyImage)
         {
         }
 

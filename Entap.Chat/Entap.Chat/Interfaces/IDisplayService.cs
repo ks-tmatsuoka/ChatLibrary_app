@@ -6,5 +6,6 @@ namespace Entap.Chat
     public interface IDisplayService
     {
         Thickness GetSafeArea();
+        Rectangle GetDisplaySize();
     }
 }

@@ -8,6 +8,13 @@ namespace Entap.Chat.iOS
 {
     public class DisplayService_iOS : IDisplayService
     {
+        public Rectangle GetDisplaySize()
+        {
+            double width = UIScreen.MainScreen.Bounds.Width;
+            double height = UIScreen.MainScreen.Bounds.Height;
+            return new Rectangle(0, 0, width, height);
+        }
+
         public Thickness GetSafeArea()
         {
             if (UIDevice.CurrentDevice.CheckSystemVersion(11, 0))

@@ -34,7 +34,7 @@ namespace Entap.Chat
             this.SendButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendButton), async () => await SendMessage());
             this.SendPhotoButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendPhotoButton), async () => await SendPhoto());
             this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
-        }
+        } 
 
         protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -51,6 +51,15 @@ namespace Entap.Chat
             {
                 ChatList.BackgroundColor = OtherMessageViewBackgroundColor;
             }            
+        }
+
+        public double ImageMessageSize
+        {
+            get
+            {
+                var rect = DependencyService.Get<IDisplayService>().GetDisplaySize();
+                return rect.Width * 0.5;
+            }
         }
 
         async Task SendMessage()
@@ -109,7 +118,7 @@ namespace Entap.Chat
 
         #region MyMessageViewBackgroundColor BindableProperty
         public static readonly BindableProperty MyMessageViewBackgroundColorProperty =
-            BindableProperty.Create(nameof(MyMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.Aqua,
+            BindableProperty.Create(nameof(MyMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.LightGray,
                 propertyChanged: (bindable, oldValue, newValue) =>
                                     ((BottomController)bindable).MyMessageViewBackgroundColor = (Color)newValue);
         public Color MyMessageViewBackgroundColor
@@ -121,7 +130,7 @@ namespace Entap.Chat
 
         #region OtherMessageViewBackgroundColor BindableProperty
         public static readonly BindableProperty OtherMessageViewBackgroundColorProperty =
-            BindableProperty.Create(nameof(OtherMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.LightSkyBlue,
+            BindableProperty.Create(nameof(OtherMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.DarkGray,
                 propertyChanged: (bindable, oldValue, newValue) =>
                                     ((BottomController)bindable).OtherMessageViewBackgroundColor = (Color)newValue);
         public Color OtherMessageViewBackgroundColor

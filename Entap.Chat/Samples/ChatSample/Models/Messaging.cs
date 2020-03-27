@@ -20,7 +20,7 @@ namespace ChatSample
 
                 var mod = (id - i) % 3;
                 if (mod == 0)
-                    messages.Add(new MyImageMessage { Id = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i) });
+                    messages.Add(new OthersImageMessage { Id = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i) });
                 else
                     messages.Add(new OthersTextMessage { Id = id - i, Text= (id - i).ToString()});
             }
@@ -40,7 +40,7 @@ namespace ChatSample
 
                 var mod = (id - i) % 3;
                 if (mod == 0)
-                    messages.Add(new MyImageMessage { Id = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i) });
+                    messages.Add(new OthersImageMessage { Id = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i) });
                 else
                     messages.Add(new OthersTextMessage { Id = id + i, Text = (id + i).ToString() });
 

@@ -246,6 +246,7 @@ namespace Entap.Chat
         void Init()
         {
             HasUnevenRows = true;
+            SelectionMode = ListViewSelectionMode.None;
             SeparatorVisibility = SeparatorVisibility.None;
             Scrolled += OnScrolled; ;
             ItemAppearing += OnItemAppearing;
@@ -263,7 +264,6 @@ namespace Entap.Chat
                 {
                     ItemsSource = _messages;
                     ScrollTo(last, ScrollToPosition.End, false);
-
                 });
             });
         }
@@ -342,6 +342,13 @@ namespace Entap.Chat
         object firstVisibleItem;
         int lastVisibleItemIndex;
         object lastVisibleItem;
+        public object LastVisibleItem
+        {
+            get
+            {
+                return lastVisibleItem;
+            }
+        }
 
         ScrollDirection chatScrollDirection;
 
@@ -350,6 +357,7 @@ namespace Entap.Chat
             if (chatScrollDirection == ScrollDirection.Down)
             {
                 lastVisibleItemIndex = e.ItemIndex;
+                System.Diagnostics.Debug.WriteLine("OnItemDisappearing" + ((MessageBase)e.Item).Id.ToString());
                 lastVisibleItem = e.Item;
             }
             else if (chatScrollDirection == ScrollDirection.Up)
@@ -369,6 +377,7 @@ namespace Entap.Chat
             else if (chatScrollDirection == ScrollDirection.Down)
             {
                 lastVisibleItemIndex = e.ItemIndex;
+                System.Diagnostics.Debug.WriteLine("OnItemAppearing" + ((MessageBase)e.Item).Id.ToString());
                 lastVisibleItem = e.Item;
             }
         }
@@ -424,9 +433,26 @@ namespace Entap.Chat
 
         public bool AddMessage(MessageBase msg)
         {
-            _messages.Add(msg);
-            ScrollTo(msg, ScrollToPosition.End, true);
-            return true;
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                var dummy = new MyImageMessage();
+                _messages.Add(dummy);
+                _messages.Add(msg);
+                // ScrollTo(msg, ScrollToPosition.End, false) だけだと画像送信した際に追加したメッセージのViewが表示されない
+                // 動き的に前にテキストのメッセージがあると、そのテキストのメッセージ分の高さしかスクロールしてくれない感じになっている
+                // なので一旦ダミーの画像のView追加してスクロールして、ダミーを削除
+                //ScrollTo(msg, ScrollToPosition.End, false)
+                ScrollTo(msg, ScrollToPosition.Start, true);
+                _messages.Remove(dummy);
+                return true;
+            }
+            else if (Device.RuntimePlatform == Device.iOS)
+            {
+                _messages.Add(msg);
+                ScrollTo(msg, ScrollToPosition.End, true);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

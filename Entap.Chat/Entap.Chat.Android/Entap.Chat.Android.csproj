@@ -52,6 +52,7 @@
     <Compile Include="DependencyService\DisplayService_Droid.cs" />
     <Compile Include="Renderers\DynamicResizedEditorRenderer_Droid.cs" />
     <Compile Include="Renderers\CustomContentViewRenderer_Droid.cs" />
+    <Compile Include="Modules\DisplayManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -74,6 +75,7 @@
     <Folder Include="Resources\drawable\" />
     <Folder Include="Renderers\" />
     <Folder Include="DependencyService\" />
+    <Folder Include="Modules\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Entap.Chat\Entap.Chat.csproj">

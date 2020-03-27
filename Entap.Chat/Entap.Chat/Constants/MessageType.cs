@@ -8,7 +8,8 @@ namespace Entap.Chat
     {
         None,
         OthersText,
-        Image,
         MyText,
+        OthersImage,
+        MyImage,
     }
 }
