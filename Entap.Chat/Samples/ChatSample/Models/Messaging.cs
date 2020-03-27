@@ -18,11 +18,11 @@ namespace ChatSample
             {
                 if (id - i < 0) break;
 
-                var mod = (id - i) % 2;
+                var mod = (id - i) % 3;
                 if (mod == 0)
+                    messages.Add(new MyImageMessage { Id = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i) });
+                else
                     messages.Add(new OthersTextMessage { Id = id - i, Text= (id - i).ToString()});
-                else if (mod == 1)
-                    messages.Add(new MyImageMessage { Id = id - i, ImageUrl= "http://placehold.jp/50x50.png?text=" + (id - i) });
             }
             messages.Reverse();
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
@@ -38,11 +38,12 @@ namespace ChatSample
             {
                 if (id - i < 0) break;
 
-                var mod = (id - i) % 2;
+                var mod = (id - i) % 3;
                 if (mod == 0)
-                    messages.Add(new OthersTextMessage { Id = id + i, Text = (id + i).ToString() });
-                else if (mod == 1)
                     messages.Add(new MyImageMessage { Id = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i) });
+                else
+                    messages.Add(new OthersTextMessage { Id = id + i, Text = (id + i).ToString() });
+
             }
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
