@@ -65,5 +65,25 @@
       <Name>Entap.Chat</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\send_icon%403x.png" />
+    <BundleResource Include="Resources\send_icon%402x.png" />
+    <BundleResource Include="Resources\send_icon.png" />
+    <BundleResource Include="Resources\library_icon%403x.png" />
+    <BundleResource Include="Resources\library_icon%402x.png" />
+    <BundleResource Include="Resources\library_icon.png" />
+    <BundleResource Include="Resources\camera_icon%403x.png" />
+    <BundleResource Include="Resources\camera_icon%402x.png" />
+    <BundleResource Include="Resources\camera_icon.png" />
+    <BundleResource Include="Resources\send_icon_dark%403x.png" />
+    <BundleResource Include="Resources\send_icon_dark%402x.png" />
+    <BundleResource Include="Resources\send_icon_dark.png" />
+    <BundleResource Include="Resources\camera_icon_dark%403x.png" />
+    <BundleResource Include="Resources\camera_icon_dark%402x.png" />
+    <BundleResource Include="Resources\camera_icon_dark.png" />
+    <BundleResource Include="Resources\library_icon_dark%403x.png" />
+    <BundleResource Include="Resources\library_icon_dark%402x.png" />
+    <BundleResource Include="Resources\library_icon_dark.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

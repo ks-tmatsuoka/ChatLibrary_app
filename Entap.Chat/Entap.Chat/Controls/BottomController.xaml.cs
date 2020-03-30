@@ -34,6 +34,21 @@ namespace Entap.Chat
             this.SendButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendButton), async () => await SendMessage());
             this.SendPhotoButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendPhotoButton), async () => await SendPhoto());
             this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
+
+            this.Controller.BackgroundColor = BottomControllerBackgroundColor;
+
+            if (BottomControllerIconStyle == ControllerIconStyles.Dark)
+            {
+                SendPhotoButton.ImageSource = "camera_icon_dark.png";
+                SendImgButton.ImageSource = "library_icon_dark.png";
+                SendButton.ImageSource = "send_icon_dark.png";
+            }
+            else
+            {
+                SendPhotoButton.ImageSource = "camera_icon.png";
+                SendImgButton.ImageSource = "library_icon.png";
+                SendButton.ImageSource = "send_icon.png";
+            }
         } 
 
         protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -66,7 +81,7 @@ namespace Entap.Chat
         {
             if (string.IsNullOrEmpty(this.MsgEditor.Text))
                 return;
-            ChatList.AddMessage(new MyTextMessage { Id = 200, Text = MsgEditor.Text });
+            ChatList.AddMessage(new MyTextMessage { Id = 200, Text = MsgEditor.Text, IsAlreadyRead=true });
             this.MsgEditor.Text = "";
 
             var result = await Settings.Current.Messaging.SendTextMessage(this.MsgEditor.Text);
@@ -139,5 +154,35 @@ namespace Entap.Chat
             set { SetValue(OtherMessageViewBackgroundColorProperty, value); }
         }
         #endregion
+
+        #region BottomControllerBackgroundColor BindableProperty
+        public static readonly BindableProperty BottomControllerBackgroundColorProperty =
+            BindableProperty.Create(nameof(BottomControllerBackgroundColor), typeof(Color), typeof(BottomController), Color.Black,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).BottomControllerBackgroundColor = (Color)newValue);
+        public Color BottomControllerBackgroundColor
+        {
+            get { return (Color)GetValue(BottomControllerBackgroundColorProperty); }
+            set { SetValue(BottomControllerBackgroundColorProperty, value); }
+        }
+        #endregion
+
+        #region BottomControllerIconStyle BindableProperty
+        public static readonly BindableProperty BottomControllerIconStyleProperty =
+            BindableProperty.Create(nameof(BottomControllerIconStyle), typeof(ControllerIconStyles), typeof(BottomController), ControllerIconStyles.Light,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).BottomControllerIconStyle = (ControllerIconStyles)newValue);
+        public ControllerIconStyles BottomControllerIconStyle
+        {
+            get { return (ControllerIconStyles)GetValue(BottomControllerIconStyleProperty); }
+            set { SetValue(BottomControllerIconStyleProperty, value); }
+        }
+        #endregion
+
+        public enum ControllerIconStyles
+        {
+            Light,
+            Dark
+        }
     }
 }

@@ -22,10 +22,10 @@
                             Spacing="0"
                             Margin="0,0,6,0">
                             <Label
-                                Text="既読"
+                                Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
                                 FontSize="10"/>
                             <Label
-                                Text="12:00"
+                                Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
                                 FontSize="10"/>
                             </StackLayout>
                         <Frame
@@ -57,12 +57,11 @@
                             CornerRadius="14"
                             BorderColor="Transparent"
                             IsClippedToBounds="True"
-                            Padding="0"
-                            BackgroundColor="{Binding Source={x:Reference Content}, Path=ChatViewBackgroundColor}">
+                            Padding="0">
                             <Image
                                 WidthRequest="30"
                                 HeightRequest="30"
-                                BackgroundColor="DarkGray"
+                                Source="{Binding UserIcon}"
                                 VerticalOptions="StartAndExpand"/>
                         </Frame>
                         <Frame
@@ -81,7 +80,7 @@
                         </Frame>
                         <Label
                             VerticalOptions="EndAndExpand"
-                            Text="12:00"
+                            Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
                             FontSize="10"/>
                     </StackLayout>
                 </ViewCell>
@@ -100,10 +99,10 @@
                             Spacing="0"
                             Margin="0,0,6,0">
                             <Label
-                                Text="既読"
+                                Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
                                 FontSize="10"/>
                             <Label
-                                Text="12:00"
+                                Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
                                 FontSize="10"/>
                         </StackLayout>
                         <Frame
@@ -136,12 +135,11 @@
                             CornerRadius="14"
                             BorderColor="Transparent"
                             IsClippedToBounds="True"
-                            Padding="0"
-                            BackgroundColor="{Binding Source={x:Reference Content}, Path=ChatViewBackgroundColor}">
+                            Padding="0">
                             <Image
                                 WidthRequest="30"
                                 HeightRequest="30"
-                                BackgroundColor="DarkGray"
+                                Source="{Binding UserIcon}"
                                 VerticalOptions="StartAndExpand"/>
                         </Frame>
                         <Frame
@@ -163,10 +161,9 @@
                             VerticalOptions="EndAndExpand"
                             Spacing="0">
                             <Label
-                                Text=""
                                 FontSize="10"/>
                             <Label
-                                Text="12:00"
+                                Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
                                 FontSize="10"/>
                         </StackLayout>
                     </StackLayout>
@@ -179,6 +176,8 @@
                 MyImageMessageTemplate="{StaticResource myImageMessageTemplate}"
                 OthersImageMessageTemplate="{StaticResource othersImageMessageTemplate}"
             />
+            <local:AlreadyReadConverter x:Key="alreadyReadConverter"/>
+            <local:TimeConverter x:Key="timeConverter"/>
         </ResourceDictionary>
     </local:CustomContentView.Resources>
 
@@ -206,8 +205,7 @@
             Grid.Row="1"
             Spacing="0"
             Orientation="Horizontal"
-            HorizontalOptions="FillAndExpand"
-            BackgroundColor="Black">
+            HorizontalOptions="FillAndExpand">
             <Button
                 x:Name="SendPhotoButton"
                 Margin="10,0,5,0"
@@ -215,7 +213,7 @@
                 HeightRequest="48"
                 Text="Cam"
                 VerticalOptions="EndAndExpand"
-                BackgroundColor="Red"/>
+                BackgroundColor="Transparent"/>
             <Button
                 x:Name="SendImgButton"
                 Margin="5,0,10,0"
@@ -223,7 +221,7 @@
                 HeightRequest="48"
                 Text="Lib"
                 VerticalOptions="EndAndExpand"
-                BackgroundColor="Aqua"/>
+                BackgroundColor="Transparent"/>
             
             <local:DynamicResizedEditor
                 x:Name="MsgEditor"
@@ -243,9 +241,8 @@
                 Margin="5,0,10,0"
                 WidthRequest="48"
                 HeightRequest="48"
-                Text="Send"
                 VerticalOptions="EndAndExpand"
-                BackgroundColor="Yellow"/>
+                BackgroundColor="Transparent"/>
         </StackLayout>
     </Grid>
 </local:CustomContentView>

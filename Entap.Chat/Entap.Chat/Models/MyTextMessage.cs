@@ -7,6 +7,7 @@ namespace Entap.Chat
         {
         }
 
+        public bool IsAlreadyRead { get; set; }
         public string Text { get; set; }
     }
 }

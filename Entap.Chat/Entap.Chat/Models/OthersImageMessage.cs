@@ -5,9 +5,9 @@ namespace Entap.Chat
     {
         public OthersImageMessage() : base(MessageType.OthersImage)
         {
+            UserIcon = "https://brave.entap.dev/storage/user_icon.png";
         }
-
-
+        public string UserIcon { get; set; }
         public string ImageUrl { get; set; }
     }
 }
