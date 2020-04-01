@@ -36,6 +36,9 @@ namespace Entap.Chat.Android
                 DisplayMetrics metrics = new DisplayMetrics();
                 _density = metrics.Density;
             }
+            Window window = Context.GetActivity().Window;
+            _startingMode = window.Attributes.SoftInputMode;
+            window.SetSoftInputMode(SoftInput.AdjustResize);
         }
 
         protected override void OnFocusChanged(bool gainFocus, FocusSearchDirection direction, Rect previouslyFocusedRect)
@@ -44,7 +47,7 @@ namespace Entap.Chat.Android
             if (gainFocus)
             {
                 _startingMode = window.Attributes.SoftInputMode;
-                window.SetSoftInputMode(SoftInput.AdjustPan);
+                window.SetSoftInputMode(SoftInput.AdjustResize);
             }
             else
                 window.SetSoftInputMode(_startingMode);
