@@ -1,39 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace Entap.Chat
 {
     public partial class BottomController : CustomContentView
     {
-        const int baseControllerHeight = 48;
         public BottomController()
         {
             InitializeComponent();
 
-            //this.SizeChanged += (sender, args) =>
-            //{
-
-            //};
-
             var safearea = DependencyService.Get<IDisplayService>().GetSafeArea();
             this.Controller.Padding = new Thickness(0, 0, 0, safearea.Bottom);
 
-            //this.SendButton.Clicked += (sender, args) =>
-            //{
-
-            //};
-
-            //this.SendButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendButton), async () =>
-            //{
-            //    await DelayAsync();
-            //});
             this.SendButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendButton), async () => await SendMessage());
             this.SendPhotoButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendPhotoButton), async () => await SendPhoto());
             this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
+            Settings.Current.Messaging.UpdateData(this.ChatList.Messages);
 
             this.Controller.BackgroundColor = BottomControllerBackgroundColor;
 
@@ -81,10 +66,45 @@ namespace Entap.Chat
         {
             if (string.IsNullOrEmpty(this.MsgEditor.Text))
                 return;
-            ChatList.AddMessage(new MyTextMessage { Id = 200, Text = MsgEditor.Text, IsAlreadyRead=true });
+            var msg = new MyTextMessage { Id = ChatList.GetNotSendMessageId(), Text = MsgEditor.Text, IsAlreadyRead = false };
+            ChatList.AddMessage(msg);
             this.MsgEditor.Text = "";
 
-            var result = await Settings.Current.Messaging.SendTextMessage(this.MsgEditor.Text);
+            var newMsgId = await Settings.Current.Messaging.SendTextMessage(this.MsgEditor.Text);
+            //var index = ChatList.Messages.IndexOf(msg);
+            //// サーバへ送信できた段階でメッセージの表示位置を再確認
+            //if (index == ChatList.Messages.Count - 1)
+            //{
+            //    ChatList.Messages[index].Id = newMsgId;
+            //}
+            //else
+            //{
+            //    ChatList.Messages.RemoveAt(index);
+            //    msg.Id = newMsgId;
+            //    ChatList.Messages.Add(msg);
+            //}
+
+            // テストコード
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                var index = ChatList.Messages.IndexOf(msg);
+                // サーバへ送信できた段階でメッセージの表示位置を再確認
+                if (index == ChatList.Messages.Count - 1)
+                {
+                    var newId = ChatList.Messages.Max(w => w.Id) + 1;
+                    ChatList.Messages[index].Id = newId;
+                }
+                else
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        ChatList.Messages.RemoveAt(index);
+                        msg.Id = ChatList.Messages.Max(w => w.Id) + 1;
+                        ChatList.Messages.Add(msg);
+                    });
+                }
+            });
         }
 
         async Task SendPhoto()
@@ -99,8 +119,43 @@ namespace Entap.Chat
             {
                 return;
             }
-            ChatList.AddMessage(new MyImageMessage { Id = 200, ImageUrl = imgPath });
-            var result = await Settings.Current.Messaging.SendImage(bytes);
+            var msg = new MyImageMessage { Id = ChatList.GetNotSendMessageId(), ImageUrl = imgPath };
+            ChatList.AddMessage(msg);
+            var newMsgId = await Settings.Current.Messaging.SendImage(bytes);
+            //var index = ChatList.Messages.IndexOf(msg);
+            //// サーバへ送信できた段階でメッセージの表示位置を再確認
+            //if (index == ChatList.Messages.Count - 1)
+            //{
+            //    ChatList.Messages[index].Id = newMsgId;
+            //}
+            //else
+            //{
+            //    ChatList.Messages.RemoveAt(index);
+            //    msg.Id = newMsgId;
+            //    ChatList.Messages.Add(msg);
+            //}
+
+            // テストコード
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                var index = ChatList.Messages.IndexOf(msg);
+                // サーバへ送信できた段階でメッセージの表示位置を再確認
+                if (index == ChatList.Messages.Count - 1)
+                {
+                    var newId = ChatList.Messages.Max(w => w.Id) + 1;
+                    ChatList.Messages[index].Id = newId;
+                }
+                else
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        ChatList.Messages.RemoveAt(index);
+                        msg.Id = ChatList.Messages.Max(w => w.Id) + 1;
+                        ChatList.Messages.Add(msg);
+                    });
+                }
+            });
         }
 
         async Task SendImg()
@@ -115,8 +170,43 @@ namespace Entap.Chat
             {
                 return;
             }
-            ChatList.AddMessage(new MyImageMessage { Id = 200, ImageUrl = imgPath });
-            var result = await Settings.Current.Messaging.SendImage(bytes);
+            var msg = new MyImageMessage { Id = ChatList.GetNotSendMessageId(), ImageUrl = imgPath };
+            ChatList.AddMessage(msg);
+            var newMsgId = await Settings.Current.Messaging.SendImage(bytes);
+            //var index = ChatList.Messages.IndexOf(msg);
+            //// サーバへ送信できた段階でメッセージの表示位置を再確認
+            //if (index == ChatList.Messages.Count - 1)
+            //{
+            //    ChatList.Messages[index].Id = newMsgId;
+            //}
+            //else
+            //{
+            //    ChatList.Messages.RemoveAt(index);
+            //    msg.Id = newMsgId;
+            //    ChatList.Messages.Add(msg);
+            //}
+
+            // テストコード
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                var index = ChatList.Messages.IndexOf(msg);
+                // サーバへ送信できた段階でメッセージの表示位置を再確認
+                if (index == ChatList.Messages.Count - 1)
+                {
+                    var newId = ChatList.Messages.Max(w => w.Id) + 1;
+                    ChatList.Messages[index].Id = newId;
+                }
+                else
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        ChatList.Messages.RemoveAt(index);
+                        msg.Id = ChatList.Messages.Max(w => w.Id) + 1;
+                        ChatList.Messages.Add(msg);
+                    });
+                }
+            });
         }
 
         #region ChatViewBackgroundColor BindableProperty

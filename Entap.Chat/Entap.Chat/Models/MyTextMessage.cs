@@ -6,8 +6,6 @@ namespace Entap.Chat
         public MyTextMessage() : base(MessageType.MyText)
         {
         }
-
-        public bool IsAlreadyRead { get; set; }
         public string Text { get; set; }
     }
 }

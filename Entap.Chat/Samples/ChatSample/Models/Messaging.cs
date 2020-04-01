@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Entap.Chat;
+using System.Linq;
+using Xamarin.Forms;
+
 namespace ChatSample
 {
     public class Messaging : IMessaging
@@ -31,7 +35,7 @@ namespace ChatSample
         public Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int id, int count)
         {
             var messages = new List<MessageBase>();
-            if (id >= 120)
+            if (id >= 120 || id <= 0)
                 return Task.FromResult<IEnumerable<MessageBase>>(messages);
 
             for (int i = 0; i < count; i++)
@@ -48,9 +52,9 @@ namespace ChatSample
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
 
-        public Task<bool> SendTextMessage(string text)
+        public Task<int> SendTextMessage(string text)
         {
-            return Task.FromResult<bool>(true); ;
+            return Task.FromResult<int>(-1); ;
         }
 
         public async Task<string> TakePicture()
@@ -93,9 +97,44 @@ namespace ChatSample
             return await Task.FromResult<string>(sendImgUrl);
         }
 
-        public Task<bool> SendImage(byte[] imageData)
+        public Task<int> SendImage(byte[] imageData)
         {
-            return Task.FromResult<bool>(true); ;
+            return Task.FromResult<int>(-1); ;
+        }
+
+        public void UpdateData(ObservableCollection<MessageBase> messageBases)
+        {
+            Task.Run(async () =>
+            {
+                // 既読つける処理
+                while(true)
+                {
+                    await Task.Delay(2000);
+                    var msgs = messageBases.Where(w => w.Id >= 120);
+                    foreach(var msg in msgs)
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            msg.IsAlreadyRead = true;
+                        });
+                    }
+                }
+            });
+            
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(10000);
+
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        var id = messageBases.Max(w=>w.Id) + 1;
+                        messageBases.Add(new OthersTextMessage { Id = id, Text = "other", IsAlreadyRead = false });
+                    });
+                }
+                
+            });
         }
     }
 }

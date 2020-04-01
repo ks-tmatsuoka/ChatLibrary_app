@@ -8,6 +8,5 @@ namespace Entap.Chat
         }
 
         public string ImageUrl { get; set; }
-        public bool IsAlreadyRead { get; set; }
     }
 }

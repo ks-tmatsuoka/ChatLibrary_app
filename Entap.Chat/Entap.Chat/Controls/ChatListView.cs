@@ -236,8 +236,16 @@ namespace Entap.Chat
     public class ChatListView : ListView
     {
         const int RemainingItemsThreshold = 7;
+        const int NotSendMessageId = -1;
 
         ObservableCollection<MessageBase> _messages;
+        public ObservableCollection<MessageBase> Messages
+        {
+            get
+            {
+                return _messages;
+            }
+        }
         public ChatListView() : base(ListViewCachingStrategy.RecycleElement)
         {
             Init();
@@ -248,9 +256,13 @@ namespace Entap.Chat
             HasUnevenRows = true;
             SelectionMode = ListViewSelectionMode.None;
             SeparatorVisibility = SeparatorVisibility.None;
-            Scrolled += OnScrolled; ;
-            ItemAppearing += OnItemAppearing;
-            ItemDisappearing += OnItemDisappearing;
+            Scrolled += OnScrolled;
+
+            if (Device.RuntimePlatform == Device.iOS)
+            {
+                ItemAppearing += OnItemAppearing;
+                ItemDisappearing += OnItemDisappearing;
+            }
 
             Task.Run(async () =>
             {
@@ -264,8 +276,28 @@ namespace Entap.Chat
                 {
                     ItemsSource = _messages;
                     ScrollTo(last, ScrollToPosition.End, false);
+                    _messages.CollectionChanged += OnMessagesCollectionChanged;
                 });
             });
+        }
+
+        private void OnMessagesCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                var msgLast = _messages.LastOrDefault();
+                var lastVisibleMessageBase = lastVisibleItem as MessageBase;
+                if (lastVisibleMessageBase is null)
+                    return;
+
+                if (msgLast != null && lastVisibleMessageBase != null && (msgLast.Id == lastVisibleMessageBase.Id + 1 || lastVisibleMessageBase.Id == NotSendMessageId))
+                {
+                    Device.BeginInvokeOnMainThread(async () =>
+                    {
+                        ScrollTo(msgLast, ScrollToPosition.End, true);
+                    });
+                }
+            }
         }
 
         bool IsRunningGetOldMessage = false;
@@ -349,7 +381,6 @@ namespace Entap.Chat
                 return lastVisibleItem;
             }
         }
-
         ScrollDirection chatScrollDirection;
 
         private void OnItemDisappearing(object sender, ItemVisibilityEventArgs e)
@@ -357,7 +388,6 @@ namespace Entap.Chat
             if (chatScrollDirection == ScrollDirection.Down)
             {
                 lastVisibleItemIndex = e.ItemIndex;
-                System.Diagnostics.Debug.WriteLine("OnItemDisappearing" + ((MessageBase)e.Item).Id.ToString());
                 lastVisibleItem = e.Item;
             }
             else if (chatScrollDirection == ScrollDirection.Up)
@@ -372,6 +402,7 @@ namespace Entap.Chat
             if (chatScrollDirection == ScrollDirection.Up)
             {
                 firstVisibleItemIndex = e.ItemIndex;
+                System.Diagnostics.Debug.WriteLine("OnItemAppearing firstVisibleItem" + ((MessageBase)e.Item).Id.ToString());
                 firstVisibleItem = e.Item;
             }
             else if (chatScrollDirection == ScrollDirection.Down)
@@ -382,22 +413,26 @@ namespace Entap.Chat
             }
         }
 
+        public void VisibleItemUpdateForAndroid(int firstIndex, object firstItem, int lastIndex, object lastItem)
+        {
+            firstVisibleItemIndex = firstIndex;
+            firstVisibleItem = firstItem;
+            lastVisibleItemIndex = lastIndex;
+            lastVisibleItem = lastItem;
+            System.Diagnostics.Debug.WriteLine("firstVisibleItem" + ((MessageBase)firstVisibleItem).Id.ToString());
+            System.Diagnostics.Debug.WriteLine("lastVisibleItem" + ((MessageBase)lastVisibleItem).Id.ToString());
+        }
+
         double lastScrollY = 0;
-        private void OnScrolled(object sender, ScrolledEventArgs e)
+        public void OnScrolled(object sender, ScrolledEventArgs e)
         {
             if (lastScrollY > e.ScrollY)
             {
-                if (Device.RuntimePlatform == Device.Android)
-                    chatScrollDirection = ScrollDirection.Down;
-                else if (Device.RuntimePlatform == Device.iOS)
-                    chatScrollDirection = ScrollDirection.Up;
+                chatScrollDirection = ScrollDirection.Up;
             }   
             else if (lastScrollY < e.ScrollY)
             {
-                if (Device.RuntimePlatform == Device.Android)
-                    chatScrollDirection = ScrollDirection.Up;
-                else if (Device.RuntimePlatform == Device.iOS)
-                    chatScrollDirection = ScrollDirection.Down;
+                chatScrollDirection = ScrollDirection.Down;
             }
             else
             {
@@ -433,6 +468,8 @@ namespace Entap.Chat
 
         public bool AddMessage(MessageBase msg)
         {
+            if (msg is null)
+                return false;
             if (Device.RuntimePlatform == Device.Android)
             {
                 var dummy = new MyImageMessage();
@@ -453,6 +490,11 @@ namespace Entap.Chat
                 return true;
             }
             return false;
+        }
+
+        public int GetNotSendMessageId()
+        {
+            return NotSendMessageId;
         }
 
         /// <summary>
