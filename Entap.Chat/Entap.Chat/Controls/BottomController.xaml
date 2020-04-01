@@ -95,16 +95,31 @@
                         Orientation="Horizontal">
                         <StackLayout
                             HorizontalOptions="EndAndExpand"
-                            VerticalOptions="EndAndExpand"
                             Spacing="0"
                             Margin="0,0,6,0">
-                            <Label
-                                Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
-                                FontSize="10"/>
-                            <Label
-                                Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
-                                FontSize="10"/>
+                            <ImageButton
+                                HorizontalOptions="EndAndExpand"
+                                VerticalOptions="CenterAndExpand"
+                                BackgroundColor="Transparent"
+                                WidthRequest="30"
+                                HeightRequest="30"
+                                Source="share_icon.png"
+                                CommandParameter="{Binding ImageUrl}"
+                                Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
+                            <StackLayout
+                                HorizontalOptions="EndAndExpand"
+                                VerticalOptions="End"
+                                Spacing="0"
+                                Margin="0,0,6,0">
+                                <Label
+                                    Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
+                                    FontSize="10"/>
+                                <Label
+                                    Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                    FontSize="10"/>
+                            </StackLayout>
                         </StackLayout>
+                        
                         <Frame
                             HasShadow="False"
                             CornerRadius="8"
@@ -158,13 +173,26 @@
                         </Frame>
                         <StackLayout
                             HorizontalOptions="StartAndExpand"
-                            VerticalOptions="EndAndExpand"
                             Spacing="0">
-                            <Label
-                                FontSize="10"/>
-                            <Label
-                                Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
-                                FontSize="10"/>
+                            <ImageButton
+                                HorizontalOptions="StartAndExpand"
+                                VerticalOptions="CenterAndExpand"
+                                BackgroundColor="Transparent"
+                                WidthRequest="30"
+                                HeightRequest="30"
+                                Source="share_icon.png"
+                                CommandParameter="{Binding ImageUrl}"
+                                Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
+                            <StackLayout
+                                HorizontalOptions="StartAndExpand"
+                                VerticalOptions="End"
+                                Spacing="0">
+                                <Label
+                                    FontSize="10"/>
+                                <Label
+                                    Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                    FontSize="10"/>
+                            </StackLayout>
                         </StackLayout>
                     </StackLayout>
                 </ViewCell>

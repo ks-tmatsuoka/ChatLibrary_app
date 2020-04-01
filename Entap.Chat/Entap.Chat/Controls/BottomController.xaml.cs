@@ -209,6 +209,15 @@ namespace Entap.Chat
             });
         }
 
+        public Command ImageShareCommand => new Command((pm) =>
+        {
+            ProcessManager.Current.Invoke(nameof(this.SendButton), async()=>
+            {
+                var imageSorce = pm as string;
+                await Application.Current.MainPage.DisplayAlert("aaa", imageSorce, "ccc");
+            });
+        });
+
         #region ChatViewBackgroundColor BindableProperty
         public static readonly BindableProperty ChatViewBackgroundColorProperty =
             BindableProperty.Create(nameof(ChatViewBackgroundColor), typeof(Color), typeof(BottomController), Color.Red,
