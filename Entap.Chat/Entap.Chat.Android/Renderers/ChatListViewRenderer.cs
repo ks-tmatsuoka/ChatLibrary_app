@@ -12,7 +12,6 @@ namespace Entap.Chat.Android
     {
         public ChatListViewRenderer(Context context) : base(context)
         {
-            DisplayManager.Current.Context = context;
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<ListView> e)

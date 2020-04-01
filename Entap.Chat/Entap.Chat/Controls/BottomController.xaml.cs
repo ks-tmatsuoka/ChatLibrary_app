@@ -213,8 +213,50 @@ namespace Entap.Chat
         {
             ProcessManager.Current.Invoke(nameof(this.SendButton), async()=>
             {
-                var imageSorce = pm as string;
-                await Application.Current.MainPage.DisplayAlert("aaa", imageSorce, "ccc");
+                // TODO パーミッションチェック
+
+                var imagePath = pm as string;
+                imagePath = "https://brave.entap.dev/storage/user_icon.png";
+
+                var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
+                var extension = System.IO.Path.GetExtension(imagePath);
+                string filePath = mediaFolderPath;
+                if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
+                {
+                    filePath += "/tmp.jpeg";
+                }
+                else if (extension.ToLower() == ".png")
+                {
+                    filePath += "/tmp.png";
+                }
+                else if (extension.ToLower() == ".pdf")
+                {
+                    filePath += "/tmp.pdf";
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("エラー", "こちらのファイルは表示できません", "閉じる");
+                    return;
+                }
+
+                bool result;
+                if (imagePath.Contains("http://") || imagePath.Contains("https://"))
+                {
+                    result = await ImageManager.DownloadWebImageFile(imagePath, filePath);
+                }
+                else
+                {
+                    result = FileManager.FileCopy(imagePath, filePath);
+                }
+
+                if (!result)
+                {
+                    await Application.Current.MainPage.DisplayAlert("エラー", "ファイルが取得できませんでした", "閉じる");
+                    return;
+                }
+                
+                string str = "error";
+                DependencyService.Get<IFileService>().OpenShareMenu(filePath, ref str);
             });
         });
 

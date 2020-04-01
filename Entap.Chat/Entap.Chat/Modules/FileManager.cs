@@ -21,5 +21,19 @@ namespace Entap.Chat
                 return null;
             }
         }
+
+        public static bool FileCopy(string sourceFileName, string destFileName)
+        {
+            try
+            {
+                File.Copy(sourceFileName, destFileName, true);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                //LogManager.WriteLog(LogManager.LogLevel.Warning, "FileCopy", ex);
+                return false;
+            }
+        }
     }
 }
