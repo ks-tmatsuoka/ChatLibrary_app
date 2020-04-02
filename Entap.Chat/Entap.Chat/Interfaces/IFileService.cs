@@ -6,5 +6,6 @@ namespace Entap.Chat
         void OpenShareMenu(string filePath, ref string err);
         string GetMediaFolderPath();
         string GetDownloadFolderPath();
+        bool? SaveImageiOSLibrary(string filePath);
     }
 }

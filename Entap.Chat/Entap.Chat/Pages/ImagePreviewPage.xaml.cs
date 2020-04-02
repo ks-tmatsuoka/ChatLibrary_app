@@ -35,7 +35,30 @@ namespace Entap.Chat
             {
                 ProcessManager.Current.Invoke(nameof(this.CloseButton), async () =>
                 {
-                    await Application.Current.MainPage.Navigation.PopModalAsync();
+                    var dlFolderPath = DependencyService.Get<IFileService>().GetDownloadFolderPath();
+                    var extension = System.IO.Path.GetExtension(imageUrl);
+                    string filePath = dlFolderPath;
+                    if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
+                    {
+                        filePath += "/" + Guid.NewGuid() + ".jpeg";
+                    }
+                    else if (extension.ToLower() == ".pdf")
+                    {
+                        filePath += "/" + Guid.NewGuid() + ".pdf";
+                    }
+                    else
+                    {
+                        filePath += "/" + Guid.NewGuid() + ".png";
+                    }
+                    bool? dlResult;
+                    if (Device.RuntimePlatform == Device.Android)
+                        dlResult = await ImageManager.DownloadWebImageFile(imageUrl, filePath);
+                    else
+                        dlResult = DependencyService.Get<IFileService>().SaveImageiOSLibrary(imageUrl);
+                    if (dlResult == true)
+                        await Application.Current.MainPage.DisplayAlert("", "保存しました", "閉じる");
+                    else if (dlResult == false)
+                        await Application.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
                 });
             };
 

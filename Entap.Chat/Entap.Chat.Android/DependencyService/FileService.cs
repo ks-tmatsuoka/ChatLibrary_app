@@ -95,5 +95,10 @@ namespace Entap.Chat.Android
             }
             return path;
         }
+
+        public bool? SaveImageiOSLibrary(string filePath)
+        {
+            return false;
+        }
     }
 }
