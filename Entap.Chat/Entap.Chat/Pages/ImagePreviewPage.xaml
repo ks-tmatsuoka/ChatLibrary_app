@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Entap.Chat.ImagePreviewPage">
+    <ContentPage.Content>
+        <AbsoluteLayout
+            BackgroundColor="Black"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Image
+                x:Name="Img"
+                BackgroundColor="Transparent"
+                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All"/>
+
+            <StackLayout
+                x:Name="Menu"
+                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                Spacing="0"
+                Opacity="0.5"
+                BackgroundColor="Black">
+                <ImageButton
+                    x:Name="CloseButton"
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="StartAndExpand"
+                    VerticalOptions="StartAndExpand"
+                    HeightRequest="25"
+                    WidthRequest="25"
+                    Source="close_icon.png"/>
+
+                <StackLayout
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="End"
+                    Orientation="Horizontal"
+                    Spacing="0"
+                    BackgroundColor="Transparent">
+                    <ImageButton
+                        x:Name="DownloadButton"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="CenterAndExpand"
+                        HeightRequest="40"
+                        WidthRequest="40"
+                        Source="download_icon.png"/>
+                    <ImageButton
+                        x:Name="ShareButton"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="CenterAndExpand"
+                        HeightRequest="40"
+                        WidthRequest="40"
+                        Source="share_icon.png"/>
+                </StackLayout>
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

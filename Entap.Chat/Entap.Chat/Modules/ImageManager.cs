@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Entap.Chat
 {
@@ -8,6 +10,49 @@ namespace Entap.Chat
     {
         public ImageManager()
         {
+        }
+
+        public static async Task ImageShare(string imagePath)
+        {
+            var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
+            var extension = System.IO.Path.GetExtension(imagePath);
+            string filePath = mediaFolderPath;
+            if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
+            {
+                filePath += "/tmp.jpeg";
+            }
+            else if (extension.ToLower() == ".png")
+            {
+                filePath += "/tmp.png";
+            }
+            else if (extension.ToLower() == ".pdf")
+            {
+                filePath += "/tmp.pdf";
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("エラー", "こちらのファイルは表示できません", "閉じる");
+                return;
+            }
+
+            bool result;
+            if (imagePath.Contains("http://") || imagePath.Contains("https://"))
+            {
+                result = await ImageManager.DownloadWebImageFile(imagePath, filePath);
+            }
+            else
+            {
+                result = FileManager.FileCopy(imagePath, filePath);
+            }
+
+            if (!result)
+            {
+                await Application.Current.MainPage.DisplayAlert("エラー", "ファイルが取得できませんでした", "閉じる");
+                return;
+            }
+
+            string str = "error";
+            DependencyService.Get<IFileService>().OpenShareMenu(filePath, ref str);
         }
 
         public static Task<bool> DownloadWebImageFile(string dlImagPath, string savePath)

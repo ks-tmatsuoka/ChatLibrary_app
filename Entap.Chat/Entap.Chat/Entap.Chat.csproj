@@ -21,5 +21,6 @@
     <Folder Include="Modules\" />
     <Folder Include="Behavior\" />
     <Folder Include="ValueConverter\" />
+    <Folder Include="Pages\" />
   </ItemGroup>
 </Project>

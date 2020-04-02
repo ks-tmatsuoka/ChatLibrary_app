@@ -104,6 +104,7 @@
                                 WidthRequest="30"
                                 HeightRequest="30"
                                 Source="share_icon.png"
+                                Aspect="AspectFit"
                                 CommandParameter="{Binding ImageUrl}"
                                 Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
                             <StackLayout
@@ -131,6 +132,11 @@
                                 HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                 Aspect="AspectFit"
                                 Source="{Binding ImageUrl}"/>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    CommandParameter="{Binding ImageUrl}"
+                                    Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
+                            </Frame.GestureRecognizers>
                         </Frame>
                     </StackLayout>
                 </ViewCell>
@@ -170,6 +176,11 @@
                                 HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                 Aspect="AspectFit"
                                 Source="{Binding ImageUrl}"/>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    CommandParameter="{Binding ImageUrl}"
+                                    Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
+                            </Frame.GestureRecognizers>
                         </Frame>
                         <StackLayout
                             HorizontalOptions="StartAndExpand"
