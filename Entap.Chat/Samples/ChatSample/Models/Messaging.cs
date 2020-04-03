@@ -15,8 +15,6 @@ namespace ChatSample
         public Task<IEnumerable<MessageBase>> GetMessagesAsync(int id, int count)
         {
             if (id == 0) return null;
-            if (id < 0)
-                id = 100;
 
             var messages = new List<MessageBase>();
             for (int i = 0; i < count; i++)

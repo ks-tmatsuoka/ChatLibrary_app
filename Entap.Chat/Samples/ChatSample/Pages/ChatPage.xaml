@@ -23,6 +23,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <chat:BottomController
+                RoomId="1"
+                LastReadMessageId="100"
+                UserId="10"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"/>
         </Grid>

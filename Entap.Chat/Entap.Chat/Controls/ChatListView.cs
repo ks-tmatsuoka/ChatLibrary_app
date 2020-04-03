@@ -263,10 +263,15 @@ namespace Entap.Chat
                 ItemAppearing += OnItemAppearing;
                 ItemDisappearing += OnItemDisappearing;
             }
+        }
 
+        void GetFirstDisplayMessage()
+        {
+            if (UserId < 0 || RoomId < 0 || LastReadMessageId < 0)
+                return;
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetMessagesAsync(-1, 20);
+                var messages = await Settings.Current.Messaging.GetMessagesAsync(LastReadMessageId, 20);
                 var last = messages?.Last();
                 if (last == null) return;
                 //// ToDo : 2回目以降に表示時にスクロールが無効
@@ -277,8 +282,26 @@ namespace Entap.Chat
                     ItemsSource = _messages;
                     ScrollTo(last, ScrollToPosition.End, false);
                     _messages.CollectionChanged += OnMessagesCollectionChanged;
+                    Settings.Current.Messaging.UpdateData(_messages);
                 });
             });
+        }
+
+        protected override void OnPropertyChanged(string propertyName = null)
+        {
+            base.OnPropertyChanged(propertyName);
+            if (propertyName == UserIdProperty.PropertyName)
+            {
+                GetFirstDisplayMessage();
+            }
+            else if (propertyName == LastReadMessageIdProperty.PropertyName)
+            {
+                GetFirstDisplayMessage();
+            }
+            else if (propertyName == RoomIdProperty.PropertyName)
+            {
+                GetFirstDisplayMessage();
+            }
         }
 
         private void OnMessagesCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -289,7 +312,9 @@ namespace Entap.Chat
                 var lastVisibleMessageBase = lastVisibleItem as MessageBase;
                 if (lastVisibleMessageBase is null)
                     return;
-                
+
+                System.Diagnostics.Debug.WriteLine("msgLast.MessageId: " + msgLast.MessageId);
+                System.Diagnostics.Debug.WriteLine("lastVisibleMessageBase.MessageId: " + lastVisibleMessageBase.MessageId);
                 if (msgLast != null && lastVisibleMessageBase != null && (msgLast.MessageId == lastVisibleMessageBase.MessageId + 1 || lastVisibleMessageBase.MessageId == NotSendMessageId))
                 {
                     Device.BeginInvokeOnMainThread(() =>
@@ -443,7 +468,7 @@ namespace Entap.Chat
             if (chatScrollDirection == ScrollDirection.Up)
             {
                 firstVisibleItemIndex = e.ItemIndex;
-                System.Diagnostics.Debug.WriteLine("OnItemAppearing firstVisibleItem" + ((MessageBase)e.Item).MessageId.ToString());
+                //System.Diagnostics.Debug.WriteLine("OnItemAppearing firstVisibleItem" + ((MessageBase)e.Item).MessageId.ToString());
                 firstVisibleItem = e.Item;
             }
             else if (chatScrollDirection == ScrollDirection.Down)
@@ -551,6 +576,45 @@ namespace Entap.Chat
         //    get { return (int)GetValue(RemainingItemsThresholdProperty); }
         //    set { SetValue(RemainingItemsThresholdProperty, value); }
         //}
+
+        /// <summary>
+        /// ユーザーID
+        /// </summary>
+        public static readonly BindableProperty UserIdProperty =
+            BindableProperty.Create(nameof(UserId), typeof(int), typeof(ChatListView), -1,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((ChatListView)bindable).UserId = (int)newValue);
+        public int UserId
+        {
+            get { return (int)GetValue(UserIdProperty); }
+            set { SetValue(UserIdProperty, value); }
+        }
+
+        /// <summary>
+        /// チャットのルームID
+        /// </summary>
+        public static readonly BindableProperty RoomIdProperty =
+            BindableProperty.Create(nameof(RoomId), typeof(int), typeof(ChatListView), -1,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((ChatListView)bindable).RoomId = (int)newValue);
+        public int RoomId
+        {
+            get { return (int)GetValue(RoomIdProperty); }
+            set { SetValue(RoomIdProperty, value); }
+        }
+
+        /// <summary>
+        /// 最後に既読にしたメッセージID
+        /// </summary>
+        public static readonly BindableProperty LastReadMessageIdProperty =
+            BindableProperty.Create(nameof(LastReadMessageId), typeof(int), typeof(ChatListView), -1,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((ChatListView)bindable).LastReadMessageId = (int)newValue);
+        public int LastReadMessageId
+        {
+            get { return (int)GetValue(LastReadMessageIdProperty); }
+            set { SetValue(LastReadMessageIdProperty, value); }
+        }
 
         enum ScrollDirection
         {

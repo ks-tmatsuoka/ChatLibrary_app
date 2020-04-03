@@ -18,7 +18,6 @@ namespace Entap.Chat
             this.SendButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendButton), async () => await SendMessage());
             this.SendPhotoButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendPhotoButton), async () => await SendPhoto());
             this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
-            Settings.Current.Messaging.UpdateData(this.ChatList.Messages);
 
             this.Controller.BackgroundColor = BottomControllerBackgroundColor;
 
@@ -50,7 +49,19 @@ namespace Entap.Chat
             else if (propertyName == OtherMessageViewBackgroundColorProperty.PropertyName)
             {
                 ChatList.BackgroundColor = OtherMessageViewBackgroundColor;
-            }            
+            }
+            else if (propertyName == UserIdProperty.PropertyName)
+            {
+                ChatList.UserId = UserId;
+            }
+            else if (propertyName == LastReadMessageIdProperty.PropertyName)
+            {
+                ChatList.LastReadMessageId = LastReadMessageId;
+            }
+            else if (propertyName == RoomIdProperty.PropertyName)
+            {
+                ChatList.RoomId = RoomId;
+            }
         }
 
         public double ImageMessageSize
@@ -238,8 +249,11 @@ namespace Entap.Chat
                 }
             });
         });
-        
 
+
+        /// <summary>
+        /// チャットのViewの背景色
+        /// </summary>
         #region ChatViewBackgroundColor BindableProperty
         public static readonly BindableProperty ChatViewBackgroundColorProperty =
             BindableProperty.Create(nameof(ChatViewBackgroundColor), typeof(Color), typeof(BottomController), Color.Red,
@@ -252,6 +266,9 @@ namespace Entap.Chat
         }
         #endregion
 
+        /// <summary>
+        /// 自分のメッセージの背景色
+        /// </summary>
         #region MyMessageViewBackgroundColor BindableProperty
         public static readonly BindableProperty MyMessageViewBackgroundColorProperty =
             BindableProperty.Create(nameof(MyMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.LightGray,
@@ -264,6 +281,9 @@ namespace Entap.Chat
         }
         #endregion
 
+        /// <summary>
+        /// 他人のメッセージの背景色
+        /// </summary>
         #region OtherMessageViewBackgroundColor BindableProperty
         public static readonly BindableProperty OtherMessageViewBackgroundColorProperty =
             BindableProperty.Create(nameof(OtherMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.DarkGray,
@@ -276,6 +296,9 @@ namespace Entap.Chat
         }
         #endregion
 
+        /// <summary>
+        /// ページ下部のコントローラーの背景色
+        /// </summary>
         #region BottomControllerBackgroundColor BindableProperty
         public static readonly BindableProperty BottomControllerBackgroundColorProperty =
             BindableProperty.Create(nameof(BottomControllerBackgroundColor), typeof(Color), typeof(BottomController), Color.Black,
@@ -288,6 +311,9 @@ namespace Entap.Chat
         }
         #endregion
 
+        /// <summary>
+        /// ページ下部のコントローラーの色のスタイル
+        /// </summary>
         #region BottomControllerIconStyle BindableProperty
         public static readonly BindableProperty BottomControllerIconStyleProperty =
             BindableProperty.Create(nameof(BottomControllerIconStyle), typeof(ControllerIconStyles), typeof(BottomController), ControllerIconStyles.Light,
@@ -299,6 +325,45 @@ namespace Entap.Chat
             set { SetValue(BottomControllerIconStyleProperty, value); }
         }
         #endregion
+
+        /// <summary>
+        /// ユーザーID
+        /// </summary>
+        public static readonly BindableProperty UserIdProperty =
+            BindableProperty.Create(nameof(UserId), typeof(int), typeof(BottomController), -1,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).UserId = (int)newValue);
+        public int UserId
+        {
+            get { return (int)GetValue(UserIdProperty); }
+            set { SetValue(UserIdProperty, value); }
+        }
+
+        /// <summary>
+        /// チャットのルームID
+        /// </summary>
+        public static readonly BindableProperty RoomIdProperty =
+            BindableProperty.Create(nameof(RoomId), typeof(int), typeof(BottomController), -1,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).RoomId = (int)newValue);
+        public int RoomId
+        {
+            get { return (int)GetValue(RoomIdProperty); }
+            set { SetValue(RoomIdProperty, value); }
+        }
+
+        /// <summary>
+        /// 最後に既読にしたメッセージID
+        /// </summary>
+        public static readonly BindableProperty LastReadMessageIdProperty =
+            BindableProperty.Create(nameof(LastReadMessageId), typeof(int), typeof(BottomController), -1,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).LastReadMessageId = (int)newValue);
+        public int LastReadMessageId
+        {
+            get { return (int)GetValue(LastReadMessageIdProperty); }
+            set { SetValue(LastReadMessageIdProperty, value); }
+        }
 
         public enum ControllerIconStyles
         {
