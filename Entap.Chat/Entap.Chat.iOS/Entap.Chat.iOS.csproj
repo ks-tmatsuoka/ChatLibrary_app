@@ -94,6 +94,9 @@
     <BundleResource Include="Resources\close_icon%403x.png" />
     <BundleResource Include="Resources\close_icon%402x.png" />
     <BundleResource Include="Resources\close_icon.png" />
+    <BundleResource Include="Resources\resend_icon%403x.png" />
+    <BundleResource Include="Resources\resend_icon%402x.png" />
+    <BundleResource Include="Resources\resend_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
