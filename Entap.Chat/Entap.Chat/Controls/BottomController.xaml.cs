@@ -68,7 +68,7 @@ namespace Entap.Chat
             {
                 if (string.IsNullOrEmpty(this.MsgEditor.Text))
                     return;
-                msg = new MessageBase { Id = ChatList.GetNotSendMessageId(), Text = MsgEditor.Text, IsAlreadyRead = false, MessageType=1, SendUserId = UserDataManager.Instance.UserId };
+                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), Text = MsgEditor.Text, IsAlreadyRead = false, MessageType=1, SendUserId = UserDataManager.Instance.UserId };
                 this.MsgEditor.Text = "";
             }
             else
@@ -93,13 +93,13 @@ namespace Entap.Chat
                 if (index == ChatList.Messages.Count - 1)
                 {
                     //ChatList.Messages[index].Id = newMsgId;
-                    ChatList.Messages[index].Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
+                    ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                 }
                 else
                 {
                     ChatList.Messages.RemoveAt(index);
                     //msg.Id = newMsgId;
-                    msg.Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
+                    msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                     ChatList.Messages.Add(msg);
                 }
             }
@@ -117,7 +117,7 @@ namespace Entap.Chat
             {
                 return;
             }
-            var msg = new MessageBase { Id = ChatList.GetNotSendMessageId(), ImageUrl = imgPath, MessageType=2, SendUserId=UserDataManager.Instance.UserId };
+            var msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = imgPath, MessageType=2, SendUserId=UserDataManager.Instance.UserId };
             ChatList.AddMessage(msg);
             var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
             var index = ChatList.Messages.IndexOf(msg);
@@ -132,13 +132,13 @@ namespace Entap.Chat
                 if (index == ChatList.Messages.Count - 1)
                 {
                     //ChatList.Messages[index].Id = newMsgId;
-                    ChatList.Messages[index].Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
+                    ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                 }
                 else
                 {
                     ChatList.Messages.RemoveAt(index);
                     //msg.Id = newMsgId;
-                    msg.Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
+                    msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                     ChatList.Messages.Add(msg);
                 }
             }
@@ -158,7 +158,7 @@ namespace Entap.Chat
                 {
                     return;
                 }
-                msg = new MessageBase { Id = ChatList.GetNotSendMessageId(), ImageUrl = imgPath, MessageType = 2, SendUserId = UserDataManager.Instance.UserId };
+                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = imgPath, MessageType = 2, SendUserId = UserDataManager.Instance.UserId };
             }
             else
             {
@@ -180,13 +180,13 @@ namespace Entap.Chat
                 if (index == ChatList.Messages.Count - 1)
                 {
                     //ChatList.Messages[index].Id = newMsgId;
-                    ChatList.Messages[index].Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
+                    ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                 }
                 else
                 {
                     ChatList.Messages.RemoveAt(index);
                     //msg.Id = newMsgId;
-                    msg.Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
+                    msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                     ChatList.Messages.Add(msg);
                 }
             }

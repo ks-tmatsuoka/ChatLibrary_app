@@ -27,7 +27,7 @@ namespace Entap.Chat
                 return Chat.MessageType.OthersText;
             }
         }
-        public int Id { get; set; }
+        public int MessageId { get; set; }
         public DateTime DateTime { get; set; }
 
         public string Text { get; set; }

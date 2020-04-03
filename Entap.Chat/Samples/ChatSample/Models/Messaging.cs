@@ -25,9 +25,9 @@ namespace ChatSample
 
                 var mod = (id - i) % 3;
                 if (mod == 0)
-                    messages.Add(new MessageBase { Id = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i), MessageType=2 });
+                    messages.Add(new MessageBase { MessageId = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i), MessageType=2 });
                 else
-                    messages.Add(new MessageBase { Id = id - i, Text= (id - i).ToString(), MessageType=1});
+                    messages.Add(new MessageBase { MessageId = id - i, Text= (id - i).ToString(), MessageType=1});
             }
             messages.Reverse();
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
@@ -45,9 +45,9 @@ namespace ChatSample
 
                 var mod = (id - i) % 3;
                 if (mod == 0)
-                    messages.Add(new MessageBase { Id = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i), MessageType = 2 });
+                    messages.Add(new MessageBase { MessageId = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i), MessageType = 2 });
                 else
-                    messages.Add(new MessageBase { Id = id + i, Text = (id + i).ToString(), MessageType = 1 });
+                    messages.Add(new MessageBase { MessageId = id + i, Text = (id + i).ToString(), MessageType = 1 });
 
             }
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
@@ -112,7 +112,7 @@ namespace ChatSample
                 while(true)
                 {
                     await Task.Delay(2000);
-                    var msgs = messageBases.Where(w => w.Id >= 120);
+                    var msgs = messageBases.Where(w => w.MessageId >= 120);
                     foreach(var msg in msgs)
                     {
                         Device.BeginInvokeOnMainThread(() =>
@@ -131,8 +131,8 @@ namespace ChatSample
 
                     Device.BeginInvokeOnMainThread(() =>
                     {
-                        var id = messageBases.Max(w=>w.Id) + 1;
-                        messageBases.Add(new MessageBase { Id = id, Text = "other", IsAlreadyRead = false, MessageType = 1 });
+                        var id = messageBases.Max(w=>w.MessageId) + 1;
+                        messageBases.Add(new MessageBase { MessageId = id, Text = "other", IsAlreadyRead = false, MessageType = 1 });
                     });
                 }
                 

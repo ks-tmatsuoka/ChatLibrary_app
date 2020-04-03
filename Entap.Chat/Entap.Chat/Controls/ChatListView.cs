@@ -290,7 +290,7 @@ namespace Entap.Chat
                 if (lastVisibleMessageBase is null)
                     return;
 
-                if (msgLast != null && lastVisibleMessageBase != null && (msgLast.Id == lastVisibleMessageBase.Id + 1 || lastVisibleMessageBase.Id == NotSendMessageId))
+                if (msgLast != null && lastVisibleMessageBase != null && (msgLast.MessageId == lastVisibleMessageBase.MessageId + 1 || lastVisibleMessageBase.MessageId == NotSendMessageId))
                 {
                     Device.BeginInvokeOnMainThread(async () =>
                     {
@@ -402,13 +402,13 @@ namespace Entap.Chat
             if (chatScrollDirection == ScrollDirection.Up)
             {
                 firstVisibleItemIndex = e.ItemIndex;
-                System.Diagnostics.Debug.WriteLine("OnItemAppearing firstVisibleItem" + ((MessageBase)e.Item).Id.ToString());
+                System.Diagnostics.Debug.WriteLine("OnItemAppearing firstVisibleItem" + ((MessageBase)e.Item).MessageId.ToString());
                 firstVisibleItem = e.Item;
             }
             else if (chatScrollDirection == ScrollDirection.Down)
             {
                 lastVisibleItemIndex = e.ItemIndex;
-                System.Diagnostics.Debug.WriteLine("OnItemAppearing" + ((MessageBase)e.Item).Id.ToString());
+                System.Diagnostics.Debug.WriteLine("OnItemAppearing" + ((MessageBase)e.Item).MessageId.ToString());
                 lastVisibleItem = e.Item;
             }
         }
@@ -419,8 +419,8 @@ namespace Entap.Chat
             firstVisibleItem = firstItem;
             lastVisibleItemIndex = lastIndex;
             lastVisibleItem = lastItem;
-            System.Diagnostics.Debug.WriteLine("firstVisibleItem" + ((MessageBase)firstVisibleItem).Id.ToString());
-            System.Diagnostics.Debug.WriteLine("lastVisibleItem" + ((MessageBase)lastVisibleItem).Id.ToString());
+            System.Diagnostics.Debug.WriteLine("firstVisibleItem" + ((MessageBase)firstVisibleItem).MessageId.ToString());
+            System.Diagnostics.Debug.WriteLine("lastVisibleItem" + ((MessageBase)lastVisibleItem).MessageId.ToString());
         }
 
         double lastScrollY = 0;
@@ -449,7 +449,7 @@ namespace Entap.Chat
             {
                 IsRunningGetOldMessage = true;
                 var first = _messages.First();
-                LoadMessages(first.Id - 1);
+                LoadMessages(first.MessageId - 1);
             }
             else if (
                 lastVisibleItemIndex >= _messages.Count - 1 - RemainingItemsThreshold &&
@@ -460,7 +460,7 @@ namespace Entap.Chat
             {
                 IsRunningGetNewMessage = true;
                 var last = _messages.Last();
-                LoadNewMessages(last.Id + 1);
+                LoadNewMessages(last.MessageId + 1);
             }
 
             lastScrollY = e.ScrollY;
