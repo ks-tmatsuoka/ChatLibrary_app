@@ -289,15 +289,56 @@ namespace Entap.Chat
                 var lastVisibleMessageBase = lastVisibleItem as MessageBase;
                 if (lastVisibleMessageBase is null)
                     return;
-
+                
                 if (msgLast != null && lastVisibleMessageBase != null && (msgLast.MessageId == lastVisibleMessageBase.MessageId + 1 || lastVisibleMessageBase.MessageId == NotSendMessageId))
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        ScrollTo(msgLast, ScrollToPosition.End, true);
+                        ReplaceNotSendMessage();
+                    });
+                }
+                else
                 {
                     Device.BeginInvokeOnMainThread(async () =>
                     {
-                        ScrollTo(msgLast, ScrollToPosition.End, true);
+                        ReplaceNotSendMessage();
                     });
                 }
             }
+        }
+
+        void ReplaceNotSendMessage()
+        {
+            var notSendList = _messages.Where(w => w.MessageId == NotSendMessageId && w.ResendVisible == true).ToList();
+            int notSendCount =notSendList.Count;
+            if (notSendCount < 1)
+                return;
+
+            // リストの末尾から見ていき、未送信のメッセージが送信済みのメッセージより前にある場合は置き換える
+            bool replaceFlg = false;
+            for(int i= notSendCount; i >= 1; i--)
+            {
+                if (_messages[_messages.Count - i].MessageId != NotSendMessageId)
+                {
+                    replaceFlg = true;
+                    break;
+                }
+            }
+            if (!replaceFlg)
+                return;
+
+            var addNotSendList = new ObservableCollection<MessageBase>();
+            foreach (var notSendMsg in notSendList)
+            {
+                _messages.Remove(notSendMsg);
+                addNotSendList.Add(notSendMsg);
+            }
+            _messages.AddRange(addNotSendList);
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                ScrollTo(_messages.LastOrDefault(), ScrollToPosition.End, true);
+            });
         }
 
         bool IsRunningGetOldMessage = false;
