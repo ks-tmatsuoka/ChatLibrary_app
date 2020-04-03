@@ -9,8 +9,7 @@ namespace Entap.Chat
     {
         Task<IEnumerable<MessageBase>> GetMessagesAsync(int index, int count);
         Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int index, int count);
-        Task<int> SendTextMessage(string text);
-        Task<int> SendImage(byte[] imageData);
+        Task<int> SendMessage(MessageBase text);
         Task<string> SelectImage();
         Task<string> TakePicture();
         void UpdateData(ObservableCollection<MessageBase> messageBases);

@@ -8,8 +8,9 @@
     BackgroundColor="Transparent">
     <local:CustomContentView.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="myTextMessageTemplate" x:DataType="local:MyTextMessage">
-                <ViewCell>
+            <DataTemplate x:Key="myTextMessageTemplate" x:DataType="local:MessageBase">
+                <ViewCell
+                    x:Name="Cell">
                     <StackLayout
                         Spacing="0"
                         Margin="16,6,16,6"
@@ -22,9 +23,11 @@
                             Spacing="0"
                             Margin="0,0,6,0">
                             <Label
+                                IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                 Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
                                 FontSize="10"/>
                             <Label
+                                IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                 Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
                                 FontSize="10"/>
                             </StackLayout>
@@ -40,10 +43,22 @@
                                 Text="{Binding Text}"
                                 FontSize="14"/>
                         </Frame>
+                        <ImageButton
+                            IsVisible="{Binding ResendVisible}"
+                            Margin="6,0,0,0"
+                            HorizontalOptions="End"
+                            VerticalOptions="CenterAndExpand"
+                            BackgroundColor="Transparent"
+                            WidthRequest="25"
+                            HeightRequest="25"
+                            Source="resend_icon.png"
+                            Aspect="AspectFit"
+                            CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
+                            Command="{Binding Source={x:Reference Content}, Path=ResendCommand}"/>
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersTextMessageTemplate" x:DataType="local:OthersTextMessage">
+            <DataTemplate x:Key="othersTextMessageTemplate" x:DataType="local:MessageBase">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -85,8 +100,9 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="local:MyImageMessage">
-                <ViewCell>
+            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="local:MessageBase">
+                <ViewCell
+                    x:Name="Cell">
                     <StackLayout
                         Spacing="0"
                         Margin="16,6,16,6"
@@ -105,13 +121,15 @@
                                 HeightRequest="30"
                                 Source="share_icon.png"
                                 Aspect="AspectFit"
+                                IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                 CommandParameter="{Binding ImageUrl}"
                                 Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
                             <StackLayout
                                 HorizontalOptions="EndAndExpand"
                                 VerticalOptions="End"
                                 Spacing="0"
-                                Margin="0,0,6,0">
+                                Margin="0,0,6,0"
+                                IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}">
                                 <Label
                                     Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
                                     FontSize="10"/>
@@ -138,10 +156,23 @@
                                     Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
                             </Frame.GestureRecognizers>
                         </Frame>
+
+                        <ImageButton
+                            IsVisible="{Binding ResendVisible}"
+                            Margin="6,0,0,0"
+                            HorizontalOptions="End"
+                            VerticalOptions="CenterAndExpand"
+                            BackgroundColor="Transparent"
+                            WidthRequest="25"
+                            HeightRequest="25"
+                            Source="resend_icon.png"
+                            Aspect="AspectFit"
+                            CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
+                            Command="{Binding Source={x:Reference Content}, Path=ResendCommand}"/>
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersImageMessageTemplate" x:DataType="local:OthersImageMessage">
+            <DataTemplate x:Key="othersImageMessageTemplate" x:DataType="local:MessageBase">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -217,6 +248,7 @@
             />
             <local:AlreadyReadConverter x:Key="alreadyReadConverter"/>
             <local:TimeConverter x:Key="timeConverter"/>
+            <local:BoolReverseConverter x:Key="boolReverseConverter"/>
         </ResourceDictionary>
     </local:CustomContentView.Resources>
 

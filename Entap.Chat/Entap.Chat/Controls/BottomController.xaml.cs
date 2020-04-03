@@ -62,49 +62,47 @@ namespace Entap.Chat
             }
         }
 
-        async Task SendMessage()
+        async Task SendMessage(MessageBase msg=null)
         {
-            if (string.IsNullOrEmpty(this.MsgEditor.Text))
-                return;
-            var msg = new MyTextMessage { Id = ChatList.GetNotSendMessageId(), Text = MsgEditor.Text, IsAlreadyRead = false };
-            ChatList.AddMessage(msg);
-            this.MsgEditor.Text = "";
-
-            var newMsgId = await Settings.Current.Messaging.SendTextMessage(this.MsgEditor.Text);
-            //var index = ChatList.Messages.IndexOf(msg);
-            //// サーバへ送信できた段階でメッセージの表示位置を再確認
-            //if (index == ChatList.Messages.Count - 1)
-            //{
-            //    ChatList.Messages[index].Id = newMsgId;
-            //}
-            //else
-            //{
-            //    ChatList.Messages.RemoveAt(index);
-            //    msg.Id = newMsgId;
-            //    ChatList.Messages.Add(msg);
-            //}
-
-            // テストコード
-            Task.Run(async () =>
+            if (msg is null)
             {
-                await Task.Delay(1000);
-                var index = ChatList.Messages.IndexOf(msg);
+                if (string.IsNullOrEmpty(this.MsgEditor.Text))
+                    return;
+                msg = new MessageBase { Id = ChatList.GetNotSendMessageId(), Text = MsgEditor.Text, IsAlreadyRead = false, MessageType=1, SendUserId = UserDataManager.Instance.UserId };
+                this.MsgEditor.Text = "";
+            }
+            else
+            {
+                var oldMsgIndex = ChatList.Messages.IndexOf(msg);
+                ChatList.Messages.RemoveAt(oldMsgIndex);
+                msg.ResendVisible = false;
+            }
+            ChatList.AddMessage(msg);
+            
+
+            var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
+            var index = ChatList.Messages.IndexOf(msg);
+            if (newMsgId < 0)
+            {
+                // 通信エラー
+                ChatList.Messages[index].ResendVisible = true;
+            }
+            else
+            {
                 // サーバへ送信できた段階でメッセージの表示位置を再確認
                 if (index == ChatList.Messages.Count - 1)
                 {
-                    var newId = ChatList.Messages.Max(w => w.Id) + 1;
-                    ChatList.Messages[index].Id = newId;
+                    //ChatList.Messages[index].Id = newMsgId;
+                    ChatList.Messages[index].Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
                 }
                 else
                 {
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        ChatList.Messages.RemoveAt(index);
-                        msg.Id = ChatList.Messages.Max(w => w.Id) + 1;
-                        ChatList.Messages.Add(msg);
-                    });
+                    ChatList.Messages.RemoveAt(index);
+                    //msg.Id = newMsgId;
+                    msg.Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
+                    ChatList.Messages.Add(msg);
                 }
-            });
+            }
         }
 
         async Task SendPhoto()
@@ -119,94 +117,79 @@ namespace Entap.Chat
             {
                 return;
             }
-            var msg = new MyImageMessage { Id = ChatList.GetNotSendMessageId(), ImageUrl = imgPath };
+            var msg = new MessageBase { Id = ChatList.GetNotSendMessageId(), ImageUrl = imgPath, MessageType=2, SendUserId=UserDataManager.Instance.UserId };
             ChatList.AddMessage(msg);
-            var newMsgId = await Settings.Current.Messaging.SendImage(bytes);
-            //var index = ChatList.Messages.IndexOf(msg);
-            //// サーバへ送信できた段階でメッセージの表示位置を再確認
-            //if (index == ChatList.Messages.Count - 1)
-            //{
-            //    ChatList.Messages[index].Id = newMsgId;
-            //}
-            //else
-            //{
-            //    ChatList.Messages.RemoveAt(index);
-            //    msg.Id = newMsgId;
-            //    ChatList.Messages.Add(msg);
-            //}
-
-            // テストコード
-            Task.Run(async () =>
+            var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
+            var index = ChatList.Messages.IndexOf(msg);
+            if (newMsgId < 0)
             {
-                await Task.Delay(1000);
-                var index = ChatList.Messages.IndexOf(msg);
+                // 通信エラー
+                ChatList.Messages[index].ResendVisible = true;
+            }
+            else
+            {
                 // サーバへ送信できた段階でメッセージの表示位置を再確認
                 if (index == ChatList.Messages.Count - 1)
                 {
-                    var newId = ChatList.Messages.Max(w => w.Id) + 1;
-                    ChatList.Messages[index].Id = newId;
+                    //ChatList.Messages[index].Id = newMsgId;
+                    ChatList.Messages[index].Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
                 }
                 else
                 {
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        ChatList.Messages.RemoveAt(index);
-                        msg.Id = ChatList.Messages.Max(w => w.Id) + 1;
-                        ChatList.Messages.Add(msg);
-                    });
+                    ChatList.Messages.RemoveAt(index);
+                    //msg.Id = newMsgId;
+                    msg.Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
+                    ChatList.Messages.Add(msg);
                 }
-            });
+            }
         }
 
-        async Task SendImg()
+        async Task SendImg(MessageBase msg=null)
         {
-            var imgPath = await Settings.Current.Messaging.SelectImage();
-            if (string.IsNullOrEmpty(imgPath))
-                return;
-            byte[] bytes = FileManager.ReadBytes(imgPath);
-            string extension = System.IO.Path.GetExtension(imgPath);
-            string name = Guid.NewGuid().ToString() + extension;
-            if (bytes == null || bytes.Length < 1)
+            if (msg is null)
             {
-                return;
+                var imgPath = await Settings.Current.Messaging.SelectImage();
+                if (string.IsNullOrEmpty(imgPath))
+                    return;
+                byte[] bytes = FileManager.ReadBytes(imgPath);
+                string extension = System.IO.Path.GetExtension(imgPath);
+                string name = Guid.NewGuid().ToString() + extension;
+                if (bytes == null || bytes.Length < 1)
+                {
+                    return;
+                }
+                msg = new MessageBase { Id = ChatList.GetNotSendMessageId(), ImageUrl = imgPath, MessageType = 2, SendUserId = UserDataManager.Instance.UserId };
             }
-            var msg = new MyImageMessage { Id = ChatList.GetNotSendMessageId(), ImageUrl = imgPath };
-            ChatList.AddMessage(msg);
-            var newMsgId = await Settings.Current.Messaging.SendImage(bytes);
-            //var index = ChatList.Messages.IndexOf(msg);
-            //// サーバへ送信できた段階でメッセージの表示位置を再確認
-            //if (index == ChatList.Messages.Count - 1)
-            //{
-            //    ChatList.Messages[index].Id = newMsgId;
-            //}
-            //else
-            //{
-            //    ChatList.Messages.RemoveAt(index);
-            //    msg.Id = newMsgId;
-            //    ChatList.Messages.Add(msg);
-            //}
-
-            // テストコード
-            Task.Run(async () =>
+            else
             {
-                await Task.Delay(1000);
-                var index = ChatList.Messages.IndexOf(msg);
+                var oldMsgIndex = ChatList.Messages.IndexOf(msg);
+                ChatList.Messages.RemoveAt(oldMsgIndex);
+                msg.ResendVisible = false;
+            }
+            ChatList.AddMessage(msg);
+            var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
+            var index = ChatList.Messages.IndexOf(msg);
+            if (newMsgId < 0)
+            {
+                // 通信エラー
+                ChatList.Messages[index].ResendVisible = true;
+            }
+            else
+            {
                 // サーバへ送信できた段階でメッセージの表示位置を再確認
                 if (index == ChatList.Messages.Count - 1)
                 {
-                    var newId = ChatList.Messages.Max(w => w.Id) + 1;
-                    ChatList.Messages[index].Id = newId;
+                    //ChatList.Messages[index].Id = newMsgId;
+                    ChatList.Messages[index].Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
                 }
                 else
                 {
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        ChatList.Messages.RemoveAt(index);
-                        msg.Id = ChatList.Messages.Max(w => w.Id) + 1;
-                        ChatList.Messages.Add(msg);
-                    });
+                    ChatList.Messages.RemoveAt(index);
+                    //msg.Id = newMsgId;
+                    msg.Id = ChatList.Messages.Max(w => w.Id) + 1; // テストコード
+                    ChatList.Messages.Add(msg);
                 }
-            });
+            }
         }
 
         public Command ImageTapCommand => new Command((pm) =>
@@ -229,6 +212,33 @@ namespace Entap.Chat
                 await ImageManager.ImageShare(imagePath);
             });
         });
+
+
+        public Command ResendCommand => new Command((obj) =>
+        {
+            ProcessManager.Current.Invoke(nameof(this.SendButton), async () =>
+            {
+                var msg = obj as MessageBase;
+                var button = new string[]{ "再送する","取り消し" };
+                var result = await Application.Current.MainPage.DisplayActionSheet(null, "キャンセル", null, button);
+                if (result.Equals(button[0]))
+                {
+                    if (msg.MessageType == 1)
+                    {
+                        await SendMessage(msg);
+                    }
+                    else if (msg.MessageType == 2)
+                    {
+                        await SendImg(msg);
+                    }
+                }
+                else if (result.Equals(button[1]))
+                {
+                    ChatList.Messages.Remove(msg);
+                }
+            });
+        });
+        
 
         #region ChatViewBackgroundColor BindableProperty
         public static readonly BindableProperty ChatViewBackgroundColorProperty =

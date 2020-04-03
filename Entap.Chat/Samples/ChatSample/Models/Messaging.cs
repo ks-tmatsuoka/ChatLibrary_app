@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Entap.Chat;
 using System.Linq;
 using Xamarin.Forms;
+using System.Text.RegularExpressions;
 
 namespace ChatSample
 {
@@ -24,9 +25,9 @@ namespace ChatSample
 
                 var mod = (id - i) % 3;
                 if (mod == 0)
-                    messages.Add(new OthersImageMessage { Id = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i) });
+                    messages.Add(new MessageBase { Id = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i), MessageType=2 });
                 else
-                    messages.Add(new OthersTextMessage { Id = id - i, Text= (id - i).ToString()});
+                    messages.Add(new MessageBase { Id = id - i, Text= (id - i).ToString(), MessageType=1});
             }
             messages.Reverse();
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
@@ -44,17 +45,23 @@ namespace ChatSample
 
                 var mod = (id - i) % 3;
                 if (mod == 0)
-                    messages.Add(new OthersImageMessage { Id = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i) });
+                    messages.Add(new MessageBase { Id = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i), MessageType = 2 });
                 else
-                    messages.Add(new OthersTextMessage { Id = id + i, Text = (id + i).ToString() });
+                    messages.Add(new MessageBase { Id = id + i, Text = (id + i).ToString(), MessageType = 1 });
 
             }
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
 
-        public Task<int> SendTextMessage(string text)
+        public Task<int> SendMessage(MessageBase msg)
         {
-            return Task.FromResult<int>(-1); ;
+            var time = DateTime.Now;
+            int i;
+            if (time.Second % 2 == 0)
+                i = 0;
+            else
+                i = -1;
+            return Task.FromResult<int>(i);
         }
 
         public async Task<string> TakePicture()
@@ -97,11 +104,6 @@ namespace ChatSample
             return await Task.FromResult<string>(sendImgUrl);
         }
 
-        public Task<int> SendImage(byte[] imageData)
-        {
-            return Task.FromResult<int>(-1); ;
-        }
-
         public void UpdateData(ObservableCollection<MessageBase> messageBases)
         {
             Task.Run(async () =>
@@ -130,7 +132,7 @@ namespace ChatSample
                     Device.BeginInvokeOnMainThread(() =>
                     {
                         var id = messageBases.Max(w=>w.Id) + 1;
-                        messageBases.Add(new OthersTextMessage { Id = id, Text = "other", IsAlreadyRead = false });
+                        messageBases.Add(new MessageBase { Id = id, Text = "other", IsAlreadyRead = false, MessageType = 1 });
                     });
                 }
                 

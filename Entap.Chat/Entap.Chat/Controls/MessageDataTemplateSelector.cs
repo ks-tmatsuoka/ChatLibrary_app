@@ -19,7 +19,7 @@ namespace Entap.Chat
         {
             if (!(item is MessageBase message)) throw new TypeAccessException();
 
-            switch (message.MessageType)
+            switch (message._MessageType)
             {
                 case MessageType.OthersText:
                     return OthersTextMessageTemplate;

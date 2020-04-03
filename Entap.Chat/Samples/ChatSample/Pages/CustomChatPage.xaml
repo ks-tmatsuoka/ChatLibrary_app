@@ -8,7 +8,7 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="myTextMessageTemplate" x:DataType="chat:MyTextMessage">
+            <DataTemplate x:Key="myTextMessageTemplate" x:DataType="chat:MessageBase">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -23,7 +23,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="chat:MyImageMessage">
+            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="chat:MessageBase">
                 <ViewCell>
                     <Image
                         HeightRequest="150"
@@ -31,7 +31,7 @@
                     />
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersTextMessageTemplate" x:DataType="chat:OthersTextMessage">
+            <DataTemplate x:Key="othersTextMessageTemplate" x:DataType="chat:MessageBase">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -46,7 +46,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersImageMessageTemplate" x:DataType="chat:OthersImageMessage">
+            <DataTemplate x:Key="othersImageMessageTemplate" x:DataType="chat:MessageBase">
                 <ViewCell>
                     <Image
                         HeightRequest="150"

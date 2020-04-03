@@ -232,7 +232,7 @@ namespace Entap.Chat
     }
     */
 
-
+    [Preserve(AllMembers = true)]
     public class ChatListView : ListView
     {
         const int RemainingItemsThreshold = 7;
@@ -472,7 +472,7 @@ namespace Entap.Chat
                 return false;
             if (Device.RuntimePlatform == Device.Android)
             {
-                var dummy = new MyImageMessage();
+                var dummy = new MessageBase() { SendUserId=UserDataManager.Instance.UserId, MessageType=2};
                 _messages.Add(dummy);
                 _messages.Add(msg);
                 // ScrollTo(msg, ScrollToPosition.End, false) だけだと画像送信した際に追加したメッセージのViewが表示されない
