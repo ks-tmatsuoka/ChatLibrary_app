@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Entap.Chat
 {
-    public partial class BottomController : CustomContentView
+    public partial class ChatControl : CustomContentView
     {
-        public BottomController()
+        public ChatControl()
         {
             InitializeComponent();
 
@@ -19,7 +19,7 @@ namespace Entap.Chat
             this.SendPhotoButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendPhotoButton), async () => await SendPhoto());
             this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
 
-            this.Controller.BackgroundColor = BottomControllerBackgroundColor;
+            this.Controller.BackgroundColor = ChatControlBackgroundColor;
 
             if (BottomControllerIconStyle == ControllerIconStyles.Dark)
             {
@@ -269,9 +269,9 @@ namespace Entap.Chat
         /// </summary>
         #region DateBackgroundColor BindableProperty
         public static readonly BindableProperty DateBackgroundColorProperty =
-            BindableProperty.Create(nameof(DateBackgroundColor), typeof(Color), typeof(BottomController), Color.Black,
+            BindableProperty.Create(nameof(DateBackgroundColor), typeof(Color), typeof(ChatControl), Color.Black,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).DateBackgroundColor = (Color)newValue);
+                                    ((ChatControl)bindable).DateBackgroundColor = (Color)newValue);
         public Color DateBackgroundColor
         {
             get { return (Color)GetValue(DateBackgroundColorProperty); }
@@ -284,9 +284,9 @@ namespace Entap.Chat
         /// </summary>
         #region DateTextColor BindableProperty
         public static readonly BindableProperty DateTextColorProperty =
-            BindableProperty.Create(nameof(DateTextColor), typeof(Color), typeof(BottomController), Color.White,
+            BindableProperty.Create(nameof(DateTextColor), typeof(Color), typeof(ChatControl), Color.White,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).DateTextColor = (Color)newValue);
+                                    ((ChatControl)bindable).DateTextColor = (Color)newValue);
         public Color DateTextColor
         {
             get { return (Color)GetValue(DateTextColorProperty); }
@@ -299,9 +299,9 @@ namespace Entap.Chat
         /// </summary>
         #region ChatViewBackgroundColor BindableProperty
         public static readonly BindableProperty ChatViewBackgroundColorProperty =
-            BindableProperty.Create(nameof(ChatViewBackgroundColor), typeof(Color), typeof(BottomController), Color.White,
+            BindableProperty.Create(nameof(ChatViewBackgroundColor), typeof(Color), typeof(ChatControl), Color.White,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).ChatViewBackgroundColor = (Color)newValue);
+                                    ((ChatControl)bindable).ChatViewBackgroundColor = (Color)newValue);
         public Color ChatViewBackgroundColor
         {
             get { return (Color)GetValue(ChatViewBackgroundColorProperty); }
@@ -314,9 +314,9 @@ namespace Entap.Chat
         /// </summary>
         #region MyMessageViewBackgroundColor BindableProperty
         public static readonly BindableProperty MyMessageViewBackgroundColorProperty =
-            BindableProperty.Create(nameof(MyMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.LightGray,
+            BindableProperty.Create(nameof(MyMessageViewBackgroundColor), typeof(Color), typeof(ChatControl), Color.LightGray,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).MyMessageViewBackgroundColor = (Color)newValue);
+                                    ((ChatControl)bindable).MyMessageViewBackgroundColor = (Color)newValue);
         public Color MyMessageViewBackgroundColor
         {
             get { return (Color)GetValue(MyMessageViewBackgroundColorProperty); }
@@ -329,9 +329,9 @@ namespace Entap.Chat
         /// </summary>
         #region OtherMessageViewBackgroundColor BindableProperty
         public static readonly BindableProperty OtherMessageViewBackgroundColorProperty =
-            BindableProperty.Create(nameof(OtherMessageViewBackgroundColor), typeof(Color), typeof(BottomController), Color.DarkGray,
+            BindableProperty.Create(nameof(OtherMessageViewBackgroundColor), typeof(Color), typeof(ChatControl), Color.DarkGray,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).OtherMessageViewBackgroundColor = (Color)newValue);
+                                    ((ChatControl)bindable).OtherMessageViewBackgroundColor = (Color)newValue);
         public Color OtherMessageViewBackgroundColor
         {
             get { return (Color)GetValue(OtherMessageViewBackgroundColorProperty); }
@@ -344,9 +344,9 @@ namespace Entap.Chat
         /// </summary>
         #region BottomControllerBackgroundColor BindableProperty
         public static readonly BindableProperty BottomControllerBackgroundColorProperty =
-            BindableProperty.Create(nameof(BottomControllerBackgroundColor), typeof(Color), typeof(BottomController), Color.Black,
+            BindableProperty.Create(nameof(BottomControllerBackgroundColor), typeof(Color), typeof(ChatControl), Color.Black,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).BottomControllerBackgroundColor = (Color)newValue);
+                                    ((ChatControl)bindable).BottomControllerBackgroundColor = (Color)newValue);
         public Color BottomControllerBackgroundColor
         {
             get { return (Color)GetValue(BottomControllerBackgroundColorProperty); }
@@ -359,9 +359,9 @@ namespace Entap.Chat
         /// </summary>
         #region BottomControllerIconStyle BindableProperty
         public static readonly BindableProperty BottomControllerIconStyleProperty =
-            BindableProperty.Create(nameof(BottomControllerIconStyle), typeof(ControllerIconStyles), typeof(BottomController), ControllerIconStyles.Light,
+            BindableProperty.Create(nameof(BottomControllerIconStyle), typeof(ControllerIconStyles), typeof(ChatControl), ControllerIconStyles.Light,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).BottomControllerIconStyle = (ControllerIconStyles)newValue);
+                                    ((ChatControl)bindable).BottomControllerIconStyle = (ControllerIconStyles)newValue);
         public ControllerIconStyles BottomControllerIconStyle
         {
             get { return (ControllerIconStyles)GetValue(BottomControllerIconStyleProperty); }
@@ -373,9 +373,9 @@ namespace Entap.Chat
         /// ユーザーID
         /// </summary>
         public static readonly BindableProperty UserIdProperty =
-            BindableProperty.Create(nameof(UserId), typeof(int), typeof(BottomController), -1,
+            BindableProperty.Create(nameof(UserId), typeof(int), typeof(ChatControl), -1,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).UserId = (int)newValue);
+                                    ((ChatControl)bindable).UserId = (int)newValue);
         public int UserId
         {
             get { return (int)GetValue(UserIdProperty); }
@@ -386,9 +386,9 @@ namespace Entap.Chat
         /// チャットのルームID
         /// </summary>
         public static readonly BindableProperty RoomIdProperty =
-            BindableProperty.Create(nameof(RoomId), typeof(int), typeof(BottomController), -1,
+            BindableProperty.Create(nameof(RoomId), typeof(int), typeof(ChatControl), -1,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).RoomId = (int)newValue);
+                                    ((ChatControl)bindable).RoomId = (int)newValue);
         public int RoomId
         {
             get { return (int)GetValue(RoomIdProperty); }
@@ -399,9 +399,9 @@ namespace Entap.Chat
         /// 最後に既読にしたメッセージID
         /// </summary>
         public static readonly BindableProperty LastReadMessageIdProperty =
-            BindableProperty.Create(nameof(LastReadMessageId), typeof(int), typeof(BottomController), -1,
+            BindableProperty.Create(nameof(LastReadMessageId), typeof(int), typeof(ChatControl), -1,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).LastReadMessageId = (int)newValue);
+                                    ((ChatControl)bindable).LastReadMessageId = (int)newValue);
         public int LastReadMessageId
         {
             get { return (int)GetValue(LastReadMessageIdProperty); }
