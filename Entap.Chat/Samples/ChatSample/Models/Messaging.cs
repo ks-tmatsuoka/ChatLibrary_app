@@ -13,12 +13,13 @@ namespace ChatSample
 {
     public class Messaging : IMessaging
     {
-        public Task<IEnumerable<MessageBase>> GetMessagesAsync(int id, int count)
+        const int LoadCount = 20;
+        public Task<IEnumerable<MessageBase>> GetMessagesAsync(int id)
         {
             if (id == 0) return null;
 
             var messages = new List<MessageBase>();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < LoadCount; i++)
             {
                 if (id - i < 0) break;
 
@@ -32,13 +33,13 @@ namespace ChatSample
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
 
-        public Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int id, int count)
+        public Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int id)
         {
             var messages = new List<MessageBase>();
             if (id >= 120 || id <= 0)
                 return Task.FromResult<IEnumerable<MessageBase>>(messages);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < LoadCount; i++)
             {
                 if (id - i < 0) break;
 

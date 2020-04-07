@@ -268,7 +268,7 @@ namespace Entap.Chat
             lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetMessagesAsync(LastReadMessageId, 20);
+                var messages = await Settings.Current.Messaging.GetMessagesAsync(LastReadMessageId);
                 var last = messages?.Last();
                 if (last == null) return;
 
@@ -388,7 +388,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetMessagesAsync(messageId, 20);
+                var messages = await Settings.Current.Messaging.GetMessagesAsync(messageId);
 
                 Device.BeginInvokeOnMainThread(() =>
                 {
@@ -416,7 +416,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetNewMessagesAsync(messageId, 20);
+                var messages = await Settings.Current.Messaging.GetNewMessagesAsync(messageId);
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     _messages.AddRange(messages);
