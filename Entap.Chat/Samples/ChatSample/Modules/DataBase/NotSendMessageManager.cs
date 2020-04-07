@@ -12,11 +12,9 @@ namespace ChatSample
 
         public NotSendMessageManager()
         {
-            Connection = SQLiteManager.Instance.GetConnection();
+            Connection = SQLiteService.Connection;
             Connection.CreateTable<NotSendMessage>();
         }
-
-        
 
         public NotSendMessage GetItem()
         {

@@ -100,6 +100,7 @@ namespace Entap.Chat
             }
             else
             {
+                msg.ResendVisible = false;
                 // サーバへ送信できた段階でメッセージの表示位置を再確認
                 if (index == ChatList.Messages.Count - 1)
                 {
@@ -175,32 +176,6 @@ namespace Entap.Chat
                 msg.ResendVisible = false;
             }
             await ChatAddImg(msg);
-            //ChatList.AddMessage(msg);
-            //var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
-            //var index = ChatList.Messages.IndexOf(msg);
-            //if (newMsgId < 0)
-            //{
-            //    // 通信エラー
-            //    ChatList.Messages[index].ResendVisible = true;
-            //    var sendErrorImgPath = FileManager.GetContentsPath(FileManager.AppDataFolders.NotSendImage) + "/" + Guid.NewGuid() + extension;
-            //    FileManager.FileCopy(copyImgPath, sendErrorImgPath);
-            //}
-            //else
-            //{
-            //    // サーバへ送信できた段階でメッセージの表示位置を再確認
-            //    if (index == ChatList.Messages.Count - 1)
-            //    {
-            //        //ChatList.Messages[index].Id = newMsgId;
-            //        ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
-            //    }
-            //    else
-            //    {
-            //        ChatList.Messages.RemoveAt(index);
-            //        //msg.Id = newMsgId;
-            //        msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
-            //        ChatList.Messages.Add(msg);
-            //    }
-            //}
         }
 
         async Task ChatAddImg(MessageBase msg)
@@ -222,6 +197,7 @@ namespace Entap.Chat
             }
             else
             {
+                msg.ResendVisible = false;
                 // サーバへ送信できた段階でメッセージの表示位置を再確認
                 if (index == ChatList.Messages.Count - 1)
                 {
