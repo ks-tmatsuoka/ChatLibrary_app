@@ -63,6 +63,13 @@ namespace ChatSample
             return Task.FromResult<int>(i);
         }
 
+        public Task<int> SendAlreadyRead(int msgId)
+        {
+            int i;
+            i = 0;
+            return Task.FromResult<int>(i);
+        }
+
         public async Task<string> TakePicture()
         {
             var mg = new MediaPluginManager();

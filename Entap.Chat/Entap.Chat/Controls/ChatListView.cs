@@ -237,7 +237,7 @@ namespace Entap.Chat
     {
         const int RemainingItemsThreshold = 7;
         const int NotSendMessageId = -1;
-
+        int lastReadMessageId;
         ObservableCollection<MessageBase> _messages;
         public ObservableCollection<MessageBase> Messages
         {
@@ -270,6 +270,7 @@ namespace Entap.Chat
         {
             if (UserId < 0 || RoomId < 0 || LastReadMessageId < 0)
                 return;
+            lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
             {
                 var messages = await Settings.Current.Messaging.GetMessagesAsync(LastReadMessageId, 20);
@@ -489,6 +490,7 @@ namespace Entap.Chat
                 lastVisibleItemIndex = e.ItemIndex;
                 System.Diagnostics.Debug.WriteLine("OnItemAppearing" + ((MessageBase)e.Item).MessageId.ToString());
                 lastVisibleItem = e.Item;
+                SendAlreadyRead(lastVisibleItem);
             }
         }
 
@@ -500,6 +502,23 @@ namespace Entap.Chat
             lastVisibleItem = lastItem;
             System.Diagnostics.Debug.WriteLine("firstVisibleItem" + ((MessageBase)firstVisibleItem).MessageId.ToString());
             System.Diagnostics.Debug.WriteLine("lastVisibleItem" + ((MessageBase)lastVisibleItem).MessageId.ToString());
+
+            SendAlreadyRead(lastVisibleItem);
+        }
+
+        async Task SendAlreadyRead(object obj)
+        {
+            var messageBase = obj as MessageBase;
+            if (messageBase != null && lastReadMessageId < messageBase.MessageId)
+            {
+                System.Diagnostics.Debug.WriteLine("SendAlreadyRead: " + messageBase.MessageId);
+                var result = await Settings.Current.Messaging.SendAlreadyRead(messageBase.MessageId);
+                if (result == 0)
+                {
+                    lastReadMessageId = messageBase.MessageId;
+                }
+            }
+            
         }
 
         double lastScrollY = 0;
