@@ -7,6 +7,7 @@ using Entap.Chat;
 using System.Linq;
 using Xamarin.Forms;
 using System.Text.RegularExpressions;
+using SQLite;
 
 namespace ChatSample
 {
@@ -23,9 +24,9 @@ namespace ChatSample
 
                 var mod = (id - i) % 3;
                 if (mod == 0)
-                    messages.Add(new MessageBase { MessageId = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i), MessageType=2 });
+                    messages.Add(new MessageBase { MessageId = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i), MessageType = 2 });
                 else
-                    messages.Add(new MessageBase { MessageId = id - i, Text= (id - i).ToString(), MessageType=1});
+                    messages.Add(new MessageBase { MessageId = id - i, Text = (id - i).ToString(), MessageType = 1 });
             }
             messages.Reverse();
             return Task.FromResult<IEnumerable<MessageBase>>(messages);
@@ -107,11 +108,11 @@ namespace ChatSample
             Task.Run(async () =>
             {
                 // 既読つける処理
-                while(true)
+                while (true)
                 {
                     await Task.Delay(2000);
                     var msgs = messageBases.Where(w => w.MessageId >= 120);
-                    foreach(var msg in msgs)
+                    foreach (var msg in msgs)
                     {
                         Device.BeginInvokeOnMainThread(() =>
                         {
@@ -120,7 +121,7 @@ namespace ChatSample
                     }
                 }
             });
-            
+
             Task.Run(async () =>
             {
                 while (true)
@@ -129,12 +130,53 @@ namespace ChatSample
 
                     Device.BeginInvokeOnMainThread(() =>
                     {
-                        var id = messageBases.Max(w=>w.MessageId) + 1;
+                        var id = messageBases.Max(w => w.MessageId) + 1;
                         messageBases.Add(new MessageBase { MessageId = id, Text = "other", IsAlreadyRead = false, MessageType = 1 });
                     });
                 }
-                
+
             });
+        }
+
+        /// <summary>
+        /// チャットのリストの末尾に送信できていないメッセージを追加
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="messageBases"></param>
+        public void AddNotSendMessages(int roomId, ObservableCollection<MessageBase> messageBases)
+        {
+            var items = new NotSendMessageManager().GetItems(roomId);
+            foreach (var item in items)
+            {
+                var messageBase = new MessageBase(item);
+                messageBase.NotSendId = item.Id;
+                messageBases.Add(messageBase);
+            }
+        }
+
+        /// <summary>
+        /// 送れていないメッセージをStorageに保存
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="messageBase"></param>
+        /// <returns></returns>
+        public void SaveNotSendMessageData(int roomId, MessageBase messageBase)
+        {
+            var mg = new NotSendMessageManager();
+            var notSendMessage = new NotSendMessage(roomId, messageBase);
+            var id = mg.SaveItem(notSendMessage);
+            // sqliteのデータととチャットのメッセージデータの紐付け
+            messageBase.NotSendId = id;
+        }
+
+        /// <summary>
+        /// ストレージに保存されてる未送信データの削除
+        /// </summary>
+        /// <param name="id">プライマリーキー</param>
+        public void DeleteNotSendMessageData(int id)
+        {
+            var mg = new NotSendMessageManager();
+            mg.DeleteItem(id);
         }
     }
 }

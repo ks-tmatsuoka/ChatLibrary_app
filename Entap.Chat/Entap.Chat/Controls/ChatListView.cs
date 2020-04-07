@@ -253,6 +253,7 @@ namespace Entap.Chat
 
         void Init()
         {
+            FileManager.CreateFolders();
             HasUnevenRows = true;
             SelectionMode = ListViewSelectionMode.None;
             SeparatorVisibility = SeparatorVisibility.None;
@@ -277,14 +278,21 @@ namespace Entap.Chat
                 //// ToDo : 2回目以降に表示時にスクロールが無効
 
                 _messages = new ObservableCollection<MessageBase>(messages);
+                SetNotSendMessage();
                 Device.BeginInvokeOnMainThread(async () =>
                 {
                     ItemsSource = _messages;
-                    ScrollTo(last, ScrollToPosition.End, false);
+                    if (_messages.Count > 0)
+                        ScrollTo(_messages?.Last(), ScrollToPosition.End, false);
                     _messages.CollectionChanged += OnMessagesCollectionChanged;
                     Settings.Current.Messaging.UpdateData(_messages);
                 });
             });
+        }
+
+        void SetNotSendMessage()
+        {
+            Settings.Current.Messaging.AddNotSendMessages(RoomId, _messages);
         }
 
         protected override void OnPropertyChanged(string propertyName = null)
@@ -320,20 +328,20 @@ namespace Entap.Chat
                     Device.BeginInvokeOnMainThread(() =>
                     {
                         ScrollTo(msgLast, ScrollToPosition.End, true);
-                        ReplaceNotSendMessage();
+                        ReplaceNotSendMessage(true);
                     });
                 }
                 else
                 {
                     Device.BeginInvokeOnMainThread(async () =>
                     {
-                        ReplaceNotSendMessage();
+                        ReplaceNotSendMessage(true);
                     });
                 }
             }
         }
 
-        void ReplaceNotSendMessage()
+        void ReplaceNotSendMessage(bool isScrolled)
         {
             var notSendList = _messages.Where(w => w.MessageId == NotSendMessageId && w.ResendVisible == true).ToList();
             int notSendCount =notSendList.Count;
@@ -360,10 +368,13 @@ namespace Entap.Chat
                 addNotSendList.Add(notSendMsg);
             }
             _messages.AddRange(addNotSendList);
-            Device.BeginInvokeOnMainThread(() =>
+            if (isScrolled)
             {
-                ScrollTo(_messages.LastOrDefault(), ScrollToPosition.End, true);
-            });
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    ScrollTo(_messages.LastOrDefault(), ScrollToPosition.End, true);
+                });
+            }
         }
 
         bool IsRunningGetOldMessage = false;
@@ -432,6 +443,8 @@ namespace Entap.Chat
                 {
                     _messages.AddRange(messages);
                     IsRunningGetNewMessage = false;
+
+                    ReplaceNotSendMessage(false);
                 });
             });
         }
@@ -525,7 +538,7 @@ namespace Entap.Chat
                 )
             {
                 IsRunningGetNewMessage = true;
-                var last = _messages.Last();
+                var last = _messages.Where(w=>w.NotSendId < 1)?.Last();
                 LoadNewMessages(last.MessageId + 1);
             }
 
@@ -561,6 +574,24 @@ namespace Entap.Chat
         public int GetNotSendMessageId()
         {
             return NotSendMessageId;
+        }
+
+        public void NotSendMessageSaveInStorage(MessageBase messageBase)
+        {
+            if (messageBase.NotSendId < 1)
+            {
+                Settings.Current.Messaging.SaveNotSendMessageData(RoomId, messageBase);
+            }
+        }
+
+        public bool NotSendMessageDeleteFromStorage(int notSendMessageId)
+        {
+            if (notSendMessageId > 0)
+            {
+                Settings.Current.Messaging.DeleteNotSendMessageData(notSendMessageId);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

@@ -90,13 +90,13 @@ namespace Entap.Chat
             }
             ChatList.AddMessage(msg);
             
-
             var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
             var index = ChatList.Messages.IndexOf(msg);
             if (newMsgId < 0)
             {
                 // 通信エラー
                 ChatList.Messages[index].ResendVisible = true;
+                ChatList.NotSendMessageSaveInStorage(ChatList.Messages[index]);
             }
             else
             {
@@ -113,6 +113,8 @@ namespace Entap.Chat
                     msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                     ChatList.Messages.Add(msg);
                 }
+
+                ChatList.NotSendMessageDeleteFromStorage(msg.NotSendId);
             }
         }
 
@@ -128,31 +130,17 @@ namespace Entap.Chat
             {
                 return;
             }
-            var msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = imgPath, MessageType=2, SendUserId=UserDataManager.Instance.UserId };
-            ChatList.AddMessage(msg);
-            var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
-            var index = ChatList.Messages.IndexOf(msg);
-            if (newMsgId < 0)
+            var copyImgPath = FileManager.GetContentsPath(FileManager.AppDataFolders.SendImage) + "/" + Guid.NewGuid() + extension;
+            if (!FileManager.FileCopy(imgPath, copyImgPath))
             {
-                // 通信エラー
-                ChatList.Messages[index].ResendVisible = true;
-            }
-            else
-            {
-                // サーバへ送信できた段階でメッセージの表示位置を再確認
-                if (index == ChatList.Messages.Count - 1)
+                Device.BeginInvokeOnMainThread(() =>
                 {
-                    //ChatList.Messages[index].Id = newMsgId;
-                    ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
-                }
-                else
-                {
-                    ChatList.Messages.RemoveAt(index);
-                    //msg.Id = newMsgId;
-                    msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
-                    ChatList.Messages.Add(msg);
-                }
+                    Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
+                });
+                return;
             }
+            var msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType=2, SendUserId=UserDataManager.Instance.UserId };
+            await ChatAddImg(msg);
         }
 
         async Task SendImg(MessageBase msg=null)
@@ -169,7 +157,16 @@ namespace Entap.Chat
                 {
                     return;
                 }
-                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = imgPath, MessageType = 2, SendUserId = UserDataManager.Instance.UserId };
+                var copyImgPath = FileManager.GetContentsPath(FileManager.AppDataFolders.SendImage) + "/" + Guid.NewGuid() + extension;
+                if (!FileManager.FileCopy(imgPath, copyImgPath))
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
+                    });
+                    return;
+                }
+                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = 2, SendUserId = UserDataManager.Instance.UserId };
             }
             else
             {
@@ -177,13 +174,51 @@ namespace Entap.Chat
                 ChatList.Messages.RemoveAt(oldMsgIndex);
                 msg.ResendVisible = false;
             }
+            await ChatAddImg(msg);
+            //ChatList.AddMessage(msg);
+            //var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
+            //var index = ChatList.Messages.IndexOf(msg);
+            //if (newMsgId < 0)
+            //{
+            //    // 通信エラー
+            //    ChatList.Messages[index].ResendVisible = true;
+            //    var sendErrorImgPath = FileManager.GetContentsPath(FileManager.AppDataFolders.NotSendImage) + "/" + Guid.NewGuid() + extension;
+            //    FileManager.FileCopy(copyImgPath, sendErrorImgPath);
+            //}
+            //else
+            //{
+            //    // サーバへ送信できた段階でメッセージの表示位置を再確認
+            //    if (index == ChatList.Messages.Count - 1)
+            //    {
+            //        //ChatList.Messages[index].Id = newMsgId;
+            //        ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
+            //    }
+            //    else
+            //    {
+            //        ChatList.Messages.RemoveAt(index);
+            //        //msg.Id = newMsgId;
+            //        msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
+            //        ChatList.Messages.Add(msg);
+            //    }
+            //}
+        }
+
+        async Task ChatAddImg(MessageBase msg)
+        {
             ChatList.AddMessage(msg);
             var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
             var index = ChatList.Messages.IndexOf(msg);
             if (newMsgId < 0)
             {
                 // 通信エラー
+                var delImgPath = msg.ImageUrl;
+                string extension = System.IO.Path.GetExtension(delImgPath);
                 ChatList.Messages[index].ResendVisible = true;
+                var sendErrorImgPath = FileManager.GetContentsPath(FileManager.AppDataFolders.NotSendImage) + "/" + Guid.NewGuid() + extension;
+                FileManager.FileCopy(delImgPath, sendErrorImgPath);
+                ChatList.Messages[index].ImageUrl = sendErrorImgPath;
+                FileManager.FileDelete(delImgPath);
+                ChatList.NotSendMessageSaveInStorage(ChatList.Messages[index]);
             }
             else
             {
@@ -200,6 +235,8 @@ namespace Entap.Chat
                     msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                     ChatList.Messages.Add(msg);
                 }
+
+                ChatList.NotSendMessageDeleteFromStorage(msg.NotSendId);
             }
         }
 
@@ -245,7 +282,8 @@ namespace Entap.Chat
                 }
                 else if (result.Equals(button[1]))
                 {
-                    ChatList.Messages.Remove(msg);
+                    if (ChatList.NotSendMessageDeleteFromStorage(msg.NotSendId))
+                        ChatList.Messages.Remove(msg);
                 }
             });
         });

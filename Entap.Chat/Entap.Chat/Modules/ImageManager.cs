@@ -19,15 +19,15 @@ namespace Entap.Chat
             string filePath = mediaFolderPath;
             if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
             {
-                filePath += "/tmp.jpeg";
+                filePath += "/temp.jpeg";
             }
             else if (extension.ToLower() == ".png")
             {
-                filePath += "/tmp.png";
+                filePath += "/temp.png";
             }
             else if (extension.ToLower() == ".pdf")
             {
-                filePath += "/tmp.pdf";
+                filePath += "/temp.pdf";
             }
             else
             {

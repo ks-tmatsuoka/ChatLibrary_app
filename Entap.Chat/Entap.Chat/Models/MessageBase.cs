@@ -14,6 +14,21 @@ namespace Entap.Chat
             DateTime = DateTime.Now;
             UserIcon = "https://brave.entap.dev/storage/user_icon.png";
         }
+
+        public MessageBase(MessageBase notSendMessage)
+        {
+            MessageId = notSendMessage.MessageId;
+            DateTime = notSendMessage.DateTime;
+            Text = notSendMessage.Text;
+            ImageUrl = notSendMessage.ImageUrl;
+            UserIcon = notSendMessage.UserIcon;
+            MessageType = notSendMessage.MessageType;
+            SendUserId = notSendMessage.SendUserId;
+            IsAlreadyRead = false;
+            ResendVisible = true;
+            //NotSendId = notSendMessage.Id;
+        }
+
         public MessageType _MessageType
         {
             get
@@ -27,6 +42,7 @@ namespace Entap.Chat
                 return Chat.MessageType.OthersText;
             }
         }
+
         public int MessageId { get; set; }
         public DateTime DateTime { get; set; }
 
@@ -69,5 +85,7 @@ namespace Entap.Chat
                 }
             }
         }
+
+        public int NotSendId { get; set; }
     }
 }

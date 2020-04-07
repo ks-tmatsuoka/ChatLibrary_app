@@ -14,6 +14,7 @@ namespace ChatSample
         public MediaPluginManager()
         {
             CrossMedia.Current.Initialize();
+            ClearMediaFolder();
         }
 
         const string MediaFolder = "temp";
