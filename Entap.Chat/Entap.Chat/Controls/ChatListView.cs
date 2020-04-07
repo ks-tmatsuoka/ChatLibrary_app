@@ -276,7 +276,6 @@ namespace Entap.Chat
                 var messages = await Settings.Current.Messaging.GetMessagesAsync(LastReadMessageId, 20);
                 var last = messages?.Last();
                 if (last == null) return;
-                //// ToDo : 2回目以降に表示時にスクロールが無効
 
                 _messages = new ObservableCollection<MessageBase>(messages);
                 SetNotSendMessage();
@@ -291,6 +290,9 @@ namespace Entap.Chat
             });
         }
 
+        /// <summary>
+        /// 未送信メッセージのセット
+        /// </summary>
         void SetNotSendMessage()
         {
             Settings.Current.Messaging.AddNotSendMessages(RoomId, _messages);
@@ -342,6 +344,10 @@ namespace Entap.Chat
             }
         }
 
+        /// <summary>
+        /// 未送信メッセージをリストの一番下にになるよう入れ替え
+        /// </summary>
+        /// <param name="isScrolled"></param>
         void ReplaceNotSendMessage(bool isScrolled)
         {
             var notSendList = _messages.Where(w => w.MessageId == NotSendMessageId && w.ResendVisible == true).ToList();
@@ -379,43 +385,15 @@ namespace Entap.Chat
         }
 
         bool IsRunningGetOldMessage = false;
+        /// <summary>
+        /// 古いメッセージ読み込み
+        /// </summary>
+        /// <param name="messageId"></param>
         void LoadMessages(int messageId)
         {
             Task.Run(async () =>
             {
                 var messages = await Settings.Current.Messaging.GetMessagesAsync(messageId, 20);
-                //if (Device.RuntimePlatform == Device.Android)
-                //{
-                //    Device.BeginInvokeOnMainThread(() =>
-                //    {
-                //        IsEnabled = false;
-                //        foreach (var msg in messages.Reverse())
-                //        {
-                //            _messages.Insert(0, msg);
-                //        }
-                //        ScrollTo(firstVisibleItem, ScrollToPosition.Start, false);
-                //        IsEnabled = true;
-                //        //firstVisibleItemIndexを一度ありえない値にしておかないとどんどん前のデータの読み込みが行われる
-                //        firstVisibleItemIndex = -1;
-                //        IsRunningGetOldMessage = false;
-                //    });
-                //}
-                //else if (Device.RuntimePlatform == Device.iOS)
-                //{
-                //    Device.BeginInvokeOnMainThread(() =>
-                //    {
-                //        IsEnabled = false;
-                //        foreach (var msg in messages.Reverse())
-                //        {
-                //            _messages.Insert(0, msg);
-                //        }
-                //        //ScrollTo(firstVisibleItem, ScrollToPosition.Start, false);
-                //        IsEnabled = true;
-                //        // firstVisibleItemIndexを一度ありえない値にしておかないとどんどん前のデータの読み込みが行われる
-                //        firstVisibleItemIndex = -1;
-                //        IsRunningGetOldMessage = false;
-                //    });
-                //}
 
                 Device.BeginInvokeOnMainThread(() =>
                 {
@@ -435,6 +413,10 @@ namespace Entap.Chat
         }
 
         bool IsRunningGetNewMessage = false;
+        /// <summary>
+        /// 新しいメッセージ読み込み
+        /// </summary>
+        /// <param name="messageId"></param>
         void LoadNewMessages(int messageId)
         {
             Task.Run(async () =>
@@ -444,7 +426,6 @@ namespace Entap.Chat
                 {
                     _messages.AddRange(messages);
                     IsRunningGetNewMessage = false;
-
                     ReplaceNotSendMessage(false);
                 });
             });
@@ -494,6 +475,13 @@ namespace Entap.Chat
             }
         }
 
+        /// <summary>
+        /// 表示中のメッセージの一番上のメッセージと一番下のメッセージを変数へ代入(Androidで使用)
+        /// </summary>
+        /// <param name="firstIndex"></param>
+        /// <param name="firstItem"></param>
+        /// <param name="lastIndex"></param>
+        /// <param name="lastItem"></param>
         public void VisibleItemUpdateForAndroid(int firstIndex, object firstItem, int lastIndex, object lastItem)
         {
             firstVisibleItemIndex = firstIndex;
@@ -506,6 +494,11 @@ namespace Entap.Chat
             SendAlreadyRead(lastVisibleItem);
         }
 
+        /// <summary>
+        /// 既読済みメッセージをAPIに送る
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         async Task SendAlreadyRead(object obj)
         {
             var messageBase = obj as MessageBase;
@@ -564,6 +557,11 @@ namespace Entap.Chat
             lastScrollY = e.ScrollY;
         }
 
+        /// <summary>
+        /// メッセージをリストに追加
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         public bool AddMessage(MessageBase msg)
         {
             if (msg is null)
@@ -590,11 +588,19 @@ namespace Entap.Chat
             return false;
         }
 
+        /// <summary>
+        /// 未送信メッセージに指定するMessageIdを取得
+        /// </summary>
+        /// <returns></returns>
         public int GetNotSendMessageId()
         {
             return NotSendMessageId;
         }
 
+        /// <summary>
+        /// 未送信メッセージをストレージに保存
+        /// </summary>
+        /// <param name="messageBase"></param>
         public void NotSendMessageSaveInStorage(MessageBase messageBase)
         {
             if (messageBase.NotSendId < 1)
@@ -603,6 +609,11 @@ namespace Entap.Chat
             }
         }
 
+        /// <summary>
+        /// ストレージから未送信メッセージのデータを削除
+        /// </summary>
+        /// <param name="notSendMessageId"></param>
+        /// <returns></returns>
         public bool NotSendMessageDeleteFromStorage(int notSendMessageId)
         {
             if (notSendMessageId > 0)
