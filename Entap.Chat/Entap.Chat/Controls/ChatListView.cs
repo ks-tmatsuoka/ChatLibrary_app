@@ -235,17 +235,12 @@ namespace Entap.Chat
     [Preserve(AllMembers = true)]
     public class ChatListView : ListView
     {
-        const int RemainingItemsThreshold = 7;
+        const int DefaultRemainingItemsThreshold = 7;
         const int NotSendMessageId = -1;
         int lastReadMessageId;
         ObservableCollection<MessageBase> _messages;
-        public ObservableCollection<MessageBase> Messages
-        {
-            get
-            {
-                return _messages;
-            }
-        }
+        public ObservableCollection<MessageBase> Messages => _messages;
+
         public ChatListView() : base(ListViewCachingStrategy.RecycleElement)
         {
             Init();
@@ -273,7 +268,7 @@ namespace Entap.Chat
             lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetMessagesAsync(LastReadMessageId, 20);
+                var messages = await Settings.Current.Messaging.GetMessagesAsync(LastReadMessageId);
                 var last = messages?.Last();
                 if (last == null) return;
 
@@ -429,7 +424,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetMessagesAsync(messageId, 20);
+                var messages = await Settings.Current.Messaging.GetMessagesAsync(messageId);
 
                 Device.BeginInvokeOnMainThread(() =>
                 {
@@ -458,7 +453,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetNewMessagesAsync(messageId, 20);
+                var messages = await Settings.Current.Messaging.GetNewMessagesAsync(messageId);
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     _messages.AddRange(messages);
@@ -663,18 +658,19 @@ namespace Entap.Chat
         }
 
         /// <summary>
-        /// データの読み込みを始める未表示データの値
+        /// データの読み込みを始める未表示データのしきい値
+        /// 未表示のアイテム数がRemainingItemsThresholdに達した際に、データ増分をロード
         /// </summary>
-        //public static readonly BindableProperty RemainingItemsThresholdProperty =
-        //    BindableProperty.Create(nameof(RemainingItemsThreshold), typeof(int), typeof(ChatListView_Seki), null,
-        //        propertyChanged: (bindable, oldValue, newValue) =>
-        //                            ((ChatListView_Seki)bindable).RemainingItemsThreshold = (int)newValue);
+        public static readonly BindableProperty RemainingItemsThresholdProperty =
+            BindableProperty.Create(nameof(RemainingItemsThreshold), typeof(int), typeof(ChatListView), DefaultRemainingItemsThreshold,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                     ((ChatListView)bindable).RemainingItemsThreshold = (int)newValue);
 
-        //public int RemainingItemsThreshold
-        //{
-        //    get { return (int)GetValue(RemainingItemsThresholdProperty); }
-        //    set { SetValue(RemainingItemsThresholdProperty, value); }
-        //}
+        public int RemainingItemsThreshold
+        {
+            get { return (int)GetValue(RemainingItemsThresholdProperty); }
+            set { SetValue(RemainingItemsThresholdProperty, value); }
+        }
 
         /// <summary>
         /// ユーザーID
