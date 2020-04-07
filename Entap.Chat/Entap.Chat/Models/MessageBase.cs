@@ -87,5 +87,22 @@ namespace Entap.Chat
         }
 
         public int NotSendId { get; set; }
+
+        private bool dateVisible;
+        public bool DateVisible
+        {
+            get
+            {
+                return dateVisible;
+            }
+            set
+            {
+                if (dateVisible != value)
+                {
+                    dateVisible = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("DateVisible"));
+                }
+            }
+        }
     }
 }

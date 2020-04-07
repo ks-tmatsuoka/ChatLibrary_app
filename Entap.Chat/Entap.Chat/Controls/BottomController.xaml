@@ -15,46 +15,67 @@
                         Spacing="0"
                         Margin="16,6,16,6"
                         HorizontalOptions="FillAndExpand"
-                        BackgroundColor="Transparent"
-                        Orientation="Horizontal">
-                        <StackLayout
-                            HorizontalOptions="EndAndExpand"
-                            VerticalOptions="EndAndExpand"
-                            Spacing="0"
-                            Margin="0,0,6,0">
-                            <Label
-                                IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
-                                Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
-                                FontSize="10"/>
-                            <Label
-                                IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
-                                Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
-                                FontSize="10"/>
-                            </StackLayout>
+                        BackgroundColor="Transparent">
                         <Frame
+                            Margin="10"
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Fill"
                             HasShadow="False"
-                            CornerRadius="8"
-                            BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
+                            CornerRadius="10"
+                            IsVisible="false"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=DateBackgroundColor}"
                             Padding="0">
                             <Label
-                                Margin="6"
-                                HorizontalOptions="Fill"
-                                VerticalOptions="Fill"
-                                Text="{Binding Text}"
+                                Margin="12,2"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"
+                                TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
+                                Text="{Binding DateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
-                        <ImageButton
-                            IsVisible="{Binding ResendVisible}"
-                            Margin="6,0,0,0"
-                            HorizontalOptions="End"
-                            VerticalOptions="CenterAndExpand"
+                        <StackLayout
+                            Spacing="0"
                             BackgroundColor="Transparent"
-                            WidthRequest="25"
-                            HeightRequest="25"
-                            Source="resend_icon.png"
-                            Aspect="AspectFit"
-                            CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
-                            Command="{Binding Source={x:Reference Content}, Path=ResendCommand}"/>
+                            Orientation="Horizontal">
+                            <StackLayout
+                                HorizontalOptions="EndAndExpand"
+                                VerticalOptions="EndAndExpand"
+                                Spacing="0"
+                                Margin="0,0,6,0">
+                                <Label
+                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
+                                    Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
+                                    FontSize="10"/>
+                                <Label
+                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
+                                    Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                    FontSize="10"/>
+                            </StackLayout>
+                            <Frame
+                                HasShadow="False"
+                                CornerRadius="8"
+                                BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
+                                Padding="0">
+                                <Label
+                                    Margin="6"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    Text="{Binding Text}"
+                                    FontSize="14"/>
+                            </Frame>
+                            <ImageButton
+                                IsVisible="{Binding ResendVisible}"
+                                Margin="6,0,0,0"
+                                HorizontalOptions="End"
+                                VerticalOptions="CenterAndExpand"
+                                BackgroundColor="Transparent"
+                                WidthRequest="25"
+                                HeightRequest="25"
+                                Source="resend_icon.png"
+                                Aspect="AspectFit"
+                                CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
+                                Command="{Binding Source={x:Reference Content}, Path=ResendCommand}"/>
+                        </StackLayout>
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
@@ -248,6 +269,7 @@
             />
             <local:AlreadyReadConverter x:Key="alreadyReadConverter"/>
             <local:TimeConverter x:Key="timeConverter"/>
+            <local:DateConverter x:Key="dateConverter"/>
             <local:BoolReverseConverter x:Key="boolReverseConverter"/>
         </ResourceDictionary>
     </local:CustomContentView.Resources>
@@ -268,6 +290,7 @@
         </Grid.ColumnDefinitions>
         <local:ChatListView
             x:Name="ChatList"
+            BackgroundColor="{Binding Source={x:Reference Content}, Path=ChatViewBackgroundColor}"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand"
             ItemTemplate="{StaticResource messageDataTemplateSelector}"/>

@@ -264,13 +264,42 @@ namespace Entap.Chat
             });
         });
 
+        /// <summary>
+        /// 日付のViewの背景色
+        /// </summary>
+        #region DateBackgroundColor BindableProperty
+        public static readonly BindableProperty DateBackgroundColorProperty =
+            BindableProperty.Create(nameof(DateBackgroundColor), typeof(Color), typeof(BottomController), Color.Black,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).DateBackgroundColor = (Color)newValue);
+        public Color DateBackgroundColor
+        {
+            get { return (Color)GetValue(DateBackgroundColorProperty); }
+            set { SetValue(DateBackgroundColorProperty, value); }
+        }
+        #endregion
+
+        /// <summary>
+        /// 日付のテキストの色
+        /// </summary>
+        #region DateTextColor BindableProperty
+        public static readonly BindableProperty DateTextColorProperty =
+            BindableProperty.Create(nameof(DateTextColor), typeof(Color), typeof(BottomController), Color.White,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((BottomController)bindable).DateTextColor = (Color)newValue);
+        public Color DateTextColor
+        {
+            get { return (Color)GetValue(DateTextColorProperty); }
+            set { SetValue(DateTextColorProperty, value); }
+        }
+        #endregion
 
         /// <summary>
         /// チャットのViewの背景色
         /// </summary>
         #region ChatViewBackgroundColor BindableProperty
         public static readonly BindableProperty ChatViewBackgroundColorProperty =
-            BindableProperty.Create(nameof(ChatViewBackgroundColor), typeof(Color), typeof(BottomController), Color.Red,
+            BindableProperty.Create(nameof(ChatViewBackgroundColor), typeof(Color), typeof(BottomController), Color.White,
                 propertyChanged: (bindable, oldValue, newValue) =>
                                     ((BottomController)bindable).ChatViewBackgroundColor = (Color)newValue);
         public Color ChatViewBackgroundColor
