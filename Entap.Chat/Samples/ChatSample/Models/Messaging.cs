@@ -138,7 +138,7 @@ namespace ChatSample
                     Device.BeginInvokeOnMainThread(() =>
                     {
                         var id = messageBases.Max(w => w.MessageId) + 1;
-                        messageBases.Add(new MessageBase { MessageId = id, Text = "other", IsAlreadyRead = false, MessageType = 1 });
+                        //messageBases.Add(new MessageBase { MessageId = id, Text = "other", IsAlreadyRead = false, MessageType = 1 });
                     });
                 }
 

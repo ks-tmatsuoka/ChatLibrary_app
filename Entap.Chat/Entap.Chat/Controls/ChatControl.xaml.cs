@@ -15,24 +15,13 @@ namespace Entap.Chat
             var safearea = DependencyService.Get<IDisplayService>().GetSafeArea();
             this.Controller.Padding = new Thickness(0, 0, 0, safearea.Bottom);
 
-            this.SendButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendButton), async () => await SendMessage());
-            this.SendPhotoButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendPhotoButton), async () => await SendPhoto());
-            this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
+            Controller.SendCommand = SendCommand;
+            Controller.CameraCommand = CameraCommand;
+            Controller.LibraryCommand = LibraryCommand;
+            //this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
 
-            this.Controller.BackgroundColor = ChatControlBackgroundColor;
-
-            if (BottomControllerIconStyle == ControllerIconStyles.Dark)
-            {
-                SendPhotoButton.ImageSource = "camera_icon_dark.png";
-                SendImgButton.ImageSource = "library_icon_dark.png";
-                SendButton.ImageSource = "send_icon_dark.png";
-            }
-            else
-            {
-                SendPhotoButton.ImageSource = "camera_icon.png";
-                SendImgButton.ImageSource = "library_icon.png";
-                SendButton.ImageSource = "send_icon.png";
-            }
+            Controller.BottomControllerBackgroundColor = BottomControllerBackgroundColor;
+            Controller.BottomControllerIconStyle = BottomControllerIconStyle;
         } 
 
         protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -62,6 +51,14 @@ namespace Entap.Chat
             {
                 ChatList.RoomId = RoomId;
             }
+            else if (propertyName == BottomControllerIconStyleProperty.PropertyName)
+            {
+                Controller.BottomControllerIconStyle = BottomControllerIconStyle;
+            }
+            else if (propertyName == BottomControllerBackgroundColorProperty.PropertyName)
+            {
+                Controller.BottomControllerBackgroundColor = BottomControllerBackgroundColor;
+            }
         }
 
         public double ImageMessageSize
@@ -73,14 +70,19 @@ namespace Entap.Chat
             }
         }
 
-        async Task SendMessage(MessageBase msg=null)
+        public Command SendCommand => new Command((obj) =>
+        {
+            var msg = obj as MessageBase;
+            ProcessManager.Current.Invoke(nameof(SendCommand), async () => await SendMessage(msg));
+        });
+        async Task SendMessage(MessageBase msg = null)
         {
             if (msg is null)
             {
-                if (string.IsNullOrEmpty(this.MsgEditor.Text))
+                if (string.IsNullOrEmpty(Controller.EditorText))
                     return;
-                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), Text = MsgEditor.Text, IsAlreadyRead = false, MessageType=1, SendUserId = UserDataManager.Instance.UserId };
-                this.MsgEditor.Text = "";
+                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), Text = Controller.EditorText, IsAlreadyRead = false, MessageType = 1, SendUserId = UserDataManager.Instance.UserId };
+                Controller.EditorText = "";
             }
             else
             {
@@ -89,7 +91,7 @@ namespace Entap.Chat
                 msg.ResendVisible = false;
             }
             ChatList.AddMessage(msg);
-            
+
             var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
             var index = ChatList.Messages.IndexOf(msg);
             if (newMsgId < 0)
@@ -119,6 +121,10 @@ namespace Entap.Chat
             }
         }
 
+        public Command CameraCommand => new Command((obj) =>
+        {
+            ProcessManager.Current.Invoke(nameof(SendCommand), async () => await SendPhoto());
+        });
         async Task SendPhoto()
         {
             var imgPath = await Settings.Current.Messaging.TakePicture();
@@ -144,6 +150,11 @@ namespace Entap.Chat
             await ChatAddImg(msg);
         }
 
+        public Command LibraryCommand => new Command((obj) =>
+        {
+            var msg = obj as MessageBase;
+            ProcessManager.Current.Invoke(nameof(SendCommand), async () => await SendImg(msg));
+        });
         async Task SendImg(MessageBase msg=null)
         {
             if (msg is null)
@@ -218,7 +229,7 @@ namespace Entap.Chat
 
         public Command ImageTapCommand => new Command((pm) =>
         {
-            ProcessManager.Current.Invoke(nameof(this.SendButton), async () =>
+            ProcessManager.Current.Invoke(nameof(ImageTapCommand), async () =>
             {
                 var imagePath = pm as string;
                 await Application.Current.MainPage.Navigation.PushModalAsync(new ImagePreviewPage(imagePath));
@@ -227,7 +238,7 @@ namespace Entap.Chat
 
         public Command ImageShareCommand => new Command((pm) =>
         {
-            ProcessManager.Current.Invoke(nameof(this.SendButton), async()=>
+            ProcessManager.Current.Invoke(nameof(ImageShareCommand), async () =>
             {
                 // TODO パーミッションチェック
 
@@ -240,10 +251,10 @@ namespace Entap.Chat
 
         public Command ResendCommand => new Command((obj) =>
         {
-            ProcessManager.Current.Invoke(nameof(this.SendButton), async () =>
+            ProcessManager.Current.Invoke(nameof(ResendCommand), async () =>
             {
                 var msg = obj as MessageBase;
-                var button = new string[]{ "再送する","取り消し" };
+                var button = new string[] { "再送する", "取り消し" };
                 var result = await Application.Current.MainPage.DisplayActionSheet(null, "キャンセル", null, button);
                 if (result.Equals(button[0]))
                 {
@@ -406,12 +417,6 @@ namespace Entap.Chat
         {
             get { return (int)GetValue(LastReadMessageIdProperty); }
             set { SetValue(LastReadMessageIdProperty, value); }
-        }
-
-        public enum ControllerIconStyles
-        {
-            Light,
-            Dark
-        }
+        }  
     }
 }

@@ -22,7 +22,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <chat:BottomController
+            <chat:ChatControl
                 RoomId="1"
                 LastReadMessageId="100"
                 UserId="10"

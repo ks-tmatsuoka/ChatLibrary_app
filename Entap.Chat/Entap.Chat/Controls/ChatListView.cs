@@ -332,6 +332,7 @@ namespace Entap.Chat
                     {
                         ScrollTo(msgLast, ScrollToPosition.End, true);
                         ReplaceNotSendMessage(true);
+                        DateVisibleUpdate();
                     });
                 }
                 else
@@ -339,8 +340,43 @@ namespace Entap.Chat
                     Device.BeginInvokeOnMainThread(async () =>
                     {
                         ReplaceNotSendMessage(true);
+                        DateVisibleUpdate();
                     });
                 }
+            }
+        }
+
+        /// <summary>
+        /// 日時のView更新
+        /// </summary>
+        void DateVisibleUpdate()
+        {
+            if (_messages.Count < 1)
+                return;
+            var first = _messages.FirstOrDefault();
+            DateTime dateTime = first.DateTime;
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                first.DateVisible = true;
+            });
+            foreach (var msg in _messages)
+            {
+                if (dateTime.ToString("yyyy/MM/dd") == msg.DateTime.ToString("yyyy/MM/dd"))
+                {
+                    if (msg.DateVisible)
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            msg.DateVisible = false;
+                        });
+                    }
+                    continue;
+                }
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    msg.DateVisible = true;
+                });
+                dateTime = msg.DateTime;
             }
         }
 
@@ -408,6 +444,7 @@ namespace Entap.Chat
                     // firstVisibleItemIndexを一度ありえない値にしておかないとどんどん前のデータの読み込みが行われる
                     firstVisibleItemIndex = -1;
                     IsRunningGetOldMessage = false;
+                    DateVisibleUpdate();
                 });
             });
         }
@@ -427,6 +464,7 @@ namespace Entap.Chat
                     _messages.AddRange(messages);
                     IsRunningGetNewMessage = false;
                     ReplaceNotSendMessage(false);
+                    DateVisibleUpdate();
                 });
             });
         }

@@ -3,7 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Entap.Chat"
-    x:Class="Entap.Chat.BottomController"
+    x:Class="Entap.Chat.ChatControl"
     x:Name="Content"
     BackgroundColor="Transparent">
     <local:CustomContentView.Resources>
@@ -22,7 +22,7 @@
                             VerticalOptions="Fill"
                             HasShadow="False"
                             CornerRadius="10"
-                            IsVisible="false"
+                            IsVisible="{Binding DateVisible}"
                             BackgroundColor="{Binding Source={x:Reference Content}, Path=DateBackgroundColor}"
                             Padding="0">
                             <Label
@@ -85,39 +85,60 @@
                         Spacing="0"
                         Margin="16,6,16,6"
                         HorizontalOptions="FillAndExpand"
-                        BackgroundColor="Transparent"
-                        Orientation="Horizontal">
+                        BackgroundColor="Transparent">
                         <Frame
-                            Margin="1"
+                            Margin="10"
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Fill"
                             HasShadow="False"
-                            CornerRadius="14"
-                            BorderColor="Transparent"
-                            IsClippedToBounds="True"
+                            CornerRadius="10"
+                            IsVisible="{Binding DateVisible}"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=DateBackgroundColor}"
                             Padding="0">
-                            <Image
-                                WidthRequest="30"
-                                HeightRequest="30"
-                                Source="{Binding UserIcon}"
-                                VerticalOptions="StartAndExpand"/>
-                        </Frame>
-                        <Frame
-                            Margin="6,0,6,0"
-                            HasShadow="False"
-                            CornerRadius="8"
-                            Padding="0"
-                            BackgroundColor="{Binding Source={x:Reference Content}, Path=OtherMessageViewBackgroundColor}">
                             <Label
-                                Margin="6"
-                                BackgroundColor="Transparent"
-                                HorizontalOptions="Fill"
-                                VerticalOptions="Fill"
-                                Text="{Binding Text}"
+                                Margin="12,2"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"
+                                TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
+                                Text="{Binding DateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
-                        <Label
-                            VerticalOptions="EndAndExpand"
-                            Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
-                            FontSize="10"/>
+                        <StackLayout
+                            Spacing="0"
+                            BackgroundColor="Transparent"
+                            Orientation="Horizontal">
+                            <Frame
+                                Margin="1"
+                                HasShadow="False"
+                                CornerRadius="14"
+                                BorderColor="Transparent"
+                                IsClippedToBounds="True"
+                                Padding="0">
+                                <Image
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    Source="{Binding UserIcon}"
+                                    VerticalOptions="StartAndExpand"/>
+                            </Frame>
+                            <Frame
+                                Margin="6,0,6,0"
+                                HasShadow="False"
+                                CornerRadius="8"
+                                Padding="0"
+                                BackgroundColor="{Binding Source={x:Reference Content}, Path=OtherMessageViewBackgroundColor}">
+                                <Label
+                                    Margin="6"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    Text="{Binding Text}"
+                                    FontSize="14"/>
+                            </Frame>
+                            <Label
+                                VerticalOptions="EndAndExpand"
+                                Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                FontSize="10"/>
+                        </StackLayout>
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
@@ -128,68 +149,89 @@
                         Spacing="0"
                         Margin="16,6,16,6"
                         HorizontalOptions="FillAndExpand"
-                        BackgroundColor="Transparent"
-                        Orientation="Horizontal">
+                        BackgroundColor="Transparent">
+                        <Frame
+                            Margin="10"
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Fill"
+                            HasShadow="False"
+                            CornerRadius="10"
+                            IsVisible="{Binding DateVisible}"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=DateBackgroundColor}"
+                            Padding="0">
+                            <Label
+                                Margin="12,2"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"
+                                TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
+                                Text="{Binding DateTime, Converter={StaticResource dateConverter}}"
+                                FontSize="14"/>
+                        </Frame>
                         <StackLayout
-                            HorizontalOptions="EndAndExpand"
                             Spacing="0"
-                            Margin="0,0,6,0">
-                            <ImageButton
-                                HorizontalOptions="EndAndExpand"
-                                VerticalOptions="CenterAndExpand"
-                                BackgroundColor="Transparent"
-                                WidthRequest="30"
-                                HeightRequest="30"
-                                Source="share_icon.png"
-                                Aspect="AspectFit"
-                                IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
-                                CommandParameter="{Binding ImageUrl}"
-                                Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
+                            BackgroundColor="Transparent"
+                            Orientation="Horizontal">
                             <StackLayout
                                 HorizontalOptions="EndAndExpand"
-                                VerticalOptions="End"
                                 Spacing="0"
-                                Margin="0,0,6,0"
-                                IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}">
-                                <Label
-                                    Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
-                                    FontSize="10"/>
-                                <Label
-                                    Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
-                                    FontSize="10"/>
-                            </StackLayout>
-                        </StackLayout>
-                        
-                        <Frame
-                            HasShadow="False"
-                            CornerRadius="8"
-                            BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
-                            Padding="0">
-                            <Image
-                                Margin="6"
-                                WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                Aspect="AspectFit"
-                                Source="{Binding ImageUrl}"/>
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer
+                                Margin="0,0,6,0">
+                                <ImageButton
+                                    HorizontalOptions="EndAndExpand"
+                                    VerticalOptions="CenterAndExpand"
+                                    BackgroundColor="Transparent"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    Source="share_icon.png"
+                                    Aspect="AspectFit"
+                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                     CommandParameter="{Binding ImageUrl}"
-                                    Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
-                            </Frame.GestureRecognizers>
-                        </Frame>
+                                    Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
+                                <StackLayout
+                                    HorizontalOptions="EndAndExpand"
+                                    VerticalOptions="End"
+                                    Spacing="0"
+                                    Margin="0,0,6,0"
+                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}">
+                                    <Label
+                                        Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
+                                        FontSize="10"/>
+                                    <Label
+                                        Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                        FontSize="10"/>
+                                </StackLayout>
+                            </StackLayout>
 
-                        <ImageButton
-                            IsVisible="{Binding ResendVisible}"
-                            Margin="6,0,0,0"
-                            HorizontalOptions="End"
-                            VerticalOptions="CenterAndExpand"
-                            BackgroundColor="Transparent"
-                            WidthRequest="25"
-                            HeightRequest="25"
-                            Source="resend_icon.png"
-                            Aspect="AspectFit"
-                            CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
-                            Command="{Binding Source={x:Reference Content}, Path=ResendCommand}"/>
+                            <Frame
+                                HasShadow="False"
+                                CornerRadius="8"
+                                BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
+                                Padding="0">
+                                <Image
+                                    Margin="6"
+                                    WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                    Aspect="AspectFit"
+                                    Source="{Binding ImageUrl}"/>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        CommandParameter="{Binding ImageUrl}"
+                                        Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+
+                            <ImageButton
+                                IsVisible="{Binding ResendVisible}"
+                                Margin="6,0,0,0"
+                                HorizontalOptions="End"
+                                VerticalOptions="CenterAndExpand"
+                                BackgroundColor="Transparent"
+                                WidthRequest="25"
+                                HeightRequest="25"
+                                Source="resend_icon.png"
+                                Aspect="AspectFit"
+                                CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
+                                Command="{Binding Source={x:Reference Content}, Path=ResendCommand}"/>
+                        </StackLayout>
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
@@ -199,62 +241,83 @@
                         Spacing="0"
                         Margin="16,6,16,6"
                         HorizontalOptions="FillAndExpand"
-                        BackgroundColor="Transparent"
-                        Orientation="Horizontal">
+                        BackgroundColor="Transparent">
                         <Frame
-                            Margin="1"
+                            Margin="10"
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Fill"
                             HasShadow="False"
-                            VerticalOptions="StartAndExpand"
-                            CornerRadius="14"
-                            BorderColor="Transparent"
-                            IsClippedToBounds="True"
+                            CornerRadius="10"
+                            IsVisible="{Binding DateVisible}"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=DateBackgroundColor}"
                             Padding="0">
-                            <Image
-                                WidthRequest="30"
-                                HeightRequest="30"
-                                Source="{Binding UserIcon}"
-                                VerticalOptions="StartAndExpand"/>
-                        </Frame>
-                        <Frame
-                            Margin="6,0,6,0"
-                            HasShadow="False"
-                            CornerRadius="8"
-                            BackgroundColor="{Binding Source={x:Reference Content}, Path=OtherMessageViewBackgroundColor}"
-                            Padding="0">
-                            <Image
-                                Margin="6"
-                                BackgroundColor="Transparent"
-                                WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                Aspect="AspectFit"
-                                Source="{Binding ImageUrl}"/>
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    CommandParameter="{Binding ImageUrl}"
-                                    Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
-                            </Frame.GestureRecognizers>
+                            <Label
+                                Margin="12,2"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"
+                                TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
+                                Text="{Binding DateTime, Converter={StaticResource dateConverter}}"
+                                FontSize="14"/>
                         </Frame>
                         <StackLayout
-                            HorizontalOptions="StartAndExpand"
-                            Spacing="0">
-                            <ImageButton
-                                HorizontalOptions="StartAndExpand"
-                                VerticalOptions="CenterAndExpand"
-                                BackgroundColor="Transparent"
-                                WidthRequest="30"
-                                HeightRequest="30"
-                                Source="share_icon.png"
-                                CommandParameter="{Binding ImageUrl}"
-                                Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
+                            Spacing="0"
+                            BackgroundColor="Transparent"
+                            Orientation="Horizontal">
+                            <Frame
+                                Margin="1"
+                                HasShadow="False"
+                                VerticalOptions="StartAndExpand"
+                                CornerRadius="14"
+                                BorderColor="Transparent"
+                                IsClippedToBounds="True"
+                                Padding="0">
+                                <Image
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    Source="{Binding UserIcon}"
+                                    VerticalOptions="StartAndExpand"/>
+                            </Frame>
+                            <Frame
+                                Margin="6,0,6,0"
+                                HasShadow="False"
+                                CornerRadius="8"
+                                BackgroundColor="{Binding Source={x:Reference Content}, Path=OtherMessageViewBackgroundColor}"
+                                Padding="0">
+                                <Image
+                                    Margin="6"
+                                    BackgroundColor="Transparent"
+                                    WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                    Aspect="AspectFit"
+                                    Source="{Binding ImageUrl}"/>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        CommandParameter="{Binding ImageUrl}"
+                                        Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
                             <StackLayout
                                 HorizontalOptions="StartAndExpand"
-                                VerticalOptions="End"
                                 Spacing="0">
-                                <Label
-                                    FontSize="10"/>
-                                <Label
-                                    Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
-                                    FontSize="10"/>
+                                <ImageButton
+                                    HorizontalOptions="StartAndExpand"
+                                    VerticalOptions="CenterAndExpand"
+                                    BackgroundColor="Transparent"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    Source="share_icon.png"
+                                    CommandParameter="{Binding ImageUrl}"
+                                    Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
+                                <StackLayout
+                                    HorizontalOptions="StartAndExpand"
+                                    VerticalOptions="End"
+                                    Spacing="0">
+                                    <Label
+                                        FontSize="10"/>
+                                    <Label
+                                        Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                        FontSize="10"/>
+                                </StackLayout>
                             </StackLayout>
                         </StackLayout>
                     </StackLayout>
@@ -294,7 +357,10 @@
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand"
             ItemTemplate="{StaticResource messageDataTemplateSelector}"/>
-        <StackLayout
+        <local:BottomController
+            x:Name="Controller"
+            Grid.Row="1"/>
+        <!--<StackLayout
             x:Name="Controller"
             Grid.Row="1"
             Spacing="0"
@@ -337,6 +403,6 @@
                 HeightRequest="48"
                 VerticalOptions="EndAndExpand"
                 BackgroundColor="Transparent"/>
-        </StackLayout>
+        </StackLayout>-->
     </Grid>
 </local:CustomContentView>
