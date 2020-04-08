@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Content = Android.Content;
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
@@ -27,7 +27,7 @@ namespace ChatSample.Droid
             // Webviewで入力箇所がキーボードに隠れないようにするのに必要な処理
             //App.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
         }
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Content.PM.Permission[] grantResults)
         {
             Plugin.Permissions.PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Threading.Tasks;
 using Entap.Chat;
 using System.Linq;
 using Xamarin.Forms;
-using System.Text.RegularExpressions;
-using SQLite;
 
 namespace ChatSample
 {
@@ -185,6 +182,97 @@ namespace ChatSample
         {
             var mg = new NotSendMessageManager();
             mg.DeleteItem(id);
+        }
+
+
+        public async Task ImageShare(string imagePath)
+        {
+            FileManager.CreateFolders();
+            var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
+            var extension = System.IO.Path.GetExtension(imagePath);
+            string filePath = mediaFolderPath;
+            if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
+            {
+                filePath += "/temp.jpeg";
+            }
+            else if (extension.ToLower() == ".png")
+            {
+                filePath += "/temp.png";
+            }
+            else if (extension.ToLower() == ".pdf")
+            {
+                filePath += "/temp.pdf";
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("エラー", "こちらのファイルは表示できません", "閉じる");
+                return;
+            }
+
+            bool result;
+            if (imagePath.Contains("http://") || imagePath.Contains("https://"))
+            {
+                result = await ImageManager.DownloadWebImageFile(imagePath, filePath);
+            }
+            else
+            {
+                result = FileManager.FileCopy(imagePath, filePath);
+            }
+
+            if (!result)
+            {
+                await Application.Current.MainPage.DisplayAlert("エラー", "ファイルが取得できませんでした", "閉じる");
+                return;
+            }
+
+            string str = "error";
+            DependencyService.Get<IFileService>().OpenShareMenu(filePath, ref str);
+        }
+
+        public async Task ImageDownload(string imageUrl)
+        {
+            FileManager.CreateFolders();
+            var dlFolderPath = DependencyService.Get<IFileService>().GetDownloadFolderPath();
+            var extension = System.IO.Path.GetExtension(imageUrl);
+            string filePath = dlFolderPath;
+            if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
+            {
+                filePath += "/" + Guid.NewGuid() + ".jpeg";
+            }
+            else if (extension.ToLower() == ".pdf")
+            {
+                filePath += "/" + Guid.NewGuid() + ".pdf";
+            }
+            else
+            {
+                filePath += "/" + Guid.NewGuid() + ".png";
+            }
+            bool? dlResult;
+            if (Device.RuntimePlatform == Device.Android)
+                dlResult = await ImageManager.DownloadWebImageFile(imageUrl, filePath);
+            else
+                dlResult = DependencyService.Get<IFileService>().SaveImageiOSLibrary(imageUrl);
+            if (dlResult == true)
+                await Application.Current.MainPage.DisplayAlert("", "保存しました", "閉じる");
+            else if (dlResult == false)
+                await Application.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
+        }
+
+        public string GetSendImageSaveFolderPath()
+        {
+            var path = FileManager.GetContentsPath(FileManager.AppDataFolders.SendImage) + "/";
+            return path;
+        }
+
+        public string GetNotSendImageSaveFolderPath()
+        {
+            var path = FileManager.GetContentsPath(FileManager.AppDataFolders.NotSendImage) + "/";
+            return path;
+        }
+
+        public string GetUserId()
+        {
+            return UserDataManager.Instance.UserId;
         }
     }
 }

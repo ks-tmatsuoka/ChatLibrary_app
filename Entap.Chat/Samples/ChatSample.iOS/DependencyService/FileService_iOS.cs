@@ -2,16 +2,16 @@
 using System.IO;
 using System.Threading.Tasks;
 using AssetsLibrary;
+using ChatSample.iOS;
 using CoreImage;
-using Entap.Chat.iOS;
 using Foundation;
 using UIKit;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(FileService))]
-namespace Entap.Chat.iOS
+[assembly: Dependency(typeof(FileService_iOS))]
+namespace ChatSample.iOS
 {
-    public class FileService : IFileService
+    public class FileService_iOS : IFileService
     {
         public void OpenShareMenu(string filePath, ref string err)
         {
@@ -95,9 +95,9 @@ namespace Entap.Chat.iOS
                     delegate (UIImage img, NSError error) {
                         var hasError = (error != null);
                         if (!hasError)
-                            Application.Current.MainPage.DisplayAlert("", "保存しました", "閉じる");
+                            App.Current.MainPage.DisplayAlert("", "保存しました", "閉じる");
                         else
-                            Application.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
+                            App.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
                     }));
                 cmp.SetResult(null);
             }

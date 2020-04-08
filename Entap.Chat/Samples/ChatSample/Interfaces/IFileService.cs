@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Entap.Chat
+namespace ChatSample
 {
     public interface IFileService
     {

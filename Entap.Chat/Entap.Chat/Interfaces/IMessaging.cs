@@ -20,5 +20,10 @@ namespace Entap.Chat
         void SaveNotSendMessageData(int roomId, MessageBase messageBase);
         void DeleteNotSendMessageData(int id);
 
+        Task ImageShare(string imagePath);
+        Task ImageDownload(string imageUrl);
+        string GetSendImageSaveFolderPath();
+        string GetNotSendImageSaveFolderPath();
+        string GetUserId();
     }
 }

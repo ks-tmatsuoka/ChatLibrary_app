@@ -248,7 +248,6 @@ namespace Entap.Chat
 
         void Init()
         {
-            FileManager.CreateFolders();
             HasUnevenRows = true;
             SelectionMode = ListViewSelectionMode.None;
             SeparatorVisibility = SeparatorVisibility.None;
@@ -263,7 +262,7 @@ namespace Entap.Chat
 
         void GetFirstDisplayMessage()
         {
-            if (UserId < 0 || RoomId < 0 || LastReadMessageId < 0)
+            if (RoomId < 0 || LastReadMessageId < 0)
                 return;
             lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
@@ -296,11 +295,7 @@ namespace Entap.Chat
         protected override void OnPropertyChanged(string propertyName = null)
         {
             base.OnPropertyChanged(propertyName);
-            if (propertyName == UserIdProperty.PropertyName)
-            {
-                GetFirstDisplayMessage();
-            }
-            else if (propertyName == LastReadMessageIdProperty.PropertyName)
+            if (propertyName == LastReadMessageIdProperty.PropertyName)
             {
                 GetFirstDisplayMessage();
             }
@@ -601,7 +596,7 @@ namespace Entap.Chat
                 return false;
             if (Device.RuntimePlatform == Device.Android)
             {
-                var dummy = new MessageBase() { SendUserId=UserDataManager.Instance.UserId, MessageType=2};
+                var dummy = new MessageBase() { SendUserId= Settings.Current.Messaging.GetUserId(), MessageType=2};
                 _messages.Add(dummy);
                 _messages.Add(msg);
                 // ScrollTo(msg, ScrollToPosition.End, false) だけだと画像送信した際に追加したメッセージのViewが表示されない
@@ -670,19 +665,6 @@ namespace Entap.Chat
         {
             get { return (int)GetValue(RemainingItemsThresholdProperty); }
             set { SetValue(RemainingItemsThresholdProperty, value); }
-        }
-
-        /// <summary>
-        /// ユーザーID
-        /// </summary>
-        public static readonly BindableProperty UserIdProperty =
-            BindableProperty.Create(nameof(UserId), typeof(int), typeof(ChatListView), -1,
-                propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((ChatListView)bindable).UserId = (int)newValue);
-        public int UserId
-        {
-            get { return (int)GetValue(UserIdProperty); }
-            set { SetValue(UserIdProperty, value); }
         }
 
         /// <summary>

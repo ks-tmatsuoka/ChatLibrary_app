@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Entap.Chat
+namespace ChatSample
 {
     public class ImageManager
     {

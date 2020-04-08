@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
+using Entap.Chat.Modules;
 
 namespace Entap.Chat
 {
@@ -33,42 +34,19 @@ namespace Entap.Chat
 
             DownloadButton.Clicked += (sender, args) =>
             {
-                ProcessManager.Current.Invoke(nameof(this.CloseButton), async () =>
+                ProcessManager.Current.Invoke(nameof(DownloadButton), async () =>
                 {
-                    var dlFolderPath = DependencyService.Get<IFileService>().GetDownloadFolderPath();
-                    var extension = System.IO.Path.GetExtension(imageUrl);
-                    string filePath = dlFolderPath;
-                    if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
-                    {
-                        filePath += "/" + Guid.NewGuid() + ".jpeg";
-                    }
-                    else if (extension.ToLower() == ".pdf")
-                    {
-                        filePath += "/" + Guid.NewGuid() + ".pdf";
-                    }
-                    else
-                    {
-                        filePath += "/" + Guid.NewGuid() + ".png";
-                    }
-                    bool? dlResult;
-                    if (Device.RuntimePlatform == Device.Android)
-                        dlResult = await ImageManager.DownloadWebImageFile(imageUrl, filePath);
-                    else
-                        dlResult = DependencyService.Get<IFileService>().SaveImageiOSLibrary(imageUrl);
-                    if (dlResult == true)
-                        await Application.Current.MainPage.DisplayAlert("", "保存しました", "閉じる");
-                    else if (dlResult == false)
-                        await Application.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
+                    await Settings.Current.Messaging.ImageDownload(imageUrl);
                 });
             };
 
             ShareButton.Clicked += (sender, args) =>
             {
-                ProcessManager.Current.Invoke(nameof(this.CloseButton), async () =>
+                ProcessManager.Current.Invoke(nameof(ShareButton), async () =>
                 {
                     // TODO パーミッションチェック
 
-                    await ImageManager.ImageShare(imageUrl);
+                    await Settings.Current.Messaging.ImageShare(imageUrl);
                 });
             };
         }

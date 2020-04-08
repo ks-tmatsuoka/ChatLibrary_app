@@ -15,6 +15,7 @@
     <PackageReference Include="Xamarin.Forms" Version="4.5.0.396" />
     <PackageReference Include="Xam.Plugin.Media" Version="4.0.1.5" />
     <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Entap.Chat\Entap.Chat.csproj" />
@@ -24,5 +25,8 @@
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
     <Folder Include="Modules\DataBase\" />
+    <Folder Include="Models\Response\" />
+    <Folder Include="Models\Request\" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 </Project>

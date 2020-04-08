@@ -7,11 +7,12 @@ using Environment = Android.OS.Environment;
 using Entap.Chat.Android;
 using Xamarin.Forms;
 using Android.OS;
+using ChatSample.Android;
 
-[assembly: Dependency(typeof(FileService))]
-namespace Entap.Chat.Android
+[assembly: Dependency(typeof(FileService_Droid))]
+namespace ChatSample.Android
 {
-    public class FileService : IFileService
+    public class FileService_Droid : IFileService
     {
         public void OpenShareMenu(string filePath, ref string err)
         {

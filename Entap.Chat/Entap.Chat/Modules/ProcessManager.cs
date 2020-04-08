@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Entap.Chat
+namespace Entap.Chat.Modules
 {
     /// <summary>
     /// プロセスの多重実行を制御するため実行状態を管理する
