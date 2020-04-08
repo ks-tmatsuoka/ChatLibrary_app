@@ -19,7 +19,6 @@ namespace Entap.Chat
             Controller.SendCommand = SendCommand;
             Controller.CameraCommand = CameraCommand;
             Controller.LibraryCommand = LibraryCommand;
-            //this.SendImgButton.Clicked += (sender, e) => ProcessManager.Current.Invoke(nameof(this.SendImgButton), async () => await SendImg());
 
             Controller.BottomControllerBackgroundColor = BottomControllerBackgroundColor;
             Controller.BottomControllerIconStyle = BottomControllerIconStyle;

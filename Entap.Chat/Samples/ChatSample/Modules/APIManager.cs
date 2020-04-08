@@ -76,6 +76,8 @@ namespace ChatSample
         {
             public const string AddDevice = "add_device.php";
             public const string GetUserId = "get_userId.php";
+            public const string GetRoomList = "get_room_list.php";
+            public const string CreateRoom = "create_room.php";
         }
 
         /// <summary>
