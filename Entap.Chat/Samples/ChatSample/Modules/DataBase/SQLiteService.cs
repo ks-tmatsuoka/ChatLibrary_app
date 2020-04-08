@@ -1,15 +1,25 @@
 ﻿using System;
 using System.IO;
 using SQLite;
+using Xamarin.Forms;
 
 namespace ChatSample
 {
     public class SQLiteService
     {
-        public static string DatabasePath =>
-            Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-                "EntapChat.db3");
+        public static string DatabasePath => GetDatabasePath();
+
+        static string GetDatabasePath()
+        {
+            if (Device.RuntimePlatform == Device.iOS)
+            {
+                string docFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                string libFolder = Path.Combine(docFolder, "..", "Library");
+                var fullPath = Path.Combine(libFolder, "EntapChat.db3");
+                return fullPath;
+            }
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "EntapChat.db3");
+        }
 
         static SQLiteAsyncConnection _asyncConnection;
         //public static SQLiteAsyncConnection AsyncConnection = _asyncConnection ?? (_asyncConnection = GetAsyncConnection());
