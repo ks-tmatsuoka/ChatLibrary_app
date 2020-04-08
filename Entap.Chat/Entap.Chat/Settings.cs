@@ -13,11 +13,11 @@ namespace Entap.Chat
         /// </summary>
         public static Settings Current => _settings.Value;
 
-        public IMessaging Messaging;
+        public IChatService ChatService;
 
-        public void Init(IMessaging messaging)
+        public void Init(IChatService chatService)
         {
-            Messaging = messaging;
+            ChatService = chatService;
         }
     }
 }

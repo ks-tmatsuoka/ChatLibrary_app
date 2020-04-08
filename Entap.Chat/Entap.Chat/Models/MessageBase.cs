@@ -33,9 +33,9 @@ namespace Entap.Chat
         {
             get
             {
-                if (MessageType == 1 && SendUserId == Settings.Current.Messaging.GetUserId())
+                if (MessageType == 1 && SendUserId == Settings.Current.ChatService.GetUserId())
                     return Chat.MessageType.MyText;
-                else if (MessageType == 2 && SendUserId == Settings.Current.Messaging.GetUserId())
+                else if (MessageType == 2 && SendUserId == Settings.Current.ChatService.GetUserId())
                     return Chat.MessageType.MyImage;
                 else if (MessageType == 2)
                     return Chat.MessageType.OthersImage;

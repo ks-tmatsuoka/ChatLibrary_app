@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace ChatSample
 {
-    public class Messaging : IMessaging
+    public class ChatService : IChatService
     {
         const int LoadCount = 20;
         public Task<IEnumerable<MessageBase>> GetMessagesAsync(int id)

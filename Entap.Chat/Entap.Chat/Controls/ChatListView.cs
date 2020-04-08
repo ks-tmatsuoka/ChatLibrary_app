@@ -267,7 +267,7 @@ namespace Entap.Chat
             lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetMessagesAsync(LastReadMessageId);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(LastReadMessageId);
                 var last = messages?.Last();
                 if (last == null) return;
 
@@ -279,7 +279,7 @@ namespace Entap.Chat
                     if (_messages.Count > 0)
                         ScrollTo(_messages?.Last(), ScrollToPosition.End, false);
                     _messages.CollectionChanged += OnMessagesCollectionChanged;
-                    Settings.Current.Messaging.UpdateData(_messages);
+                    Settings.Current.ChatService.UpdateData(_messages);
                 });
             });
         }
@@ -289,7 +289,7 @@ namespace Entap.Chat
         /// </summary>
         void SetNotSendMessage()
         {
-            Settings.Current.Messaging.AddNotSendMessages(RoomId, _messages);
+            Settings.Current.ChatService.AddNotSendMessages(RoomId, _messages);
         }
 
         protected override void OnPropertyChanged(string propertyName = null)
@@ -419,7 +419,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetMessagesAsync(messageId);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(messageId);
 
                 Device.BeginInvokeOnMainThread(() =>
                 {
@@ -448,7 +448,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.Messaging.GetNewMessagesAsync(messageId);
+                var messages = await Settings.Current.ChatService.GetNewMessagesAsync(messageId);
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     _messages.AddRange(messages);
@@ -533,7 +533,7 @@ namespace Entap.Chat
             if (messageBase != null && lastReadMessageId < messageBase.MessageId)
             {
                 System.Diagnostics.Debug.WriteLine("SendAlreadyRead: " + messageBase.MessageId);
-                var result = await Settings.Current.Messaging.SendAlreadyRead(messageBase.MessageId);
+                var result = await Settings.Current.ChatService.SendAlreadyRead(messageBase.MessageId);
                 if (result == 0)
                 {
                     lastReadMessageId = messageBase.MessageId;
@@ -596,7 +596,7 @@ namespace Entap.Chat
                 return false;
             if (Device.RuntimePlatform == Device.Android)
             {
-                var dummy = new MessageBase() { SendUserId= Settings.Current.Messaging.GetUserId(), MessageType=2};
+                var dummy = new MessageBase() { SendUserId= Settings.Current.ChatService.GetUserId(), MessageType=2};
                 _messages.Add(dummy);
                 _messages.Add(msg);
                 // ScrollTo(msg, ScrollToPosition.End, false) だけだと画像送信した際に追加したメッセージのViewが表示されない
@@ -633,7 +633,7 @@ namespace Entap.Chat
         {
             if (messageBase.NotSendId < 1)
             {
-                Settings.Current.Messaging.SaveNotSendMessageData(RoomId, messageBase);
+                Settings.Current.ChatService.SaveNotSendMessageData(RoomId, messageBase);
             }
         }
 
@@ -646,7 +646,7 @@ namespace Entap.Chat
         {
             if (notSendMessageId > 0)
             {
-                Settings.Current.Messaging.DeleteNotSendMessageData(notSendMessageId);
+                Settings.Current.ChatService.DeleteNotSendMessageData(notSendMessageId);
                 return true;
             }
             return false;

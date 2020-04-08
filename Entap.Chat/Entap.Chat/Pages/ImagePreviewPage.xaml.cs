@@ -36,7 +36,7 @@ namespace Entap.Chat
             {
                 ProcessManager.Current.Invoke(nameof(DownloadButton), async () =>
                 {
-                    await Settings.Current.Messaging.ImageDownload(imageUrl);
+                    await Settings.Current.ChatService.ImageDownload(imageUrl);
                 });
             };
 
@@ -46,7 +46,7 @@ namespace Entap.Chat
                 {
                     // TODO パーミッションチェック
 
-                    await Settings.Current.Messaging.ImageShare(imageUrl);
+                    await Settings.Current.ChatService.ImageShare(imageUrl);
                 });
             };
         }

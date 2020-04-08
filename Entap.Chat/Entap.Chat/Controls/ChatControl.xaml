@@ -360,49 +360,5 @@
         <local:BottomController
             x:Name="Controller"
             Grid.Row="1"/>
-        <!--<StackLayout
-            x:Name="Controller"
-            Grid.Row="1"
-            Spacing="0"
-            Orientation="Horizontal"
-            HorizontalOptions="FillAndExpand">
-            <Button
-                x:Name="SendPhotoButton"
-                Margin="10,0,5,0"
-                WidthRequest="48"
-                HeightRequest="48"
-                Text="Cam"
-                VerticalOptions="EndAndExpand"
-                BackgroundColor="Transparent"/>
-            <Button
-                x:Name="SendImgButton"
-                Margin="5,0,10,0"
-                WidthRequest="48"
-                HeightRequest="48"
-                Text="Lib"
-                VerticalOptions="EndAndExpand"
-                BackgroundColor="Transparent"/>
-            
-            <local:DynamicResizedEditor
-                x:Name="MsgEditor"
-                Margin="5,5,5,5"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="CenterAndExpand"
-                Placeholder="メッセージを入力"
-                PlaceholderColor="LightGray"
-                BackgroundColor="White"
-                CornerRadius="6"
-                MaxDisplayLineCount="5"
-                FontSize="14"
-                MinimumHeightRequest="28"
-            />
-            <Button
-                x:Name="SendButton"
-                Margin="5,0,10,0"
-                WidthRequest="48"
-                HeightRequest="48"
-                VerticalOptions="EndAndExpand"
-                BackgroundColor="Transparent"/>
-        </StackLayout>-->
     </Grid>
 </local:CustomContentView>

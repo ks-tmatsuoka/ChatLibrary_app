@@ -23,7 +23,7 @@ namespace Entap.Chat
 
             Controller.BottomControllerBackgroundColor = BottomControllerBackgroundColor;
             Controller.BottomControllerIconStyle = BottomControllerIconStyle;
-        } 
+        }
 
         protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -78,7 +78,7 @@ namespace Entap.Chat
             {
                 if (string.IsNullOrEmpty(Controller.EditorText))
                     return;
-                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), Text = Controller.EditorText, IsAlreadyRead = false, MessageType = 1, SendUserId = Settings.Current.Messaging.GetUserId() };
+                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), Text = Controller.EditorText, IsAlreadyRead = false, MessageType = 1, SendUserId = Settings.Current.ChatService.GetUserId() };
                 Controller.EditorText = "";
             }
             else
@@ -89,7 +89,7 @@ namespace Entap.Chat
             }
             ChatList.AddMessage(msg);
 
-            var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
+            var newMsgId = await Settings.Current.ChatService.SendMessage(msg);
             var index = ChatList.Messages.IndexOf(msg);
             if (newMsgId < 0)
             {
@@ -124,7 +124,7 @@ namespace Entap.Chat
         });
         async Task SendPhoto()
         {
-            var imgPath = await Settings.Current.Messaging.TakePicture();
+            var imgPath = await Settings.Current.ChatService.TakePicture();
             if (string.IsNullOrEmpty(imgPath))
                 return;
             byte[] bytes = FileManager.ReadBytes(imgPath);
@@ -134,7 +134,7 @@ namespace Entap.Chat
             {
                 return;
             }
-            var copyImgPath = Settings.Current.Messaging.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+            var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
             if (!FileManager.FileCopy(imgPath, copyImgPath))
             {
                 Device.BeginInvokeOnMainThread(() =>
@@ -143,7 +143,7 @@ namespace Entap.Chat
                 });
                 return;
             }
-            var msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType=2, SendUserId= Settings.Current.Messaging.GetUserId() };
+            var msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = 2, SendUserId = Settings.Current.ChatService.GetUserId() };
             await ChatAddImg(msg);
         }
 
@@ -152,11 +152,11 @@ namespace Entap.Chat
             var msg = obj as MessageBase;
             ProcessManager.Current.Invoke(nameof(SendCommand), async () => await SendImg(msg));
         });
-        async Task SendImg(MessageBase msg=null)
+        async Task SendImg(MessageBase msg = null)
         {
             if (msg is null)
             {
-                var imgPath = await Settings.Current.Messaging.SelectImage();
+                var imgPath = await Settings.Current.ChatService.SelectImage();
                 if (string.IsNullOrEmpty(imgPath))
                     return;
                 byte[] bytes = FileManager.ReadBytes(imgPath);
@@ -166,7 +166,7 @@ namespace Entap.Chat
                 {
                     return;
                 }
-                var copyImgPath = Settings.Current.Messaging.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
                 if (!FileManager.FileCopy(imgPath, copyImgPath))
                 {
                     Device.BeginInvokeOnMainThread(() =>
@@ -175,7 +175,7 @@ namespace Entap.Chat
                     });
                     return;
                 }
-                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = 2, SendUserId = Settings.Current.Messaging.GetUserId() };
+                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = 2, SendUserId = Settings.Current.ChatService.GetUserId() };
             }
             else
             {
@@ -189,7 +189,7 @@ namespace Entap.Chat
         async Task ChatAddImg(MessageBase msg)
         {
             ChatList.AddMessage(msg);
-            var newMsgId = await Settings.Current.Messaging.SendMessage(msg);
+            var newMsgId = await Settings.Current.ChatService.SendMessage(msg);
             var index = ChatList.Messages.IndexOf(msg);
             if (newMsgId < 0)
             {
@@ -197,7 +197,7 @@ namespace Entap.Chat
                 var delImgPath = msg.ImageUrl;
                 string extension = System.IO.Path.GetExtension(delImgPath);
                 ChatList.Messages[index].ResendVisible = true;
-                var sendErrorImgPath = Settings.Current.Messaging.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                var sendErrorImgPath = Settings.Current.ChatService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + extension;
                 FileManager.FileCopy(delImgPath, sendErrorImgPath);
                 ChatList.Messages[index].ImageUrl = sendErrorImgPath;
                 FileManager.FileDelete(delImgPath);
@@ -240,7 +240,7 @@ namespace Entap.Chat
                 // TODO パーミッションチェック
 
                 var imagePath = pm as string;
-                await Settings.Current.Messaging.ImageShare(imagePath);
+                await Settings.Current.ChatService.ImageShare(imagePath);
             });
         });
 
@@ -400,6 +400,6 @@ namespace Entap.Chat
         {
             get { return (int)GetValue(LastReadMessageIdProperty); }
             set { SetValue(LastReadMessageIdProperty, value); }
-        }  
+        }
     }
 }

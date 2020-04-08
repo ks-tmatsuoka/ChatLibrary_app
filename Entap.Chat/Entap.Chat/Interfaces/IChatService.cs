@@ -7,7 +7,7 @@ using Xamarin.Forms.Internals;
 namespace Entap.Chat
 {
     [Preserve(AllMembers = true)]
-    public interface IMessaging
+    public interface IChatService
     {
         Task<IEnumerable<MessageBase>> GetMessagesAsync(int index);
         Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int index);

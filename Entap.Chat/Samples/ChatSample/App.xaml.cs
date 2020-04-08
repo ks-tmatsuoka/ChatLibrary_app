@@ -11,8 +11,8 @@ namespace ChatSample
 
             MainPage = new NavigationPage(new MainPage());
 
-            var messaging = new Messaging();
-            Entap.Chat.Settings.Current.Init(messaging);
+            var service = new ChatService();
+            Entap.Chat.Settings.Current.Init(service);
         }
 
         protected override void OnStart()
