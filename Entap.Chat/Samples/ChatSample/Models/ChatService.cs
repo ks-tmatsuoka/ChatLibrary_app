@@ -5,52 +5,109 @@ using System.Threading.Tasks;
 using Entap.Chat;
 using System.Linq;
 using Xamarin.Forms;
+using System.Net.WebSockets;
+using System.Threading;
+using Newtonsoft.Json;
 
 namespace ChatSample
 {
     public class ChatService : IChatService
     {
         const int LoadCount = 20;
-        public Task<IEnumerable<MessageBase>> GetMessagesAsync(int id)
+        public async Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId)
         {
-            if (id == 0) return null;
-
-            var messages = new List<MessageBase>();
-            for (int i = 0; i < LoadCount; i++)
+            var req = new ReqGetMessage
             {
-                if (id - i < 0) break;
-
-                var mod = (id - i) % 3;
-                if (mod == 0)
-                    messages.Add(new MessageBase { MessageId = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i), MessageType = 2 });
-                else
-                    messages.Add(new MessageBase { MessageId = id - i, Text = (id - i).ToString(), MessageType = 1 });
+                RoomId = roomId,
+                MessageId = messageId,
+                MessageDirection = 1,
+                Conut = LoadCount
+            };
+            var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.GetMessages), req);
+            var resp = JsonConvert.DeserializeObject<RespGetMessage>(json);
+            var messages = new List<MessageBase>();
+            if (resp.Status == APIManager.APIStatus.Succeeded)
+            {
+                foreach (var val in resp.Data.MessageList)
+                {
+                    var msgBase = new MessageBase
+                    {
+                        MessageId = val.MessageId,
+                        Text = val.Text,
+                        SendUserId = val.SendUserId,
+                        DateTime = val.SendDateTime,
+                        ImageUrl = val.MediaUrl,
+                        MessageType = val.MessageType
+                    };
+                    messages.Add(msgBase);
+                }
             }
+
+            //if (id == 0) return null;
+
+            //var messages = new List<MessageBase>();
+            //for (int i = 0; i < LoadCount; i++)
+            //{
+            //    if (id - i < 0) break;
+
+            //    var mod = (id - i) % 3;
+            //    if (mod == 0)
+            //        messages.Add(new MessageBase { MessageId = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i), MessageType = 2 });
+            //    else
+            //        messages.Add(new MessageBase { MessageId = id - i, Text = (id - i).ToString(), MessageType = 1 });
+            //}
             messages.Reverse();
-            return Task.FromResult<IEnumerable<MessageBase>>(messages);
+            return await Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
 
-        public Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int id)
+        public async Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int roomId, int messageId)
         {
-            var messages = new List<MessageBase>();
-            if (id >= 120 || id <= 0)
-                return Task.FromResult<IEnumerable<MessageBase>>(messages);
-
-            for (int i = 0; i < LoadCount; i++)
+            var req = new ReqGetMessage
             {
-                if (id - i < 0) break;
-
-                var mod = (id - i) % 3;
-                if (mod == 0)
-                    messages.Add(new MessageBase { MessageId = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i), MessageType = 2 });
-                else
-                    messages.Add(new MessageBase { MessageId = id + i, Text = (id + i).ToString(), MessageType = 1 });
-
+                RoomId = roomId,
+                MessageId = messageId,
+                MessageDirection = 2,
+                Conut = LoadCount
+            };
+            var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.GetMessages), req);
+            var resp = JsonConvert.DeserializeObject<RespGetMessage>(json);
+            var messages = new List<MessageBase>();
+            if (resp.Status == APIManager.APIStatus.Succeeded)
+            {
+                foreach(var val in resp.Data.MessageList)
+                {
+                    var msgBase = new MessageBase
+                    {
+                        MessageId = val.MessageId,
+                        Text = val.Text,
+                        SendUserId = val.SendUserId,
+                        DateTime = val.SendDateTime,
+                        ImageUrl = val.MediaUrl,
+                        MessageType = val.MessageType
+                    };
+                    messages.Add(msgBase);
+                }
             }
-            return Task.FromResult<IEnumerable<MessageBase>>(messages);
+
+            //var messages = new List<MessageBase>();
+            //if (id >= 120 || id <= 0)
+            //    return Task.FromResult<IEnumerable<MessageBase>>(messages);
+
+            //for (int i = 0; i < LoadCount; i++)
+            //{
+            //    if (id - i < 0) break;
+
+            //    var mod = (id - i) % 3;
+            //    if (mod == 0)
+            //        messages.Add(new MessageBase { MessageId = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i), MessageType = 2 });
+            //    else
+            //        messages.Add(new MessageBase { MessageId = id + i, Text = (id + i).ToString(), MessageType = 1 });
+
+            //}
+            return await Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
 
-        public Task<int> SendMessage(MessageBase msg)
+        public async Task<int> SendMessage(MessageBase msg)
         {
             var time = DateTime.Now;
             int i;
@@ -58,7 +115,23 @@ namespace ChatSample
                 i = 0;
             else
                 i = -1;
-            return Task.FromResult<int>(i);
+
+
+            var dic = new Dictionary<string, string>();
+            dic["RoomId"] = "1";
+            dic["UserId"] = UserDataManager.Instance.UserId;
+            dic["MessageType"] = "1";
+            dic["Text"] = msg.Text;
+
+            byte[] bytes = null;
+            string name = "";
+
+            var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, "image");
+            var resp = JsonConvert.DeserializeObject<RespMessageId>(json);
+
+
+
+            return await Task.FromResult<int>(i);
         }
 
         public Task<int> SendAlreadyRead(int msgId)
@@ -127,20 +200,75 @@ namespace ChatSample
                 }
             });
 
+            /*
             Task.Run(async () =>
             {
+                //クライアント側のWebSocketを定義
+                ClientWebSocket ws = new ClientWebSocket();
+
+                //接続先エンドポイントを指定
+                var uri = new Uri("wss://chat.entap.dev:8080");
+
+                //サーバに対し、接続を開始
+                await ws.ConnectAsync(uri, CancellationToken.None);
+                var buffer = new byte[1024];
+
                 while (true)
                 {
-                    await Task.Delay(10000);
+                    //await Task.Delay(10000);
 
-                    Device.BeginInvokeOnMainThread(() =>
+                    //Device.BeginInvokeOnMainThread(() =>
+                    //{
+                    //    var id = messageBases.Max(w => w.MessageId) + 1;
+                    //    //messageBases.Add(new MessageBase { MessageId = id, Text = "other", IsAlreadyRead = false, MessageType = 1 });
+                    //});
+
+
+                    //所得情報確保用の配列を準備
+                    var segment = new ArraySegment<byte>(buffer);
+
+                    //サーバからのレスポンス情報を取得
+                    var result = await ws.ReceiveAsync(segment, CancellationToken.None);
+
+                    //エンドポイントCloseの場合、処理を中断
+                    if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        var id = messageBases.Max(w => w.MessageId) + 1;
-                        //messageBases.Add(new MessageBase { MessageId = id, Text = "other", IsAlreadyRead = false, MessageType = 1 });
-                    });
+                        await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "OK",
+                          CancellationToken.None);
+                        return;
+                    }
+
+                    //バイナリの場合は、当処理では扱えないため、処理を中断
+                    if (result.MessageType == WebSocketMessageType.Binary)
+                    {
+                        await ws.CloseAsync(WebSocketCloseStatus.InvalidMessageType,
+                          "I don't do binary", CancellationToken.None);
+                        return;
+                    }
+
+                    //メッセージの最後まで取得
+                    int count = result.Count;
+                    while (!result.EndOfMessage)
+                    {
+                        if (count >= buffer.Length)
+                        {
+                            await ws.CloseAsync(WebSocketCloseStatus.InvalidPayloadData,
+                              "That's too long", CancellationToken.None);
+                            return;
+                        }
+                        segment = new ArraySegment<byte>(buffer, count, buffer.Length - count);
+                        result = await ws.ReceiveAsync(segment, CancellationToken.None);
+
+                        count += result.Count;
+                    }
+
+                    //メッセージを取得
+                    var message = System.Text.Encoding.UTF8.GetString(buffer, 0, count);
+                    Console.WriteLine("> " + message);
                 }
 
             });
+            */
         }
 
         /// <summary>

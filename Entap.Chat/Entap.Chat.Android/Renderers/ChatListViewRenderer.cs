@@ -27,6 +27,10 @@ namespace Entap.Chat.Android
         private void Control_Scroll(object sender, global::Android.Widget.AbsListView.ScrollEventArgs e)
         {
             var _ChatListView = Element as ChatListView;
+
+            if (_ChatListView.Messages is null)
+                return;
+
             _ChatListView.OnScrolled(null, new ScrolledEventArgs(0, Control.GetChildAt(0).GetY() * -1));
             
             var firstIndex = e.FirstVisibleItem;

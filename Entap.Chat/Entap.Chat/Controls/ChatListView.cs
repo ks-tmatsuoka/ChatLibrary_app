@@ -267,11 +267,26 @@ namespace Entap.Chat
             lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(LastReadMessageId);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, LastReadMessageId);
                 var last = messages?.Last();
-                if (last == null) return;
-
                 _messages = new ObservableCollection<MessageBase>(messages);
+                if (_messages.Count() < DefaultRemainingItemsThreshold * 3)
+                {
+                    var newMessages = await Settings.Current.ChatService.GetNewMessagesAsync(RoomId, LastReadMessageId);
+                    foreach(var msg in newMessages)
+                    {
+                        _messages.Add(msg);
+                    }
+                    if (last == null)
+                    {
+                        newMessages?.Last();
+                    }
+                }
+                if (last == null)
+                {
+                    return;
+                }
+
                 SetNotSendMessage();
                 Device.BeginInvokeOnMainThread(async () =>
                 {
@@ -419,7 +434,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(messageId);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId);
 
                 Device.BeginInvokeOnMainThread(() =>
                 {
@@ -448,7 +463,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetNewMessagesAsync(messageId);
+                var messages = await Settings.Current.ChatService.GetNewMessagesAsync(RoomId, messageId);
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     _messages.AddRange(messages);

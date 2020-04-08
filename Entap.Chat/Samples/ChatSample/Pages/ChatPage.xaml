@@ -24,7 +24,7 @@
             </Grid.ColumnDefinitions>
             <chat:ChatControl
                 RoomId="1"
-                LastReadMessageId="100"
+                LastReadMessageId="0"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"/>
         </Grid>
