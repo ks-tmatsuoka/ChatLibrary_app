@@ -246,6 +246,11 @@ namespace Entap.Chat
             Init();
         }
 
+        public ChatListView(ListViewCachingStrategy cachingStrategy) : base(cachingStrategy)
+        {
+            Init();
+        }
+
         void Init()
         {
             HasUnevenRows = true;
