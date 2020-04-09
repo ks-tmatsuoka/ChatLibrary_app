@@ -16,10 +16,7 @@ namespace Entap.Chat
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var val = value as bool?;
-            if (val == true)
-                return false;
-            return true;
+            throw new NotImplementedException();
         }
     }
 }

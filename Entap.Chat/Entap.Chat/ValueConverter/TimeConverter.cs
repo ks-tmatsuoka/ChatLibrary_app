@@ -13,10 +13,9 @@ namespace Entap.Chat
             var dateTime = (DateTime)value;
             return dateTime.ToString("hh:mm");
         }
-        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var dateTime = (DateTime)value;
-            return dateTime.ToString("hh:mm");
+            throw new NotImplementedException();
         }
     }
 }

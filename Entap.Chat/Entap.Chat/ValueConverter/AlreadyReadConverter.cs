@@ -18,12 +18,7 @@ namespace Entap.Chat
         }
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var isAlreadyRead = (bool)value;
-            if (isAlreadyRead)
-            {
-                return "既読";
-            }
-            return "";
+            throw new NotImplementedException();
         }
     }
 }
