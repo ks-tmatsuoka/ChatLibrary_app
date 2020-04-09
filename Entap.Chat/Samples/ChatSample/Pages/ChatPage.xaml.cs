@@ -7,9 +7,10 @@ namespace ChatSample
 {
     public partial class ChatPage : ContentPage
     {
-        public ChatPage()
+        public ChatPage(int roomId)
         {
             InitializeComponent();
+            this.BindingContext = new ChatPageViewModel(roomId);
         }
     }
 }

@@ -270,9 +270,11 @@ namespace Entap.Chat
             if (RoomId < 0 || LastReadMessageId < 0)
                 return;
             lastReadMessageId = LastReadMessageId;
+            if (lastReadMessageId == 0)
+                lastReadMessageId = 1;
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, LastReadMessageId);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId);
                 var last = messages?.Last();
                 _messages = new ObservableCollection<MessageBase>(messages);
                 if (_messages.Count() < DefaultRemainingItemsThreshold * 3)
@@ -293,6 +295,7 @@ namespace Entap.Chat
                 }
 
                 SetNotSendMessage();
+                DateVisibleUpdate();
                 Device.BeginInvokeOnMainThread(async () =>
                 {
                     ItemsSource = _messages;
@@ -371,6 +374,8 @@ namespace Entap.Chat
             });
             foreach (var msg in _messages)
             {
+                if (first.Equals(msg))
+                    continue;
                 if (dateTime.ToString("yyyy/MM/dd") == msg.DateTime.ToString("yyyy/MM/dd"))
                 {
                     if (msg.DateVisible)

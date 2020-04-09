@@ -6,7 +6,7 @@ namespace ChatSample
         public Contents Data { get; set; }
         public class Contents
         {
-            public string MessageId { get; set; }
+            public int MessageId { get; set; }
         }
     }
 }

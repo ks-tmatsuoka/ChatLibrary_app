@@ -195,7 +195,7 @@ namespace ChatSample
                     if (!posttask.IsSuccessStatusCode && showError)
                     {
                         await App.Current.MainPage.DisplayAlert("通信エラー", "通信に失敗しました", "閉じる");
-                        return "{\"status\":" + APIStatus.HttpConnectError + ", \"message\":[], \"data\":{ }}";
+                        return "{\"Status\":" + APIStatus.HttpConnectError + ",\"Message\": \"\",\"Data\": {}}";
                     }
                     var responseStr = await posttask.Content.ReadAsStringAsync();
                     var response = JsonConvert.DeserializeObject<ResponseBase>(responseStr);
@@ -245,7 +245,7 @@ namespace ChatSample
                 {
                     await App.Current.MainPage.DisplayAlert("エラー", "通信に失敗しました", "閉じる");
                 }
-                return "{\"status\":" + APIStatus.RetryFalse + ", \"message\":[\"リトライ失敗\"], \"data\":{ }}";
+                return "{\"status\":" + APIStatus.RetryFalse + ", \"message\":\"リトライ失敗\", \"data\":{ }}";
             }
             catch (Exception ex)
             {
@@ -262,7 +262,7 @@ namespace ChatSample
                 //    });
                     
                 //}
-                return "{\"status\":" + APIStatus.Exception + ", \"message\":[\"" + ex.Message.Replace("\"", " ").Replace(":", " ") + "\"]}";
+                return "{\"Status\":" + APIStatus.Exception + ",\"Message\": \"" + ex.Message.Replace("\"", " ").Replace(":", " ") + "\",\"Data\": {}}";
             }
         }
 

@@ -6,10 +6,6 @@
     xmlns:chat="clr-namespace:Entap.Chat;assembly=Entap.Chat"
     x:Class="ChatSample.ChatPage">
 
-    <ContentPage.BindingContext>
-        <local:ChatPageViewModel/>
-    </ContentPage.BindingContext>
-
     <ContentPage.Content>
         <Grid
             HorizontalOptions="FillAndExpand"
@@ -23,7 +19,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <chat:ChatControl
-                RoomId="1"
+                RoomId="{Binding RoomId}"
                 LastReadMessageId="0"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"/>

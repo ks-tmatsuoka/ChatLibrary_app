@@ -13,6 +13,7 @@ namespace ChatSample
 
             var service = new ChatService();
             Entap.Chat.Settings.Current.Init(service);
+            FileManager.CreateFolders();
         }
 
         protected override void OnStart()

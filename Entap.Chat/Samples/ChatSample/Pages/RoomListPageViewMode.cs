@@ -48,18 +48,6 @@ namespace ChatSample
                         }
                     }
                 }
-
-                //var reqGetUserId = new ReqGetUserId();
-                //if (string.IsNullOrEmpty(reqGetUserId.UserId))
-                //{
-                //    var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.GetUserId), reqGetUserId);
-                //    var resp = JsonConvert.DeserializeObject<RespUserId>(json);
-                //    if (resp.Status == APIManager.APIStatus.Succeeded)
-                //    {
-                //        if (UserDataManager.Instance.UserId != resp.Data.UserId)
-                //            UserDataManager.Instance.UserId = resp.Data.UserId;
-                //    }
-                //}
             });
             
         }
@@ -86,22 +74,9 @@ namespace ChatSample
             if (!(obj is ItemTappedEventArgs itemTappedEventArgs)) return;
             if (!(itemTappedEventArgs.Item is Room model)) return;
 
-            var page = new ChatPage();
+            // テストコード
+            var page = new ChatPage(1);
             App.Current.MainPage.Navigation.PushAsync(page);
-
-            //ProcessManager.CanInvoke(async () =>
-            //{
-            //    var entry = model.RightImageTapCmdParameter as RespGetReportEntries.Entry;
-            //    if (model.IsFolder)
-            //    {
-            //        await PageManager.PushAsync<DocumentsAndPhotoPage>(new DocumentsAndPhotoPageViewModel(model.TopText, permission, entry.EntryId, project, apiName, false, isMove, moveEntry));
-            //    }
-            //    else
-            //    {
-            //        await PageManager.PushAsync<DisplayFilePage>(new DisplayFilePageViewModel(model.FilesUrl, false));
-            //    }
-            //    ProcessManager.OnComplete();
-            //});
         });
     }
 }

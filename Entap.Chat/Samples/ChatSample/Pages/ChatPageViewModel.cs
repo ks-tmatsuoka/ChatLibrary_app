@@ -6,8 +6,10 @@ namespace ChatSample
 {
     public class ChatPageViewModel : PageViewModelBase
     {
-        public ChatPageViewModel()
+        public ChatPageViewModel(int roomId)
         {
+            RoomId = roomId;
         }
+        public int RoomId { get; set; }
     }
 }

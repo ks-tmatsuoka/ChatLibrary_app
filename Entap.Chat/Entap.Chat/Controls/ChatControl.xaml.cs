@@ -88,7 +88,7 @@ namespace Entap.Chat
             }
             ChatList.AddMessage(msg);
 
-            var newMsgId = await Settings.Current.ChatService.SendMessage(msg);
+            var newMsgId = await Settings.Current.ChatService.SendMessage(RoomId ,msg);
             var index = ChatList.Messages.IndexOf(msg);
             if (newMsgId < 0)
             {
@@ -188,7 +188,7 @@ namespace Entap.Chat
         async Task ChatAddImg(MessageBase msg)
         {
             ChatList.AddMessage(msg);
-            var newMsgId = await Settings.Current.ChatService.SendMessage(msg);
+            var newMsgId = await Settings.Current.ChatService.SendMessage(RoomId ,msg);
             var index = ChatList.Messages.IndexOf(msg);
             if (newMsgId < 0)
             {

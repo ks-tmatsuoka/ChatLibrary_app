@@ -60,10 +60,12 @@ namespace ChatSample
                 if (userData != null)
                 {
                     //return userData.UserId;
+                    // テストコード
                     return "2d130968fa52d43a1735ebd129002d2b";
                 }
                 userData = Instance.GetItem();
                 //return userData.UserId;
+                // テストコード
                 return "2d130968fa52d43a1735ebd129002d2b";
             }
             set

@@ -42,20 +42,6 @@ namespace ChatSample
                     messages.Add(msgBase);
                 }
             }
-
-            //if (id == 0) return null;
-
-            //var messages = new List<MessageBase>();
-            //for (int i = 0; i < LoadCount; i++)
-            //{
-            //    if (id - i < 0) break;
-
-            //    var mod = (id - i) % 3;
-            //    if (mod == 0)
-            //        messages.Add(new MessageBase { MessageId = id - i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id - i), MessageType = 2 });
-            //    else
-            //        messages.Add(new MessageBase { MessageId = id - i, Text = (id - i).ToString(), MessageType = 1 });
-            //}
             messages.Reverse();
             return await Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
@@ -88,50 +74,47 @@ namespace ChatSample
                     messages.Add(msgBase);
                 }
             }
-
-            //var messages = new List<MessageBase>();
-            //if (id >= 120 || id <= 0)
-            //    return Task.FromResult<IEnumerable<MessageBase>>(messages);
-
-            //for (int i = 0; i < LoadCount; i++)
-            //{
-            //    if (id - i < 0) break;
-
-            //    var mod = (id - i) % 3;
-            //    if (mod == 0)
-            //        messages.Add(new MessageBase { MessageId = id + i, ImageUrl = "http://placehold.jp/50x50.png?text=" + (id + i), MessageType = 2 });
-            //    else
-            //        messages.Add(new MessageBase { MessageId = id + i, Text = (id + i).ToString(), MessageType = 1 });
-
-            //}
             return await Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
 
-        public async Task<int> SendMessage(MessageBase msg)
+        public async Task<int> SendMessage(int roomId, MessageBase msg)
         {
-            var time = DateTime.Now;
-            int i;
-            if (time.Second % 2 == 0)
-                i = 0;
-            else
-                i = -1;
-
-
             var dic = new Dictionary<string, string>();
-            dic["RoomId"] = "1";
+            dic["RoomId"] = roomId.ToString();
             dic["UserId"] = UserDataManager.Instance.UserId;
-            dic["MessageType"] = "1";
-            dic["Text"] = msg.Text;
+            dic["MessageType"] = msg.MessageType.ToString();
+            if (!string.IsNullOrEmpty(msg.Text))
+                dic["Text"] = msg.Text;
 
             byte[] bytes = null;
             string name = "";
+            string fileType = "";
+            if (msg.MessageType == 2 && !string.IsNullOrEmpty(msg.ImageUrl))
+            {
+                // 画像
+                bytes = FileManager.ReadBytes(msg.ImageUrl);
+                var extension = System.IO.Path.GetExtension(msg.ImageUrl);
+                name = Guid.NewGuid().ToString() + extension;
+                fileType = "Image";
+                if (bytes == null || bytes.Length < 1)
+                {
+                    await App.Current.MainPage.DisplayAlert("この写真は送れません", "", "閉じる");
+                    return await Task.FromResult<int>(-1);
+                }
+            }
+            else if (msg.MessageType == 3)
+            {
+                //TODO 動画
+                fileType = "Movie";
+                return await Task.FromResult<int>(-1);
+            }
 
-            var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, "image");
+            var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, fileType);
             var resp = JsonConvert.DeserializeObject<RespMessageId>(json);
+            if (resp.Status == APIManager.APIStatus.Succeeded)
+                return await Task.FromResult<int>(resp.Data.MessageId);
 
-
-
-            return await Task.FromResult<int>(i);
+            return await Task.FromResult<int>(-1);
         }
 
         public Task<int> SendAlreadyRead(int msgId)
@@ -315,7 +298,6 @@ namespace ChatSample
 
         public async Task ImageShare(string imagePath)
         {
-            FileManager.CreateFolders();
             var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
             var extension = System.IO.Path.GetExtension(imagePath);
             string filePath = mediaFolderPath;
@@ -359,7 +341,6 @@ namespace ChatSample
 
         public async Task ImageDownload(string imageUrl)
         {
-            FileManager.CreateFolders();
             var dlFolderPath = DependencyService.Get<IFileService>().GetDownloadFolderPath();
             var extension = System.IO.Path.GetExtension(imageUrl);
             string filePath = dlFolderPath;

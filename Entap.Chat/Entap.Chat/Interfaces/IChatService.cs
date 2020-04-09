@@ -11,7 +11,7 @@ namespace Entap.Chat
     {
         Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId);
         Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int roomId, int messageId);
-        Task<int> SendMessage(MessageBase text);
+        Task<int> SendMessage(int roomId, MessageBase msg);
         Task<int> SendAlreadyRead(int msgId);
         Task<string> SelectImage();
         Task<string> TakePicture();
