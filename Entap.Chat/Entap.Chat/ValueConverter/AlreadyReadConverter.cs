@@ -12,7 +12,7 @@ namespace Entap.Chat
             var isAlreadyRead = (bool)value;
             if (isAlreadyRead)
             {
-                return "既読";
+                return Settings.Current.AlreadyReadText;
             }
             return "";
         }

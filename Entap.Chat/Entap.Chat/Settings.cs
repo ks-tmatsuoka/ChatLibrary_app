@@ -15,9 +15,18 @@ namespace Entap.Chat
 
         public IChatService ChatService;
 
+        public string TimeFormat;
+        public string AlreadyReadText;
+        public string TodayText;
+        public string DateFormat;
+
         public void Init(IChatService chatService)
         {
             ChatService = chatService;
+            TimeFormat = "H:m";
+            AlreadyReadText = "既読";
+            TodayText = "今日";
+            DateFormat = "MM/dd";
         }
     }
 }

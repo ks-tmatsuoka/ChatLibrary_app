@@ -10,8 +10,8 @@ namespace Entap.Chat
         {
             var dateTime = (DateTime)value;
             if (dateTime.ToString("yyyy/MM/dd") == DateTime.Now.ToString("yyyy/MM/dd"))
-                return "今日";
-            return dateTime.ToString("MM/dd");
+                return Settings.Current.TodayText;
+            return dateTime.ToString(Settings.Current.DateFormat);
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
