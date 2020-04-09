@@ -23,7 +23,7 @@ namespace Entap.Chat
         public void Init(IChatService chatService)
         {
             ChatService = chatService;
-            TimeFormat = "H:m";
+            TimeFormat = "H:mm";
             AlreadyReadText = "既読";
             TodayText = "今日";
             DateFormat = "MM/dd";
