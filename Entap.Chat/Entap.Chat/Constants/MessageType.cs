@@ -7,9 +7,9 @@ namespace Entap.Chat
     public enum MessageType
     {
         None,
-        OthersText,
-        MyText,
-        OthersImage,
-        MyImage,
+        Text,
+        Image,
+        Movie,
+        Custom=100
     }
 }

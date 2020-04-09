@@ -21,17 +21,17 @@ namespace Entap.Chat
 
             switch (message.MessageType)
             {
-                case 1:
+                case (int)MessageType.Text:
                     if (message.SendUserId == Settings.Current.ChatService.GetUserId())
                         return MyTextMessageTemplate;
                     else
                         return OthersTextMessageTemplate;
-                case 2:
+                case (int)MessageType.Image:
                     if (message.SendUserId == Settings.Current.ChatService.GetUserId())
                         return MyImageMessageTemplate;
                     else
                         return OthersImageMessageTemplate;
-                case 3:
+                case (int)MessageType.Movie:
                     return OthersTextMessageTemplate;
                 default:
                     throw new ArgumentException();

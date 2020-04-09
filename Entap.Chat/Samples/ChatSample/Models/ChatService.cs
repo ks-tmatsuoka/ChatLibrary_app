@@ -89,7 +89,7 @@ namespace ChatSample
             byte[] bytes = null;
             string name = "";
             string fileType = "";
-            if (msg.MessageType == 2 && !string.IsNullOrEmpty(msg.ImageUrl))
+            if (msg.MessageType == (int)MessageType.Image && !string.IsNullOrEmpty(msg.ImageUrl))
             {
                 // 画像
                 bytes = FileManager.ReadBytes(msg.ImageUrl);
@@ -102,7 +102,7 @@ namespace ChatSample
                     return await Task.FromResult<int>(-1);
                 }
             }
-            else if (msg.MessageType == 3)
+            else if (msg.MessageType == (int)MessageType.Movie)
             {
                 //TODO 動画
                 fileType = "Movie";

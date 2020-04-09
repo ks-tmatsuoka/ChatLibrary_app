@@ -77,7 +77,7 @@ namespace Entap.Chat
             {
                 if (string.IsNullOrEmpty(Controller.EditorText))
                     return;
-                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), Text = Controller.EditorText, IsAlreadyRead = false, MessageType = 1, SendUserId = Settings.Current.ChatService.GetUserId() };
+                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), Text = Controller.EditorText, IsAlreadyRead = false, MessageType = (int)MessageType.Text, SendUserId = Settings.Current.ChatService.GetUserId() };
                 Controller.EditorText = "";
             }
             else
@@ -142,7 +142,7 @@ namespace Entap.Chat
                 });
                 return;
             }
-            var msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = 2, SendUserId = Settings.Current.ChatService.GetUserId() };
+            var msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
             await ChatAddImg(msg);
         }
 
@@ -174,7 +174,7 @@ namespace Entap.Chat
                     });
                     return;
                 }
-                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = 2, SendUserId = Settings.Current.ChatService.GetUserId() };
+                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
             }
             else
             {
@@ -253,11 +253,11 @@ namespace Entap.Chat
                 var result = await Application.Current.MainPage.DisplayActionSheet(null, "キャンセル", null, button);
                 if (result.Equals(button[0]))
                 {
-                    if (msg.MessageType == 1)
+                    if (msg.MessageType == (int)MessageType.Text)
                     {
                         await SendMessage(msg);
                     }
-                    else if (msg.MessageType == 2)
+                    else if (msg.MessageType == (int)MessageType.Image)
                     {
                         await SendImg(msg);
                     }
