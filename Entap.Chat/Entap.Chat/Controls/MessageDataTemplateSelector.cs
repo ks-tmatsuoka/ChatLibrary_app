@@ -19,16 +19,20 @@ namespace Entap.Chat
         {
             if (!(item is MessageBase message)) throw new TypeAccessException();
 
-            switch (message._MessageType)
+            switch (message.MessageType)
             {
-                case MessageType.OthersText:
+                case 1:
+                    if (message.SendUserId == Settings.Current.ChatService.GetUserId())
+                        return MyTextMessageTemplate;
+                    else
+                        return OthersTextMessageTemplate;
+                case 2:
+                    if (message.SendUserId == Settings.Current.ChatService.GetUserId())
+                        return MyImageMessageTemplate;
+                    else
+                        return OthersImageMessageTemplate;
+                case 3:
                     return OthersTextMessageTemplate;
-                case MessageType.MyText:
-                    return MyTextMessageTemplate;
-                case MessageType.MyImage:
-                    return MyImageMessageTemplate;
-                case MessageType.OthersImage:
-                    return OthersImageMessageTemplate;
                 default:
                     throw new ArgumentException();
             }

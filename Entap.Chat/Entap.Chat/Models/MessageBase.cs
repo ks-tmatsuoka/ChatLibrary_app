@@ -29,26 +29,15 @@ namespace Entap.Chat
             //NotSendId = notSendMessage.Id;
         }
 
-        public MessageType _MessageType
-        {
-            get
-            {
-                if (MessageType == 1 && SendUserId == Settings.Current.ChatService.GetUserId())
-                    return Chat.MessageType.MyText;
-                else if (MessageType == 2 && SendUserId == Settings.Current.ChatService.GetUserId())
-                    return Chat.MessageType.MyImage;
-                else if (MessageType == 2)
-                    return Chat.MessageType.OthersImage;
-                return Chat.MessageType.OthersText;
-            }
-        }
-
         public int MessageId { get; set; }
         public DateTime DateTime { get; set; }
 
         public string Text { get; set; }
         public string ImageUrl { get; set; }
         public string UserIcon { get; set; }
+        /// <summary>
+        /// 1:テキスト, 2:画像, 3:動画
+        /// </summary>
         public int MessageType { get; set; }
         public string SendUserId { get; set; }
 
