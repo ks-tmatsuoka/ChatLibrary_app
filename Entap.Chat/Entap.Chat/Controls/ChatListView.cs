@@ -560,8 +560,8 @@ namespace Entap.Chat
             if (messageBase != null && lastReadMessageId < messageBase.MessageId)
             {
                 System.Diagnostics.Debug.WriteLine("SendAlreadyRead: " + messageBase.MessageId);
-                var result = await Settings.Current.ChatService.SendAlreadyRead(messageBase.MessageId);
-                if (result == 0)
+                var result = await Settings.Current.ChatService.SendAlreadyRead(RoomId, messageBase.MessageId);
+                if (result)
                 {
                     lastReadMessageId = messageBase.MessageId;
                 }

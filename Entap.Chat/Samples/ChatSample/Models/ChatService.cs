@@ -127,11 +127,21 @@ namespace ChatSample
             return await Task.FromResult<int>(-1);
         }
 
-        public Task<int> SendAlreadyRead(int msgId)
+        public async Task<bool> SendAlreadyRead(int roomId, int messageId)
         {
-            int i;
-            i = 0;
-            return Task.FromResult<int>(i);
+            bool result = false;
+            var req = new ReqReadMessage
+            {
+                RoomId = roomId,
+                MessageId = messageId
+            };
+            var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.ReadMessage), req);
+            var resp = JsonConvert.DeserializeObject<ResponseBase>(json);
+            if (resp.Status == APIManager.APIStatus.Succeeded)
+            {
+                result = true;
+            }
+            return await Task.FromResult<bool>(result);
         }
 
         /// <summary>

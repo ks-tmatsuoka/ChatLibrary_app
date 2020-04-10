@@ -12,7 +12,7 @@ namespace Entap.Chat
         Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId, List<ChatMemberBase> members);
         Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int roomId, int messageId, List<ChatMemberBase> members);
         Task<int> SendMessage(int roomId, MessageBase msg);
-        Task<int> SendAlreadyRead(int msgId);
+        Task<bool> SendAlreadyRead(int roomId, int messageId);
         Task<string> SelectImage();
         Task<string> TakePicture();
         Task<List<ChatMemberBase>> GetRoomMembers(int roomId);
