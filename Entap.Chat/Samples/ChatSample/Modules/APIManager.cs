@@ -84,6 +84,8 @@ namespace ChatSample
             public const string ReadMessage = "read_message.php";
             public const string GetMyInfomation = "get_my_infomation.php";
             public const string RegistMyInfomation = "regist_my_infomation.php";
+            public const string GetContactAddresses = "get_contact_addresses.php";
+            public const string RegistContactAddress = "regist_contact_address.php";
         }
 
         /// <summary>

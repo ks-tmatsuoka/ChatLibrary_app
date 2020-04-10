@@ -94,5 +94,11 @@ namespace ChatSample
             var page = new MyInfoPage();
             App.Current.MainPage.Navigation.PushAsync(page);
         });
+
+        public Command MoveContactPageCmd => new Command(() =>
+        {
+            var page = new ContactAddressePage();
+            App.Current.MainPage.Navigation.PushAsync(page);
+        });
     }
 }
