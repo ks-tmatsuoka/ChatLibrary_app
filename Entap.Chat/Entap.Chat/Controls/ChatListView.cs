@@ -239,6 +239,7 @@ namespace Entap.Chat
         const int NotSendMessageId = -1;
         int lastReadMessageId;
         ObservableCollection<MessageBase> _messages;
+        List<ChatMemberBase> chatMembers = new List<ChatMemberBase>();
         public ObservableCollection<MessageBase> Messages => _messages;
 
         public ChatListView() : base(ListViewCachingStrategy.RecycleElement)
@@ -274,12 +275,13 @@ namespace Entap.Chat
                 lastReadMessageId = 1;
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId);
+                chatMembers = await Settings.Current.ChatService.GetRoomMembers(RoomId);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId, chatMembers);
                 var last = messages?.Last();
                 _messages = new ObservableCollection<MessageBase>(messages);
                 if (_messages.Count() < DefaultRemainingItemsThreshold * 3)
                 {
-                    var newMessages = await Settings.Current.ChatService.GetNewMessagesAsync(RoomId, LastReadMessageId);
+                    var newMessages = await Settings.Current.ChatService.GetNewMessagesAsync(RoomId, LastReadMessageId, chatMembers);
                     foreach(var msg in newMessages)
                     {
                         _messages.Add(msg);
@@ -444,7 +446,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, chatMembers);
 
                 Device.BeginInvokeOnMainThread(() =>
                 {
@@ -473,7 +475,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetNewMessagesAsync(RoomId, messageId);
+                var messages = await Settings.Current.ChatService.GetNewMessagesAsync(RoomId, messageId, chatMembers);
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     _messages.AddRange(messages);

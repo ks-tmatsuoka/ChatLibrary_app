@@ -80,6 +80,7 @@ namespace ChatSample
             public const string CreateRoom = "create_room.php";
             public const string SendMessage = "send_message.php";
             public const string GetMessages = "get_message.php";
+            public const string GetRoomMembers = "get_room_member.php";
         }
 
         /// <summary>

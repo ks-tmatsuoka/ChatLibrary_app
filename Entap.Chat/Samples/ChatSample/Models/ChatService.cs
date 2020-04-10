@@ -14,7 +14,7 @@ namespace ChatSample
     public class ChatService : IChatService
     {
         const int LoadCount = 20;
-        public async Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId)
+        public async Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId, List<ChatMemberBase> members)
         {
             var req = new ReqGetMessage
             {
@@ -37,8 +37,13 @@ namespace ChatSample
                         SendUserId = val.SendUserId,
                         DateTime = val.SendDateTime,
                         ImageUrl = val.MediaUrl,
-                        MessageType = val.MessageType
+                        MessageType = val.MessageType,
+                        UserIcon = members.Where(w => w.UserId == val.SendUserId).LastOrDefault()?.UserIcon
                     };
+                    if (val.AlreadyReadCount > 0 && members.Count - 1 >= val.AlreadyReadCount)
+                    {
+                        msgBase.IsAlreadyRead = true;
+                    }
                     messages.Add(msgBase);
                 }
             }
@@ -46,7 +51,7 @@ namespace ChatSample
             return await Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
 
-        public async Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int roomId, int messageId)
+        public async Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int roomId, int messageId, List<ChatMemberBase> members)
         {
             var req = new ReqGetMessage
             {
@@ -69,8 +74,13 @@ namespace ChatSample
                         SendUserId = val.SendUserId,
                         DateTime = val.SendDateTime,
                         ImageUrl = val.MediaUrl,
-                        MessageType = val.MessageType
+                        MessageType = val.MessageType,
+                        UserIcon = members.Where(w=>w.UserId == val.SendUserId).LastOrDefault()?.UserIcon
                     };
+                    if (val.AlreadyReadCount > 0 && members.Count - 1 >= val.AlreadyReadCount)
+                    {
+                        msgBase.IsAlreadyRead = true;
+                    }
                     messages.Add(msgBase);
                 }
             }
@@ -124,6 +134,10 @@ namespace ChatSample
             return Task.FromResult<int>(i);
         }
 
+        /// <summary>
+        /// 写真撮影
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> TakePicture()
         {
             var mg = new MediaPluginManager();
@@ -133,6 +147,10 @@ namespace ChatSample
             return await Task.FromResult<string>(path);
         }
 
+        /// <summary>
+        /// ライブラリからの画像選択
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> SelectImage()
         {
             var mg = new MediaPluginManager();
@@ -162,6 +180,29 @@ namespace ChatSample
             }
 
             return await Task.FromResult<string>(sendImgUrl);
+        }
+
+        /// <summary>
+        /// ルームのメンバー取得
+        /// </summary>
+        /// <param name="roomId"></param>
+        public async Task<List<ChatMemberBase>> GetRoomMembers(int roomId)
+        {
+            var req = new ReqGetRoomMembers
+            {
+                RoomId = roomId
+            };
+            var list = new List<ChatMemberBase>();
+            var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.GetRoomMembers), req);
+            var resp = JsonConvert.DeserializeObject<RespGetRoomMembers>(json);
+            if (resp.Status == APIManager.APIStatus.Succeeded)
+            {
+                foreach (var member in resp.Data.Members)
+                {
+                    list.Add(member);
+                }
+            }
+            return list;
         }
 
         public void UpdateData(ObservableCollection<MessageBase> messageBases)
@@ -295,7 +336,11 @@ namespace ChatSample
             mg.DeleteItem(id);
         }
 
-
+        /// <summary>
+        /// ファイルの共有
+        /// </summary>
+        /// <param name="imagePath"></param>
+        /// <returns></returns>
         public async Task ImageShare(string imagePath)
         {
             var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
@@ -339,6 +384,11 @@ namespace ChatSample
             DependencyService.Get<IFileService>().OpenShareMenu(filePath, ref str);
         }
 
+        /// <summary>
+        /// 画像を端末にダウンロード(Androidはダウンロードフォルダ、iOSはカメラロール)
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <returns></returns>
         public async Task ImageDownload(string imageUrl)
         {
             var dlFolderPath = DependencyService.Get<IFileService>().GetDownloadFolderPath();

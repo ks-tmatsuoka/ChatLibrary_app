@@ -9,12 +9,13 @@ namespace Entap.Chat
     [Preserve(AllMembers = true)]
     public interface IChatService
     {
-        Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId);
-        Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int roomId, int messageId);
+        Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId, List<ChatMemberBase> members);
+        Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int roomId, int messageId, List<ChatMemberBase> members);
         Task<int> SendMessage(int roomId, MessageBase msg);
         Task<int> SendAlreadyRead(int msgId);
         Task<string> SelectImage();
         Task<string> TakePicture();
+        Task<List<ChatMemberBase>> GetRoomMembers(int roomId);
         void UpdateData(ObservableCollection<MessageBase> messageBases);
         void AddNotSendMessages(int roomId, ObservableCollection<MessageBase> messageBases);
         void SaveNotSendMessageData(int roomId, MessageBase messageBase);

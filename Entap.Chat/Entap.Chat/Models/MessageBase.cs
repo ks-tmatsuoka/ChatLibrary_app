@@ -11,8 +11,6 @@ namespace Entap.Chat
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public MessageBase()
         {
-            DateTime = DateTime.Now;
-            UserIcon = "https://brave.entap.dev/storage/user_icon.png";
         }
 
         public MessageBase(MessageBase notSendMessage)
