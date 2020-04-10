@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ChatSample.MyInfoPage">
+    <StackLayout
+        Spacing="0"
+        Margin="16">
+        <Label
+            FontAttributes="Bold"
+            Text="ContactId"/>
+        <Label
+            Text="{Binding ContactId}"/>
+        <Label
+            Margin="0,20,0,0"
+            FontAttributes="Bold"
+            Text="Name"/>
+        <Label
+            Text="{Binding Name}"/>
+        <Label
+            Margin="0,5,0,0"
+            FontAttributes="Bold"
+            Text="変更する名前"/>
+        <Editor
+            BackgroundColor="LightGray"
+            HeightRequest="40"
+            HorizontalOptions="FillAndExpand"
+            Text="{Binding EditorText, Mode=TwoWay}"/>
+        <Label
+            Margin="0,20,0,0"
+            FontAttributes="Bold"
+            Text="Icon"/>
+        <Image
+            HorizontalOptions="StartAndExpand"
+            WidthRequest="100"
+            HeightRequest="100"
+            BackgroundColor="LightGray"
+            Source="{Binding Icon}"/>
+        <Label
+            Margin="0,5,0,0"
+            FontAttributes="Bold"
+            Text="変更する画像"/>
+        <StackLayout
+            Spacing="0"
+            Orientation="Horizontal"
+            HorizontalOptions="FillAndExpand">
+            <Image
+                HorizontalOptions="Start"
+                WidthRequest="100"
+                HeightRequest="100"
+                BackgroundColor="LightGray"
+                Source="{Binding ChangeIcon}"/>
+            <Button
+                HorizontalOptions="StartAndExpand"
+                Text="選択"
+                Command="{Binding SelectCmd}"
+                WidthRequest="100"
+                HeightRequest="40"/>
+        </StackLayout>
+        <Button
+            Margin="10"
+            HorizontalOptions="CenterAndExpand"
+            Text="保存"
+            Command="{Binding SaveCmd}"
+            WidthRequest="100"
+            HeightRequest="40"/>
+    </StackLayout>
+</ContentPage>
