@@ -276,12 +276,12 @@ namespace Entap.Chat
             Task.Run(async () =>
             {
                 chatMembers = await Settings.Current.ChatService.GetRoomMembers(RoomId);
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId, chatMembers);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId, (int)MessageDirection.Old, chatMembers);
                 var last = messages?.Last();
                 _messages = new ObservableCollection<MessageBase>(messages);
                 if (_messages.Count() < DefaultRemainingItemsThreshold * 3)
                 {
-                    var newMessages = await Settings.Current.ChatService.GetNewMessagesAsync(RoomId, LastReadMessageId, chatMembers);
+                    var newMessages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, LastReadMessageId, (int)MessageDirection.New, chatMembers);
                     foreach(var msg in newMessages)
                     {
                         _messages.Add(msg);
@@ -446,7 +446,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, chatMembers);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.Old, chatMembers);
 
                 Device.BeginInvokeOnMainThread(() =>
                 {
@@ -475,7 +475,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetNewMessagesAsync(RoomId, messageId, chatMembers);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.New, chatMembers);
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     _messages.AddRange(messages);

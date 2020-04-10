@@ -14,13 +14,22 @@ namespace ChatSample
     public class ChatService : IChatService
     {
         const int LoadCount = 20;
-        public async Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId, List<ChatMemberBase> members)
+
+        /// <summary>
+        /// メッセージ取得
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="messageId"></param>
+        /// <param name="messageDirection"></param>
+        /// <param name="members"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId, int messageDirection, List<ChatMemberBase> members)
         {
             var req = new ReqGetMessage
             {
                 RoomId = roomId,
                 MessageId = messageId,
-                MessageDirection = 1,
+                MessageDirection = messageDirection,
                 Conut = LoadCount
             };
             var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.GetMessages), req);
@@ -47,46 +56,17 @@ namespace ChatSample
                     messages.Add(msgBase);
                 }
             }
-            messages.Reverse();
+            if (messageDirection == (int)MessageDirection.Old)
+                messages.Reverse();
             return await Task.FromResult<IEnumerable<MessageBase>>(messages);
         }
 
-        public async Task<IEnumerable<MessageBase>> GetNewMessagesAsync(int roomId, int messageId, List<ChatMemberBase> members)
-        {
-            var req = new ReqGetMessage
-            {
-                RoomId = roomId,
-                MessageId = messageId,
-                MessageDirection = 2,
-                Conut = LoadCount
-            };
-            var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.GetMessages), req);
-            var resp = JsonConvert.DeserializeObject<RespGetMessage>(json);
-            var messages = new List<MessageBase>();
-            if (resp.Status == APIManager.APIStatus.Succeeded)
-            {
-                foreach(var val in resp.Data.MessageList)
-                {
-                    var msgBase = new MessageBase
-                    {
-                        MessageId = val.MessageId,
-                        Text = val.Text,
-                        SendUserId = val.SendUserId,
-                        DateTime = val.SendDateTime,
-                        ImageUrl = val.MediaUrl,
-                        MessageType = val.MessageType,
-                        UserIcon = members.Where(w=>w.UserId == val.SendUserId).LastOrDefault()?.UserIcon
-                    };
-                    if (val.AlreadyReadCount > 0 && members.Count - 1 >= val.AlreadyReadCount)
-                    {
-                        msgBase.IsAlreadyRead = true;
-                    }
-                    messages.Add(msgBase);
-                }
-            }
-            return await Task.FromResult<IEnumerable<MessageBase>>(messages);
-        }
-
+        /// <summary>
+        /// メッセージ送信
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         public async Task<int> SendMessage(int roomId, MessageBase msg)
         {
             var dic = new Dictionary<string, string>();
@@ -127,6 +107,12 @@ namespace ChatSample
             return await Task.FromResult<int>(-1);
         }
 
+        /// <summary>
+        /// 既読をサーバ側に知らせる
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="messageId"></param>
+        /// <returns></returns>
         public async Task<bool> SendAlreadyRead(int roomId, int messageId)
         {
             bool result = false;
