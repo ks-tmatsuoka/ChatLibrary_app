@@ -10,7 +10,7 @@ namespace Entap.Chat
     public interface IChatService
     {
         Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId, int messageDirection, List<ChatMemberBase> members);
-        Task<int> SendMessage(int roomId, MessageBase msg);
+        Task<SendMessageResponseBase> SendMessage(int roomId, MessageBase msg);
         Task<bool> SendAlreadyRead(int roomId, int messageId);
         Task<string> SelectImage();
         Task<string> TakePicture();

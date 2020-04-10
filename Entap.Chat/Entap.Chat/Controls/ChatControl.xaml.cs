@@ -88,9 +88,9 @@ namespace Entap.Chat
             }
             ChatList.AddMessage(msg);
 
-            var newMsgId = await Settings.Current.ChatService.SendMessage(RoomId ,msg);
+            var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(RoomId ,msg);
             var index = ChatList.Messages.IndexOf(msg);
-            if (newMsgId < 0)
+            if (sendMessageResponseBase.MessageId < 0)
             {
                 // 通信エラー
                 ChatList.Messages[index].ResendVisible = true;
@@ -102,14 +102,16 @@ namespace Entap.Chat
                 // サーバへ送信できた段階でメッセージの表示位置を再確認
                 if (index == ChatList.Messages.Count - 1)
                 {
-                    //ChatList.Messages[index].Id = newMsgId;
-                    ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
+                    ChatList.Messages[index].MessageId = sendMessageResponseBase.MessageId;
+                    ChatList.Messages[index].DateTime = sendMessageResponseBase.SendDateTime;
+                    //ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                 }
                 else
                 {
                     ChatList.Messages.RemoveAt(index);
-                    //msg.Id = newMsgId;
-                    msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
+                    msg.MessageId = sendMessageResponseBase.MessageId;
+                    msg.DateTime = sendMessageResponseBase.SendDateTime;
+                    //msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                     ChatList.Messages.Add(msg);
                 }
 
@@ -188,9 +190,9 @@ namespace Entap.Chat
         async Task ChatAddImg(MessageBase msg)
         {
             ChatList.AddMessage(msg);
-            var newMsgId = await Settings.Current.ChatService.SendMessage(RoomId ,msg);
+            var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(RoomId ,msg);
             var index = ChatList.Messages.IndexOf(msg);
-            if (newMsgId < 0)
+            if (sendMessageResponseBase.MessageId < 0)
             {
                 // 通信エラー
                 var delImgPath = msg.ImageUrl;
@@ -208,14 +210,14 @@ namespace Entap.Chat
                 // サーバへ送信できた段階でメッセージの表示位置を再確認
                 if (index == ChatList.Messages.Count - 1)
                 {
-                    //ChatList.Messages[index].Id = newMsgId;
-                    ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
+                    ChatList.Messages[index].MessageId = sendMessageResponseBase.MessageId;
+                    ChatList.Messages[index].DateTime = sendMessageResponseBase.SendDateTime;
                 }
                 else
                 {
                     ChatList.Messages.RemoveAt(index);
-                    //msg.Id = newMsgId;
-                    msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
+                    msg.MessageId = sendMessageResponseBase.MessageId;
+                    msg.DateTime = sendMessageResponseBase.SendDateTime;
                     ChatList.Messages.Add(msg);
                 }
 

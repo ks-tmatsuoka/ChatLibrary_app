@@ -67,7 +67,7 @@ namespace ChatSample
         /// <param name="roomId"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public async Task<int> SendMessage(int roomId, MessageBase msg)
+        public async Task<SendMessageResponseBase> SendMessage(int roomId, MessageBase msg)
         {
             var dic = new Dictionary<string, string>();
             dic["RoomId"] = roomId.ToString();
@@ -89,22 +89,22 @@ namespace ChatSample
                 if (bytes == null || bytes.Length < 1)
                 {
                     await App.Current.MainPage.DisplayAlert("この写真は送れません", "", "閉じる");
-                    return await Task.FromResult<int>(-1);
+                    return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId=-1 });
                 }
             }
             else if (msg.MessageType == (int)MessageType.Movie)
             {
                 //TODO 動画
                 fileType = "Movie";
-                return await Task.FromResult<int>(-1);
+                return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = -1 });
             }
 
             var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, fileType);
-            var resp = JsonConvert.DeserializeObject<RespMessageId>(json);
+            var resp = JsonConvert.DeserializeObject<RespSendMessage>(json);
             if (resp.Status == APIManager.APIStatus.Succeeded)
-                return await Task.FromResult<int>(resp.Data.MessageId);
+                return await Task.FromResult<SendMessageResponseBase>(resp.Data);
 
-            return await Task.FromResult<int>(-1);
+            return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = -1 });
         }
 
         /// <summary>

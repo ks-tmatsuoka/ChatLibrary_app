@@ -28,7 +28,23 @@ namespace Entap.Chat
         }
 
         public int MessageId { get; set; }
-        public DateTime DateTime { get; set; }
+        
+        private DateTime dateTime;
+        public DateTime DateTime
+        {
+            get
+            {
+                return dateTime;
+            }
+            set
+            {
+                if (dateTime != value)
+                {
+                    dateTime = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("DateTime"));
+                }
+            }
+        }
 
         public string Text { get; set; }
         public string ImageUrl { get; set; }

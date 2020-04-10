@@ -277,23 +277,29 @@ namespace Entap.Chat
             {
                 chatMembers = await Settings.Current.ChatService.GetRoomMembers(RoomId);
                 var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId, (int)MessageDirection.Old, chatMembers);
+                messages = messages.Reverse();
+                var first = messages?.First();
                 var last = messages?.Last();
-                _messages = new ObservableCollection<MessageBase>(messages);
-                if (_messages.Count() < DefaultRemainingItemsThreshold * 3)
+                if (first is null || last is null)
                 {
-                    var newMessages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, LastReadMessageId, (int)MessageDirection.New, chatMembers);
-                    foreach(var msg in newMessages)
+                    return;
+                }
+                _messages = new ObservableCollection<MessageBase>(messages);
+                if (first.MessageId <= 1)
+                {
+                    var addMessages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, last.MessageId + 1, (int)MessageDirection.New, chatMembers);
+                    foreach (var msg in addMessages)
                     {
                         _messages.Add(msg);
                     }
-                    if (last == null)
-                    {
-                        newMessages?.Last();
-                    }
                 }
-                if (last == null)
+                else
                 {
-                    return;
+                    var insertMessages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, first.MessageId - 1, (int)MessageDirection.Old, chatMembers);
+                    foreach (var msg in insertMessages)
+                    {
+                        _messages.Insert(0,msg);
+                    }
                 }
 
                 SetNotSendMessage();
@@ -377,6 +383,8 @@ namespace Entap.Chat
             foreach (var msg in _messages)
             {
                 if (first.Equals(msg))
+                    continue;
+                if (msg.DateTime.Equals(new DateTime()))
                     continue;
                 if (dateTime.ToString("yyyy/MM/dd") == msg.DateTime.ToString("yyyy/MM/dd"))
                 {
@@ -605,7 +613,7 @@ namespace Entap.Chat
                 )
             {
                 IsRunningGetNewMessage = true;
-                var last = _messages.Where(w=>w.NotSendId < 1)?.Last();
+                var last = _messages.Where(w=>w.NotSendId < 1 && w.MessageId > 0)?.Last();
                 LoadNewMessages(last.MessageId + 1);
             }
 
