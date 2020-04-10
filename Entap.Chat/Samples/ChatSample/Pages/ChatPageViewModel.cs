@@ -6,10 +6,12 @@ namespace ChatSample
 {
     public class ChatPageViewModel : PageViewModelBase
     {
-        public ChatPageViewModel(int roomId)
+        public ChatPageViewModel(Room room)
         {
-            RoomId = roomId;
+            RoomId = room.RoomId;
+            LastReadMessageId = room.AlreadyReadMessageId;
         }
         public int RoomId { get; set; }
+        public int LastReadMessageId { get; set; }
     }
 }

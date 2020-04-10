@@ -85,8 +85,7 @@ namespace ChatSample
             if (!(obj is ItemTappedEventArgs itemTappedEventArgs)) return;
             if (!(itemTappedEventArgs.Item is Room model)) return;
 
-            // テストコード
-            var page = new ChatPage(1);
+            var page = new ChatPage(model);
             App.Current.MainPage.Navigation.PushAsync(page);
         });
     }
