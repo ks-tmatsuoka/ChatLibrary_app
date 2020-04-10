@@ -104,14 +104,12 @@ namespace Entap.Chat
                 {
                     ChatList.Messages[index].MessageId = sendMessageResponseBase.MessageId;
                     ChatList.Messages[index].DateTime = sendMessageResponseBase.SendDateTime;
-                    //ChatList.Messages[index].MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                 }
                 else
                 {
                     ChatList.Messages.RemoveAt(index);
                     msg.MessageId = sendMessageResponseBase.MessageId;
                     msg.DateTime = sendMessageResponseBase.SendDateTime;
-                    //msg.MessageId = ChatList.Messages.Max(w => w.MessageId) + 1; // テストコード
                     ChatList.Messages.Add(msg);
                 }
 
