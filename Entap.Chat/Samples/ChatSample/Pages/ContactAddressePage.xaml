@@ -2,7 +2,12 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="ChatSample.ContactAddressePage">
+    x:Class="ChatSample.ContactAddressePage"
+    xmlns:local="clr-namespace:ChatSample">
+    <ContentPage.BindingContext>
+        <local:ContactAddressePageViewModel
+            x:Name="ContactAddressePageViewModel"/>
+    </ContentPage.BindingContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
@@ -61,7 +66,7 @@
                                 VerticalOptions="FillAndExpand"
                                 Text="削除"
                                 CommandParameter="{Binding UserId}"
-                                />
+                                Command="{Binding Source={x:Reference ContactAddressePageViewModel}, Path=DelCmd}"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

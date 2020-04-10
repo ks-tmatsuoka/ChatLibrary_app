@@ -8,8 +8,7 @@ namespace ChatSample
     {
         public ContactAddressePage()
         {
-            InitializeComponent();
-            this.BindingContext = new ContactAddressePageViewModel();
+            InitializeComponent(); 
         }
     }
 }
