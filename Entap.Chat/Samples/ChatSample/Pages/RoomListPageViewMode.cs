@@ -100,5 +100,11 @@ namespace ChatSample
             var page = new ContactAddressePage();
             App.Current.MainPage.Navigation.PushAsync(page);
         });
+
+        public Command CreateRoomCmd => new Command(() =>
+        {
+            var page = new CreateRoomPage();
+            App.Current.MainPage.Navigation.PushAsync(page);
+        });
     }
 }

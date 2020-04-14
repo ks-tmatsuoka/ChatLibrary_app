@@ -6,8 +6,10 @@
     xmlns:local="clr-namespace:ChatSample">
     <ContentPage.BindingContext>
         <local:ContactAddressePageViewModel
-            x:Name="ContactAddressePageViewModel"/>
+            x:Name="ContactAddressePageViewModel"
+            ContactListPageFlag="True"/>
     </ContentPage.BindingContext>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
@@ -18,6 +20,7 @@
         </Grid.ColumnDefinitions>
         <StackLayout
             Spacing="0"
+            IsVisible="{Binding ContactListPageFlag}"
             Orientation="Horizontal">
             <Label
                 VerticalOptions="CenterAndExpand"
@@ -47,6 +50,11 @@
             RowHeight="50"
             ItemsSource="{Binding ItemsSource}"
             SelectionMode="None">
+            <ListView.Behaviors>
+                <local:EventToCommandBehavior 
+                    EventName="ItemTapped" 
+                    Command="{Binding ItemTappedCmd}"/>
+            </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -62,6 +70,7 @@
                                 VerticalTextAlignment="Center"
                                 Text="{Binding Name}"/>
                             <Button
+                                IsVisible="{Binding Source={x:Reference ContactAddressePageViewModel}, Path=ContactListPageFlag}"
                                 WidthRequest="80"
                                 VerticalOptions="FillAndExpand"
                                 Text="削除"
