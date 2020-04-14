@@ -11,7 +11,8 @@
             Command="{Binding ToolbarCmd}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
-        <local:RoomListPageViewMode/>
+        <local:RoomListPageViewMode
+            x:Name="RoomListPageViewMode"/>
     </ContentPage.BindingContext>
     <Grid>
         <Grid.RowDefinitions>
@@ -55,13 +56,21 @@
                         <StackLayout
                             Spacing="0"
                             HorizontalOptions="FillAndExpand"
-                            VerticalOptions="FillAndExpand">
+                            VerticalOptions="FillAndExpand"
+                            Orientation="Horizontal">
                             <Label
                                 HorizontalOptions="FillAndExpand"
                                 VerticalOptions="FillAndExpand"
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
                                 Text="{Binding RoomName}"/>
+                            <Button
+                                Text="退出"
+                                WidthRequest="80"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="End"
+                                CommandParameter="{Binding RoomId}"
+                                Command="{Binding Source={x:Reference RoomListPageViewMode}, Path=LeaveCmd}"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

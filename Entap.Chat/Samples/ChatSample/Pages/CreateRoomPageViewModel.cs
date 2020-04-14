@@ -64,7 +64,7 @@ namespace ChatSample
                     return;
                 }
 
-                InvitationUsers += selectItem.Name;
+                InvitationUsers += selectItem.Name + System.Environment.NewLine;
                 InvitationUserIds.Add(selectItem.UserId);
                 App.Current.MainPage.Navigation.PopAsync();
             });
@@ -84,13 +84,17 @@ namespace ChatSample
                 return;
             }
 
+            // RoomType3:管理者以外の人との1対1のルーム  4:管理者以外の人との複数人のルーム
             var data = new ReqCreateRoomData()
             {
                 UserId = UserDataManager.Instance.UserId,
-                RoomType = 1,
                 RoomName = EditorText,
+                RoomType = 3,
                 InvitationUserIds = InvitationUserIds
             };
+            if (data.InvitationUserIds.Count > 1)
+                data.RoomType = 4;
+
             var reqJson = JsonConvert.SerializeObject(data);
             var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.CreateRoom), new ReqCreateRoom { Data = reqJson });
             var respCreateRoom = JsonConvert.DeserializeObject<RespCreateRoom>(json);

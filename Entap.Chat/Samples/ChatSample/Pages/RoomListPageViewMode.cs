@@ -14,7 +14,13 @@ namespace ChatSample
         public RoomListPageViewMode()
         {
             ItemsSource = new ObservableCollection<Room>();
-            Task.Run(async() =>
+
+            GetData();
+        }
+
+        void GetData()
+        {
+            Task.Run(async () =>
             {
                 var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.GetRoomList), new ReqGetRoomList());
                 var respGetRooms = JsonConvert.DeserializeObject<RespGetRoomList>(json);
@@ -30,7 +36,7 @@ namespace ChatSample
                             RoomType = 1
                         };
                         var reqJson = JsonConvert.SerializeObject(data);
-                        json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.CreateRoom), new ReqCreateRoom { Data=reqJson});
+                        json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.CreateRoom), new ReqCreateRoom { Data = reqJson });
                         var respCreateRoom = JsonConvert.DeserializeObject<RespCreateRoom>(json);
                         if (respCreateRoom.Status == APIManager.APIStatus.Succeeded)
                         {
@@ -46,7 +52,7 @@ namespace ChatSample
                     }
                     else
                     {
-                        foreach(var room in respGetRooms.Data.Rooms)
+                        foreach (var room in respGetRooms.Data.Rooms)
                         {
                             var members = await chatService.GetRoomMembers(room.RoomId);
                             if (memberData.ContainsKey(room.RoomId))
@@ -60,7 +66,6 @@ namespace ChatSample
                     }
                 }
             });
-            
         }
 
         private ObservableCollection<Room> itemsSource;
@@ -79,6 +84,19 @@ namespace ChatSample
                 }
             }
         }
+
+        public Command LeaveCmd => new Command(async(roomId) =>
+        {
+            var data = new ReqLeaveRoom { RoomId = (int)roomId };
+            var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.LeaveRoom), data);
+            var resp = JsonConvert.DeserializeObject<ResponseBase>(json);
+            if (resp.Status == APIManager.APIStatus.Succeeded)
+            {
+                await App.Current.MainPage.DisplayAlert("", "退出しました", "閉じる");
+                ItemsSource = new ObservableCollection<Room>();
+                GetData();
+            }
+        });
 
         public Command ItemTappedCmd => new Command((obj) =>
         {
