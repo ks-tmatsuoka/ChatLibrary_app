@@ -40,7 +40,17 @@ namespace ChatSample
 
         public Command DelCmd => new Command(async (obj) =>
         {
-
+            var delUseId = obj as string;
+            var req = new DeleteContactAddress
+            {
+                DeleteUseId = delUseId
+            };
+            var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.DeleteContactAddress), req);
+            var resp = JsonConvert.DeserializeObject<ResponseBase>(json);
+            if (resp.Status == APIManager.APIStatus.Succeeded)
+            {
+                await GetData();
+            }
         });
 
         public Command AddCmd => new Command(async () =>
