@@ -44,8 +44,15 @@
                                 Margin="0,0,6,0">
                                 <Label
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
-                                    Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
-                                    FontSize="10"/>
+                                    FontSize="10">
+                                    <Label.Text>
+                                        <Binding Path="AlreadyReadCount">
+                                            <Binding.Converter>
+                                                <local:AlreadyReadConverter RoomType="{Binding Source={x:Reference Content}, Path=RoomType}"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </Label.Text>
+                                </Label>
                                 <Label
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                     Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
@@ -193,8 +200,15 @@
                                     Margin="0,0,6,0"
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}">
                                     <Label
-                                        Text="{Binding IsAlreadyRead, Converter={StaticResource alreadyReadConverter}}"
-                                        FontSize="10"/>
+                                        FontSize="10">
+                                        <Label.Text>
+                                            <Binding Path="AlreadyReadCount">
+                                                <Binding.Converter>
+                                                    <local:AlreadyReadConverter RoomType="{Binding Source={x:Reference Content}, Path=RoomType}"/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Label.Text>
+                                    </Label>
                                     <Label
                                         Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
                                         FontSize="10"/>
@@ -330,7 +344,6 @@
                 MyImageMessageTemplate="{StaticResource myImageMessageTemplate}"
                 OthersImageMessageTemplate="{StaticResource othersImageMessageTemplate}"
             />
-            <local:AlreadyReadConverter x:Key="alreadyReadConverter"/>
             <local:TimeConverter x:Key="timeConverter"/>
             <local:DateConverter x:Key="dateConverter"/>
             <local:BoolReverseConverter x:Key="boolReverseConverter"/>

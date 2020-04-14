@@ -22,7 +22,7 @@ namespace Entap.Chat
             UserIcon = notSendMessage.UserIcon;
             MessageType = notSendMessage.MessageType;
             SendUserId = notSendMessage.SendUserId;
-            IsAlreadyRead = false;
+            AlreadyReadCount = 0;
             ResendVisible = true;
             //NotSendId = notSendMessage.Id;
         }
@@ -55,19 +55,19 @@ namespace Entap.Chat
         public int MessageType { get; set; }
         public string SendUserId { get; set; }
 
-        private bool isAlreadyRead;
-        public bool IsAlreadyRead
+        private int alreadyReadCount;
+        public int AlreadyReadCount
         {
             get
             {
-                return isAlreadyRead;
+                return alreadyReadCount;
             }
             set
             {
-                if (isAlreadyRead != value)
+                if (alreadyReadCount != value)
                 {
-                    isAlreadyRead = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("IsAlreadyRead"));
+                    alreadyReadCount = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("AlreadyReadCount"));
                 }
             }
         }

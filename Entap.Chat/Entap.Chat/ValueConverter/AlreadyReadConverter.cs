@@ -4,19 +4,28 @@ using Xamarin.Forms;
 
 namespace Entap.Chat
 {
-    public class AlreadyReadConverter : IValueConverter
+    public class AlreadyReadConverter : BindableObject, IValueConverter
     {
-        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public static BindableProperty RoomTypeProperty = BindableProperty.Create("RoomType", typeof(int), typeof(AlreadyReadConverter));
+        public int RoomType
         {
+            get => (int)GetValue(RoomTypeProperty);
+            set => SetValue(RoomTypeProperty, value);
+        }
 
-            var isAlreadyRead = (bool)value;
-            if (isAlreadyRead)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var count = (int)value;
+            if (count > 0)
             {
+                if (RoomType == 2 || RoomType == 4)
+                    return Settings.Current.AlreadyReadText + " " + count;
                 return Settings.Current.AlreadyReadText;
             }
             return "";
         }
-        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

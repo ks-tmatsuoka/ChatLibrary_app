@@ -47,12 +47,11 @@ namespace ChatSample
                         DateTime = val.SendDateTime,
                         ImageUrl = val.MediaUrl,
                         MessageType = val.MessageType,
+                        AlreadyReadCount = val.AlreadyReadCount,
                         UserIcon = members.Where(w => w.UserId == val.SendUserId).LastOrDefault()?.UserIcon
                     };
-                    if (val.AlreadyReadCount > 0 && members.Count - 1 >= val.AlreadyReadCount)
-                    {
-                        msgBase.IsAlreadyRead = true;
-                    }
+                    // もし既読の表示をつけたくない時はここで0を強制的に入れる
+                    //msgBase.AlreadyReadCount = 0;
                     messages.Add(msgBase);
                 }
             }
@@ -214,7 +213,7 @@ namespace ChatSample
                     {
                         Device.BeginInvokeOnMainThread(() =>
                         {
-                            msg.IsAlreadyRead = true;
+                            msg.AlreadyReadCount = 1;
                         });
                     }
                 }

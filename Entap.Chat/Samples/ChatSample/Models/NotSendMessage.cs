@@ -20,7 +20,7 @@ namespace Entap.Chat
             UserIcon = messageBase.UserIcon;
             MessageType = messageBase.MessageType;
             SendUserId = messageBase.SendUserId;
-            IsAlreadyRead = false;
+            AlreadyReadCount = 0;
             ResendVisible = true;
             RoomId = roomId;
         }

@@ -268,7 +268,7 @@ namespace Entap.Chat
 
         void GetFirstDisplayMessage()
         {
-            if (RoomId < 0 || LastReadMessageId < 0)
+            if (RoomId < 0 || RoomType < 1 || LastReadMessageId < 0)
                 return;
             lastReadMessageId = LastReadMessageId;
             if (lastReadMessageId == 0)
@@ -331,6 +331,10 @@ namespace Entap.Chat
                 GetFirstDisplayMessage();
             }
             else if (propertyName == RoomIdProperty.PropertyName)
+            {
+                GetFirstDisplayMessage();
+            }
+            else if (propertyName == RoomTypeProperty.PropertyName)
             {
                 GetFirstDisplayMessage();
             }
@@ -726,6 +730,19 @@ namespace Entap.Chat
         {
             get { return (int)GetValue(RoomIdProperty); }
             set { SetValue(RoomIdProperty, value); }
+        }
+
+        /// <summary>
+        /// チャットのルームタイプ
+        /// </summary>
+        public static readonly BindableProperty RoomTypeProperty =
+            BindableProperty.Create(nameof(RoomType), typeof(int), typeof(ChatListView), 0,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((ChatListView)bindable).RoomType = (int)newValue);
+        public int RoomType
+        {
+            get { return (int)GetValue(RoomTypeProperty); }
+            set { SetValue(RoomTypeProperty, value); }
         }
 
         /// <summary>
