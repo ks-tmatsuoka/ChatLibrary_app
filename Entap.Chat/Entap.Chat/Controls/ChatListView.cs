@@ -271,34 +271,42 @@ namespace Entap.Chat
             if (RoomId < 0 || RoomType < 1 || LastReadMessageId < 0)
                 return;
             lastReadMessageId = LastReadMessageId;
-            if (lastReadMessageId == 0)
-                lastReadMessageId = 1;
             Task.Run(async () =>
             {
                 chatMembers = await Settings.Current.ChatService.GetRoomMembers(RoomId);
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId, (int)MessageDirection.Old, chatMembers);
-                messages = messages.Reverse();
-                var first = messages.FirstOrDefault();
-                var last = messages.LastOrDefault();
-                if (first is null || last is null)
+                IEnumerable<MessageBase> messages;
+                if (lastReadMessageId == 0)
                 {
-                    return;
-                }
-                _messages = new ObservableCollection<MessageBase>(messages);
-                if (first.MessageId <= 1)
-                {
-                    var addMessages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, last.MessageId + 1, (int)MessageDirection.New, chatMembers);
-                    foreach (var msg in addMessages)
-                    {
-                        _messages.Add(msg);
-                    }
+                    messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId + 1, (int)MessageDirection.New, chatMembers);
                 }
                 else
                 {
-                    var insertMessages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, first.MessageId - 1, (int)MessageDirection.Old, chatMembers);
-                    foreach (var msg in insertMessages)
+                    messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId, (int)MessageDirection.Old, chatMembers);
+                    messages = messages.Reverse();
+                }
+                var first = messages.FirstOrDefault();
+                _messages = new ObservableCollection<MessageBase>(messages);
+                if (messages.Count() < 1)
+                {
+                    ItemsSource = _messages;
+                    return;
+                }
+                if (first != null)
+                {
+                    var messageList = await Settings.Current.ChatService.GetMessagesAsync(RoomId, first.MessageId - 1, (int)MessageDirection.Old, chatMembers);
+                    foreach (var msg in messageList)
                     {
-                        _messages.Insert(0,msg);
+                        _messages.Insert(0, msg);
+                        //_messages.Add(msg);
+                    }
+                }
+                var last = _messages.LastOrDefault();
+                if (last != null)
+                {
+                    var messageList = await Settings.Current.ChatService.GetMessagesAsync(RoomId, last.MessageId + 1, (int)MessageDirection.New, chatMembers);
+                    foreach (var msg in messageList)
+                    {
+                        _messages.Add(msg);
                     }
                 }
 
