@@ -33,6 +33,16 @@ namespace Entap.Chat
                         return OthersImageMessageTemplate;
                 case (int)MessageType.Movie:
                     return OthersTextMessageTemplate;
+
+                case (int)MessageType.MemberAddRoom:
+                    return OthersTextMessageTemplate;
+
+                case (int)MessageType.MemberLeaveRoom:
+                    return OthersTextMessageTemplate;
+
+                case (int)MessageType.Custom:
+                    return OthersTextMessageTemplate;
+
                 default:
                     throw new ArgumentException();
             }
