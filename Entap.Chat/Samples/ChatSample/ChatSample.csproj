@@ -16,6 +16,8 @@
     <PackageReference Include="Xam.Plugin.Media" Version="4.0.1.5" />
     <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="WampSharp" Version="20.1.1" />
+    <PackageReference Include="WampSharp.WAMP1.Default" Version="20.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Entap.Chat\Entap.Chat.csproj" />

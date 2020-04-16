@@ -8,6 +8,9 @@ using Xamarin.Forms;
 using System.Net.WebSockets;
 using System.Threading;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Reactive.Subjects;
+using WampSharp.V1;
 
 namespace ChatSample
 {
@@ -55,6 +58,7 @@ namespace ChatSample
                     messages.Add(msgBase);
                 }
             }
+            
             if (messageDirection == (int)MessageDirection.Old)
                 messages.Reverse();
             return await Task.FromResult<IEnumerable<MessageBase>>(messages);
@@ -200,6 +204,7 @@ namespace ChatSample
             return list;
         }
 
+        public IDisposable subscription;
         public void UpdateData(ObservableCollection<MessageBase> messageBases)
         {
             Task.Run(async () =>
@@ -219,77 +224,29 @@ namespace ChatSample
                 }
             });
 
-            /*
-            Task.Run(async () =>
+
+            DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
+
+            IWampChannel<JToken> channel = channelFactory.CreateChannel("wss://chat.entap.dev:8080");
+
+            channel.Open();
+
+            // PubSub subscription:
+            ISubject<JToken> subject = channel.GetSubject<JToken>("1");
+            //var s = subscription;
+            subscription = subject.Subscribe(x =>
             {
-                ////クライアント側のWebSocketを定義
-                //ClientWebSocket ws = new ClientWebSocket();
-
-                ////接続先エンドポイントを指定
-                //var uri = new Uri("wss://chat.entap.dev:8080");
-
-                ////サーバに対し、接続を開始
-                //await ws.ConnectAsync(uri, CancellationToken.None);
-                //var buffer = new byte[1024];
-
-                while (true)
-                {
-                    await Task.Delay(10000);
-
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        var id = messageBases.Max(w => w.MessageId) + 1;
-                       // messageBases.Add(new MessageBase { MessageId = id, Text = "other", IsAlreadyRead = false, MessageType = 1 });
-                    });
-
-
-                    ////所得情報確保用の配列を準備
-                    //var segment = new ArraySegment<byte>(buffer);
-
-                    ////サーバからのレスポンス情報を取得
-                    //var result = await ws.ReceiveAsync(segment, CancellationToken.None);
-
-                    ////エンドポイントCloseの場合、処理を中断
-                    //if (result.MessageType == WebSocketMessageType.Close)
-                    //{
-                    //    await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "OK",
-                    //      CancellationToken.None);
-                    //    return;
-                    //}
-
-                    ////バイナリの場合は、当処理では扱えないため、処理を中断
-                    //if (result.MessageType == WebSocketMessageType.Binary)
-                    //{
-                    //    await ws.CloseAsync(WebSocketCloseStatus.InvalidMessageType,
-                    //      "I don't do binary", CancellationToken.None);
-                    //    return;
-                    //}
-
-                    ////メッセージの最後まで取得
-                    //int count = result.Count;
-                    //while (!result.EndOfMessage)
-                    //{
-                    //    if (count >= buffer.Length)
-                    //    {
-                    //        await ws.CloseAsync(WebSocketCloseStatus.InvalidPayloadData,
-                    //          "That's too long", CancellationToken.None);
-                    //        return;
-                    //    }
-                    //    segment = new ArraySegment<byte>(buffer, count, buffer.Length - count);
-                    //    result = await ws.ReceiveAsync(segment, CancellationToken.None);
-
-                    //    count += result.Count;
-                    //}
-
-                    ////メッセージを取得
-                    //var message = System.Text.Encoding.UTF8.GetString(buffer, 0, count);
-                    //Console.WriteLine("> " + message);
-                }
-
+                System.Diagnostics.Debug.WriteLine("Received " + x);
             });
-            */
-            
         }
+
+        public void Dispose()
+        {
+            if (subscription is null)
+                return;
+            subscription.Dispose();
+        }
+
 
         /// <summary>
         /// チャットのリストの末尾に送信できていないメッセージを追加

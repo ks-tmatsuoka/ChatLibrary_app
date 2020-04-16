@@ -266,6 +266,11 @@ namespace Entap.Chat
             }
         }
 
+        public void Dispose()
+        {
+            Settings.Current.ChatService.Dispose();
+        }
+
         void GetFirstDisplayMessage()
         {
             if (RoomId < 0 || RoomType < 1 || LastReadMessageId < 0)

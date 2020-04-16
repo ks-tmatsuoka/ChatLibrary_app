@@ -14,6 +14,13 @@ namespace Entap.Chat.Android
         {
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            var _ChatListView = Element as ChatListView;
+            _ChatListView.Dispose();
+            base.Dispose(disposing);
+        }
+
         protected override void OnElementChanged(ElementChangedEventArgs<ListView> e)
         {
             base.OnElementChanged(e);
