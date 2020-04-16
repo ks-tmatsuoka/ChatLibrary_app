@@ -398,5 +398,14 @@ namespace ChatSample
         {
             return UserDataManager.Instance.UserId;
         }
+
+        /// <summary>
+        /// 画像のプレビューページへ遷移 / ChatControlで使用
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        public void MoveImagePreviewPage(string imageUrl)
+        {
+            App.Current.MainPage.Navigation.PushModalAsync(new ImagePreviewPage(imageUrl));
+        }
     }
 }

@@ -87,12 +87,6 @@
     <BundleResource Include="Resources\share_icon%403x.png" />
     <BundleResource Include="Resources\share_icon%402x.png" />
     <BundleResource Include="Resources\share_icon.png" />
-    <BundleResource Include="Resources\download_icon%403x.png" />
-    <BundleResource Include="Resources\download_icon%402x.png" />
-    <BundleResource Include="Resources\download_icon.png" />
-    <BundleResource Include="Resources\close_icon%403x.png" />
-    <BundleResource Include="Resources\close_icon%402x.png" />
-    <BundleResource Include="Resources\close_icon.png" />
     <BundleResource Include="Resources\resend_icon%403x.png" />
     <BundleResource Include="Resources\resend_icon%402x.png" />
     <BundleResource Include="Resources\resend_icon.png" />

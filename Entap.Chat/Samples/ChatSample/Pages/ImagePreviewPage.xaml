@@ -2,25 +2,36 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="Entap.Chat.ImagePreviewPage">
-    <ContentPage.Content>
-        <AbsoluteLayout
+    xmlns:local="clr-namespace:ChatSample"
+    x:Class="ChatSample.ImagePreviewPage">
+    <AbsoluteLayout
             BackgroundColor="Black"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">
             <Image
-                x:Name="Img"
                 BackgroundColor="Transparent"
                 AbsoluteLayout.LayoutBounds="0,0,1,1"
-                AbsoluteLayout.LayoutFlags="All"/>
+                AbsoluteLayout.LayoutFlags="All"
+                Source="{Binding ImageUrl}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding TapCommadn}"/>
+                </Image.GestureRecognizers>
+            </Image>
 
             <StackLayout
                 x:Name="Menu"
                 AbsoluteLayout.LayoutBounds="0,0,1,1"
                 AbsoluteLayout.LayoutFlags="All"
                 Spacing="0"
+                Padding="{Binding MenuPadding}"
                 Opacity="0.5"
+                IsVisible="{Binding MenuVisible}"
                 BackgroundColor="Black">
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding TapCommadn}"/>
+                </StackLayout.GestureRecognizers>
                 <ImageButton
                     x:Name="CloseButton"
                     BackgroundColor="Transparent"
@@ -28,6 +39,7 @@
                     VerticalOptions="StartAndExpand"
                     HeightRequest="25"
                     WidthRequest="25"
+                    Command="{Binding CloseCmd}"
                     Source="close_icon.png"/>
 
                 <StackLayout
@@ -42,6 +54,7 @@
                         HorizontalOptions="CenterAndExpand"
                         HeightRequest="40"
                         WidthRequest="40"
+                        Command="{Binding DownloadCmd}"
                         Source="download_icon.png"/>
                     <ImageButton
                         x:Name="ShareButton"
@@ -49,9 +62,9 @@
                         HorizontalOptions="CenterAndExpand"
                         HeightRequest="40"
                         WidthRequest="40"
+                        Command="{Binding ShareCmd}"
                         Source="share_icon.png"/>
                 </StackLayout>
             </StackLayout>
         </AbsoluteLayout>
-    </ContentPage.Content>
 </ContentPage>

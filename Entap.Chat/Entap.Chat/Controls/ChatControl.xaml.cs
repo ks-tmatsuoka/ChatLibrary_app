@@ -232,7 +232,7 @@ namespace Entap.Chat
             ProcessManager.Current.Invoke(nameof(ImageTapCommand), async () =>
             {
                 var imagePath = pm as string;
-                await Application.Current.MainPage.Navigation.PushModalAsync(new ImagePreviewPage(imagePath));
+                Settings.Current.ChatService.MoveImagePreviewPage(imagePath);
             });
         });
 

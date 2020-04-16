@@ -21,7 +21,6 @@
     <Folder Include="Modules\" />
     <Folder Include="Behavior\" />
     <Folder Include="ValueConverter\" />
-    <Folder Include="Pages\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Controls\_ChatControl.xaml.cs">

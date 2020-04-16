@@ -68,6 +68,7 @@
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DependencyService\FileService_iOS.cs" />
+    <Compile Include="DependencyService\DisplayService_iOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -151,6 +152,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DependencyService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\close_icon.png" />
+    <BundleResource Include="Resources\close_icon%402x.png" />
+    <BundleResource Include="Resources\close_icon%403x.png" />
+    <BundleResource Include="Resources\download_icon.png" />
+    <BundleResource Include="Resources\download_icon%402x.png" />
+    <BundleResource Include="Resources\download_icon%403x.png" />
+    <BundleResource Include="Resources\share_icon.png" />
+    <BundleResource Include="Resources\share_icon%402x.png" />
+    <BundleResource Include="Resources\share_icon%403x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

@@ -26,5 +26,6 @@ namespace Entap.Chat
         string GetSendImageSaveFolderPath();
         string GetNotSendImageSaveFolderPath();
         string GetUserId();
+        void MoveImagePreviewPage(string imageUrl);
     }
 }
