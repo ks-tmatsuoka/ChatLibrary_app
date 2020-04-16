@@ -2,6 +2,7 @@
 using CoreGraphics;
 using Entap.Chat;
 using Entap.Chat.iOS;
+using Foundation;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -23,8 +24,9 @@ namespace Entap.Chat.iOS
         }
 
         // KeyboardObserver
-        Foundation.NSObject _keyboardShownObserver;
-        Foundation.NSObject _keyboardHiddenObserver;
+        NSObject _keyboardShownObserver;
+        NSObject _keyboardHiddenObserver;
+        double _translationY;
 
         void RegisterKeyboardObserver()
         {
@@ -54,44 +56,52 @@ namespace Entap.Chat.iOS
 
         void OnKeyboardShown(object sender, UIKeyboardEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("Keyboard is shown.");
+            //// キーボード出現時に画面全体をずらす。
+            //var keyboardFrame = e.FrameEnd;
+            //nfloat dy = 0;
+            //if (UIDevice.CurrentDevice.CheckSystemVersion(11, 0))
+            //{
+            //    var window = UIApplication.SharedApplication.KeyWindow;
+            //    if (window != null)
+            //    {
+            //        dy = window.SafeAreaInsets.Bottom;
+            //    }
+            //}
+            //var duration = e.AnimationDuration;
+            //var pageFrame = Element.Bounds;
+            //UIView.Animate(duration, () =>
+            //{
+            //    var trans = CGAffineTransform.MakeTranslation(0, -keyboardFrame.Height + dy);
+            //    this.Transform = trans;
+            //});
 
-            // キーボード出現時に画面全体をずらす。
-            var keyboardFrame = e.FrameEnd;
-            nfloat dy = 0;
-            if (UIDevice.CurrentDevice.CheckSystemVersion(11, 0))
+            NSValue result = (NSValue)e.Notification.UserInfo.ObjectForKey(new NSString(UIKeyboard.FrameEndUserInfoKey));
+            CGSize keyboardSize = result.RectangleFValue.Size;
+            if (Element != null)
             {
-                var window = UIApplication.SharedApplication.KeyWindow;
-                if (window != null)
-                {
-                    dy = window.SafeAreaInsets.Bottom;
-                }
+                _translationY = -keyboardSize.Height;
+                Element.TranslationY = _translationY;
             }
-            var duration = e.AnimationDuration;
-
-            var pageFrame = Element.Bounds;
-            UIView.Animate(duration, () =>
-            {
-                var trans = CGAffineTransform.MakeTranslation(0, -keyboardFrame.Height + dy);
-                this.Transform = trans;
-            });
         }
 
         void OnKeyboardHidden(object sender, UIKeyboardEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("Keyboard is hidden.");
+            //// キーボード消滅時に画面を元に戻す。
+            //var duration = e.AnimationDuration;
 
-            // キーボード消滅時に画面を元に戻す。
-            var duration = e.AnimationDuration;
+            //var pageFrame = Element.Bounds;
+            //UIView.Animate(duration, async () =>
+            //{
+            //    // 少し遅延させないと、UIButtonのタップが正常に取れない
+            //    await System.Threading.Tasks.Task.Delay(10);
+            //    var trans = CGAffineTransform.MakeIdentity();
+            //    this.Transform = trans;
+            //}); 
 
-            var pageFrame = Element.Bounds;
-            UIView.Animate(duration, async () =>
+            if (Element != null)
             {
-                // 少し遅延させないと、UIButtonのタップが正常に取れない
-                await System.Threading.Tasks.Task.Delay(10);
-                var trans = CGAffineTransform.MakeIdentity();
-                this.Transform = trans;
-            });
+                Element.TranslationY -= _translationY;
+            }
         }
     }
 }
