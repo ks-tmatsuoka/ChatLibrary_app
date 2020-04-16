@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ChatSample.Views;
+using Entap.Chat;
 using Xamarin.Forms;
 
 namespace ChatSample
@@ -11,9 +13,11 @@ namespace ChatSample
             RoomId = room.RoomId;
             RoomType = room.RoomType;
             LastReadMessageId = room.AlreadyReadMessageId;
+            //BottomControllerMenuView = new CustomBottomMenuView();
         }
         public int RoomId { get; set; }
         public int RoomType { get; set; }
         public int LastReadMessageId { get; set; }
+        public BottomContorollerMenuViewBase BottomControllerMenuView { get; set; }
     }
 }

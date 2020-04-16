@@ -27,5 +27,7 @@ namespace Entap.Chat
         string GetNotSendImageSaveFolderPath();
         string GetUserId();
         void MoveImagePreviewPage(string imageUrl);
+
+        Task<IEnumerable<MessageBase>> BottomControllerMenuExecute(int notSendMessageId, int type, int roomId, ChatListView chatListView);
     }
 }

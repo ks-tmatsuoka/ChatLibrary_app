@@ -407,5 +407,106 @@ namespace ChatSample
         {
             App.Current.MainPage.Navigation.PushModalAsync(new ImagePreviewPage(imageUrl));
         }
+
+
+        /// <summary>
+        /// BottomControllerの各メニュー押した際の動作指定 / ChatControlで使用
+        /// </summary>
+        /// <param name="notSendMessageId"></param>
+        /// <param name="type"></param>
+        /// <param name="roomId"></param>
+        /// <param name="chatListView"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<MessageBase>> BottomControllerMenuExecute(int notSendMessageId, int type, int roomId, ChatListView chatListView)
+        {
+            if (type == (int)BottomControllerMenuType.Camera)
+            {
+                var imgPath = await Settings.Current.ChatService.TakePicture();
+                if (string.IsNullOrEmpty(imgPath))
+                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                byte[] bytes = FileManager.ReadBytes(imgPath);
+                string extension = System.IO.Path.GetExtension(imgPath);
+                string name = Guid.NewGuid().ToString() + extension;
+                if (bytes == null || bytes.Length < 1)
+                {
+                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                }
+                var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                if (!FileManager.FileCopy(imgPath, copyImgPath))
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
+                    });
+                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                }
+                var msg = new MessageBase { MessageId = notSendMessageId, ImageUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+                return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
+            }
+            else if (type == (int)BottomControllerMenuType.Library)
+            {
+                var imgPath = await Settings.Current.ChatService.SelectImage();
+                if (string.IsNullOrEmpty(imgPath))
+                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                byte[] bytes = FileManager.ReadBytes(imgPath);
+                string extension = System.IO.Path.GetExtension(imgPath);
+                string name = Guid.NewGuid().ToString() + extension;
+                if (bytes == null || bytes.Length < 1)
+                {
+                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                }
+                var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                if (!FileManager.FileCopy(imgPath, copyImgPath))
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
+                    });
+                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                }
+                var msg = new MessageBase { MessageId = notSendMessageId, ImageUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+                return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
+            }
+            else
+            {
+                /*
+                var msg = new MessageBase();
+                chatListView.AddMessage(msg);
+                var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(roomId, msg);
+                var index = chatListView.Messages.IndexOf(msg);
+                if (sendMessageResponseBase.MessageId < 0)
+                {
+                    // 通信エラー
+                    var delImgPath = msg.ImageUrl;
+                    string extension = System.IO.Path.GetExtension(delImgPath);
+                    chatListView.Messages[index].ResendVisible = true;
+                    var sendErrorImgPath = Settings.Current.ChatService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                    FileManager.FileCopy(delImgPath, sendErrorImgPath);
+                    chatListView.Messages[index].ImageUrl = sendErrorImgPath;
+                    FileManager.FileDelete(delImgPath);
+                    chatListView.NotSendMessageSaveInStorage(chatListView.Messages[index]);
+                }
+                else
+                {
+                    msg.ResendVisible = false;
+                    // サーバへ送信できた段階でメッセージの表示位置を再確認
+                    if (index == chatListView.Messages.Count - 1)
+                    {
+                        chatListView.Messages[index].MessageId = sendMessageResponseBase.MessageId;
+                        chatListView.Messages[index].DateTime = sendMessageResponseBase.SendDateTime;
+                    }
+                    else
+                    {
+                        chatListView.Messages.RemoveAt(index);
+                        msg.MessageId = sendMessageResponseBase.MessageId;
+                        msg.DateTime = sendMessageResponseBase.SendDateTime;
+                        chatListView.Messages.Add(msg);
+                    }
+                    chatListView.NotSendMessageDeleteFromStorage(msg.NotSendId);
+                }
+                */
+            }
+            return await Task.FromResult<IEnumerable<MessageBase>>(null);
+        }
     }
 }

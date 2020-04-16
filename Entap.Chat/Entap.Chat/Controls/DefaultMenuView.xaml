@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<local:BottomContorollerMenuViewBase
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Entap.Chat"
+    x:Class="Entap.Chat.DefaultMenuView">
+    <ContentView.Content>
+        <StackLayout
+            Spacing="0"
+            Orientation="Horizontal">
+            <Button
+                x:Name="SendPhotoButton"
+                Margin="10,0,5,0"
+                WidthRequest="48"
+                HeightRequest="48"
+                VerticalOptions="EndAndExpand"
+                BackgroundColor="Transparent"/>
+            <Button
+                x:Name="SendImgButton"
+                Margin="5,0,10,0"
+                WidthRequest="48"
+                HeightRequest="48"
+                VerticalOptions="EndAndExpand"
+                BackgroundColor="Transparent"/>
+        </StackLayout>
+    </ContentView.Content>
+</local:BottomContorollerMenuViewBase>

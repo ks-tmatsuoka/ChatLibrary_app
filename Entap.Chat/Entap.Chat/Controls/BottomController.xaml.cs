@@ -12,22 +12,19 @@ namespace Entap.Chat
         {
             InitializeComponent();
 
+            if (MenuView != null)
+                Menu.Children.Add(MenuView);
+
             Controller.BackgroundColor = BottomControllerBackgroundColor;
             if (BottomControllerIconStyle == ControllerIconStyles.Dark)
             {
-                SendPhotoButton.ImageSource = "camera_icon_dark.png";
-                SendImgButton.ImageSource = "library_icon_dark.png";
                 SendButton.ImageSource = "send_icon_dark.png";
             }
             else
             {
-                SendPhotoButton.ImageSource = "camera_icon.png";
-                SendImgButton.ImageSource = "library_icon.png";
                 SendButton.ImageSource = "send_icon.png";
             }
             this.SendButton.Clicked += (sender, e) => SendCommand?.Execute(null);
-            this.SendPhotoButton.Clicked += (sender, e) => CameraCommand?.Execute(null);
-            this.SendImgButton.Clicked += (sender, e) => LibraryCommand?.Execute(null);
             this.MsgEditor.Text = EditorText;
             MsgEditor.TextChanged += EditorTextChanged;
         }
@@ -52,16 +49,18 @@ namespace Entap.Chat
             {
                 if (BottomControllerIconStyle == ControllerIconStyles.Dark)
                 {
-                    SendPhotoButton.ImageSource = "camera_icon_dark.png";
-                    SendImgButton.ImageSource = "library_icon_dark.png";
                     SendButton.ImageSource = "send_icon_dark.png";
                 }
                 else
                 {
-                    SendPhotoButton.ImageSource = "camera_icon.png";
-                    SendImgButton.ImageSource = "library_icon.png";
                     SendButton.ImageSource = "send_icon.png";
                 }
+            }
+            else if (propertyName == MenuViewProperty.PropertyName)
+            {
+                Menu.Children.Clear();
+                if (MenuView != null)
+                    Menu.Children.Add(MenuView);
             }
         }
 
@@ -125,33 +124,48 @@ namespace Entap.Chat
         }
         #endregion
 
-        /// <summary>
-        /// カメラボタン押した際のコマンド
-        /// </summary>
-        #region CameraCommand BindableProperty
-        public static readonly BindableProperty CameraCommandProperty =
-            BindableProperty.Create(nameof(CameraCommand), typeof(ICommand), typeof(BottomController), null,
-                propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).CameraCommand = (ICommand)newValue);
-        public ICommand CameraCommand
-        {
-            get { return (ICommand)GetValue(CameraCommandProperty); }
-            set { SetValue(CameraCommandProperty, value); }
-        }
-        #endregion
+        ///// <summary>
+        ///// カメラボタン押した際のコマンド
+        ///// </summary>
+        //#region CameraCommand BindableProperty
+        //public static readonly BindableProperty CameraCommandProperty =
+        //    BindableProperty.Create(nameof(CameraCommand), typeof(ICommand), typeof(BottomController), null,
+        //        propertyChanged: (bindable, oldValue, newValue) =>
+        //                            ((BottomController)bindable).CameraCommand = (ICommand)newValue);
+        //public ICommand CameraCommand
+        //{
+        //    get { return (ICommand)GetValue(CameraCommandProperty); }
+        //    set { SetValue(CameraCommandProperty, value); }
+        //}
+        //#endregion
+
+        ///// <summary>
+        ///// ライブラリボタン押した際のコマンド
+        ///// </summary>
+        //#region LibraryCommand BindableProperty
+        //public static readonly BindableProperty LibraryCommandProperty =
+        //    BindableProperty.Create(nameof(LibraryCommand), typeof(ICommand), typeof(BottomController), null,
+        //        propertyChanged: (bindable, oldValue, newValue) =>
+        //                            ((BottomController)bindable).LibraryCommand = (ICommand)newValue);
+        //public ICommand LibraryCommand
+        //{
+        //    get { return (ICommand)GetValue(LibraryCommandProperty); }
+        //    set { SetValue(LibraryCommandProperty, value); }
+        //}
+        //#endregion
 
         /// <summary>
-        /// ライブラリボタン押した際のコマンド
+        /// メニュー
         /// </summary>
-        #region LibraryCommand BindableProperty
-        public static readonly BindableProperty LibraryCommandProperty =
-            BindableProperty.Create(nameof(LibraryCommand), typeof(ICommand), typeof(BottomController), null,
+        #region MenuView BindableProperty
+        public static readonly BindableProperty MenuViewProperty =
+            BindableProperty.Create(nameof(MenuView), typeof(View), typeof(BottomController), null,
                 propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((BottomController)bindable).LibraryCommand = (ICommand)newValue);
-        public ICommand LibraryCommand
+                                    ((BottomController)bindable).MenuView = (View)newValue);
+        public View MenuView
         {
-            get { return (ICommand)GetValue(LibraryCommandProperty); }
-            set { SetValue(LibraryCommandProperty, value); }
+            get { return (View)GetValue(MenuViewProperty); }
+            set { SetValue(MenuViewProperty, value); }
         }
         #endregion
     }

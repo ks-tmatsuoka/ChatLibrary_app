@@ -17,11 +17,28 @@ namespace Entap.Chat
             this.Controller.Padding = new Thickness(0, 0, 0, safearea.Bottom);
 
             Controller.SendCommand = SendCommand;
-            Controller.CameraCommand = CameraCommand;
-            Controller.LibraryCommand = LibraryCommand;
-
             Controller.BottomControllerBackgroundColor = BottomControllerBackgroundColor;
             Controller.BottomControllerIconStyle = BottomControllerIconStyle;
+            if (BottomControllerMenuView is null)
+            {
+                var defaultView = new DefaultMenuView();
+                if (BottomControllerIconStyle == ControllerIconStyles.Dark)
+                {
+                    defaultView.SendPhotoButtonImage = "camera_icon_dark.png";
+                    defaultView.SendImgButtonImage = "library_icon_dark.png";
+                }
+                else
+                {
+                    defaultView.SendPhotoButtonImage = "camera_icon.png";
+                    defaultView.SendImgButtonImage = "library_icon.png";
+                }
+                Controller.MenuView = defaultView;
+            }
+            else
+            {
+                Controller.MenuView = BottomControllerMenuView;
+            }
+            ((BottomContorollerMenuViewBase)Controller.MenuView).MenuCommand = MenuCommand;
         }
 
         protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -54,10 +71,45 @@ namespace Entap.Chat
             else if (propertyName == BottomControllerIconStyleProperty.PropertyName)
             {
                 Controller.BottomControllerIconStyle = BottomControllerIconStyle;
+                if (BottomControllerMenuView is null)
+                {
+                    if (BottomControllerIconStyle == ControllerIconStyles.Dark)
+                    {
+                        ((DefaultMenuView)Controller.MenuView).SendPhotoButtonImage = "camera_icon_dark.png";
+                        ((DefaultMenuView)Controller.MenuView).SendImgButtonImage = "library_icon_dark.png";
+                    }
+                    else
+                    {
+                        ((DefaultMenuView)Controller.MenuView).SendPhotoButtonImage = "camera_icon.png";
+                        ((DefaultMenuView)Controller.MenuView).SendImgButtonImage = "library_icon.png";
+                    }
+                }
             }
             else if (propertyName == BottomControllerBackgroundColorProperty.PropertyName)
             {
                 Controller.BottomControllerBackgroundColor = BottomControllerBackgroundColor;
+            }
+            else if (propertyName == BottomControllerMenuViewProperty.PropertyName)
+            {
+                if (BottomControllerMenuView is null)
+                {
+                    var defaultView = new DefaultMenuView();
+                    if (BottomControllerIconStyle == ControllerIconStyles.Dark)
+                    {
+                        defaultView.SendPhotoButtonImage = "camera_icon_dark.png";
+                        defaultView.SendImgButtonImage = "library_icon_dark.png";
+                    }
+                    else
+                    {
+                        defaultView.SendPhotoButtonImage = "camera_icon.png";
+                        defaultView.SendImgButtonImage = "library_icon.png";
+                    }
+                    Controller.MenuView = defaultView;
+                }
+                else
+                {
+                    Controller.MenuView = BottomControllerMenuView;
+                }
             }
         }
 
@@ -121,71 +173,29 @@ namespace Entap.Chat
             }
         }
 
-        public Command CameraCommand => new Command((obj) =>
+        public Command MenuCommand => new Command((obj) =>
         {
-            ProcessManager.Current.Invoke(nameof(SendCommand), async () => await SendPhoto());
-        });
-        async Task SendPhoto()
-        {
-            var imgPath = await Settings.Current.ChatService.TakePicture();
-            if (string.IsNullOrEmpty(imgPath))
-                return;
-            byte[] bytes = FileManager.ReadBytes(imgPath);
-            string extension = System.IO.Path.GetExtension(imgPath);
-            string name = Guid.NewGuid().ToString() + extension;
-            if (bytes == null || bytes.Length < 1)
+            ProcessManager.Current.Invoke(nameof(MenuCommand), async () =>
             {
-                return;
-            }
-            var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
-            if (!FileManager.FileCopy(imgPath, copyImgPath))
-            {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
-                });
-                return;
-            }
-            var msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
-            await ChatAddImg(msg);
-        }
-
-        public Command LibraryCommand => new Command((obj) =>
-        {
-            var msg = obj as MessageBase;
-            ProcessManager.Current.Invoke(nameof(SendCommand), async () => await SendImg(msg));
-        });
-        async Task SendImg(MessageBase msg = null)
-        {
-            if (msg is null)
-            {
-                var imgPath = await Settings.Current.ChatService.SelectImage();
-                if (string.IsNullOrEmpty(imgPath))
+                var pm = int.Parse(obj.ToString());
+                var msgBases = await Settings.Current.ChatService.BottomControllerMenuExecute(ChatList.GetNotSendMessageId(), pm, RoomId, ChatList);
+                if (msgBases is null)
                     return;
-                byte[] bytes = FileManager.ReadBytes(imgPath);
-                string extension = System.IO.Path.GetExtension(imgPath);
-                string name = Guid.NewGuid().ToString() + extension;
-                if (bytes == null || bytes.Length < 1)
+                if (pm == (int)BottomControllerMenuType.Camera || pm == (int)BottomControllerMenuType.Library)
                 {
-                    return;
-                }
-                var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
-                if (!FileManager.FileCopy(imgPath, copyImgPath))
-                {
-                    Device.BeginInvokeOnMainThread(() =>
+                    foreach(var msgBase in msgBases)
                     {
-                        Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
-                    });
-                    return;
+                        await ChatAddImg(msgBase);
+                    }
                 }
-                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), ImageUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
-            }
-            else
-            {
-                var oldMsgIndex = ChatList.Messages.IndexOf(msg);
-                ChatList.Messages.RemoveAt(oldMsgIndex);
-                msg.ResendVisible = false;
-            }
+            });
+        });
+
+        async Task ResendImg(MessageBase msg)
+        {
+            var oldMsgIndex = ChatList.Messages.IndexOf(msg);
+            ChatList.Messages.RemoveAt(oldMsgIndex);
+            msg.ResendVisible = false;
             await ChatAddImg(msg);
         }
 
@@ -222,7 +232,6 @@ namespace Entap.Chat
                     msg.DateTime = sendMessageResponseBase.SendDateTime;
                     ChatList.Messages.Add(msg);
                 }
-
                 ChatList.NotSendMessageDeleteFromStorage(msg.NotSendId);
             }
         }
@@ -263,7 +272,7 @@ namespace Entap.Chat
                     }
                     else if (msg.MessageType == (int)MessageType.Image)
                     {
-                        await SendImg(msg);
+                        await ResendImg(msg);
                     }
                 }
                 else if (result.Equals(button[1]))
@@ -417,5 +426,20 @@ namespace Entap.Chat
             get { return (int)GetValue(LastReadMessageIdProperty); }
             set { SetValue(LastReadMessageIdProperty, value); }
         }
+
+        /// <summary>
+        /// BottomControllerのメニュー
+        /// </summary>
+        #region BottomControllerMenuView BindableProperty
+        public static readonly BindableProperty BottomControllerMenuViewProperty =
+            BindableProperty.Create(nameof(BottomControllerMenuView), typeof(View), typeof(ChatControl), null,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((ChatControl)bindable).BottomControllerMenuView = (View)newValue);
+        public View BottomControllerMenuView
+        {
+            get { return (View)GetValue(BottomControllerMenuViewProperty); }
+            set { SetValue(BottomControllerMenuViewProperty, value); }
+        }
+        #endregion
     }
 }

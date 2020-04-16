@@ -22,6 +22,7 @@
                 RoomId="{Binding RoomId}"
                 RoomType="{Binding RoomType}"
                 LastReadMessageId="{Binding LastReadMessageId}"
+                BottomControllerMenuView="{Binding BottomControllerMenuView}"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"/>
         </Grid>

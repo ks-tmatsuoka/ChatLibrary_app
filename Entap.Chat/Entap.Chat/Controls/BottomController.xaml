@@ -6,26 +6,14 @@
     xmlns:local="clr-namespace:Entap.Chat"
     x:Name="Controller">
     <StackLayout
-        Grid.Row="1"
         Spacing="0"
         Orientation="Horizontal"
         HorizontalOptions="FillAndExpand">
-        <Button
-            x:Name="SendPhotoButton"
-            Margin="10,0,5,0"
-            WidthRequest="48"
-            HeightRequest="48"
-            Text="Cam"
-            VerticalOptions="EndAndExpand"
-            BackgroundColor="Transparent"/>
-        <Button
-            x:Name="SendImgButton"
-            Margin="5,0,10,0"
-            WidthRequest="48"
-            HeightRequest="48"
-            Text="Lib"
-            VerticalOptions="EndAndExpand"
-            BackgroundColor="Transparent"/>
+        <StackLayout
+            x:Name="Menu"
+            Spacing="0"
+            Orientation="Horizontal">
+        </StackLayout>
             
         <local:DynamicResizedEditor
             x:Name="MsgEditor"
