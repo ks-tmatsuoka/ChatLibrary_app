@@ -10,6 +10,8 @@ namespace Entap.Chat
         Text,
         Image,
         Movie,
+        MemberAddRoom=10,
+        MemberLeaveRoom=11,
         Custom=100
     }
 }

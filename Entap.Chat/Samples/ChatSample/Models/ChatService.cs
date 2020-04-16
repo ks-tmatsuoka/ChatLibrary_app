@@ -65,7 +65,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// メッセージ送信
+        /// メッセージ送信/ChatControlのみで使用
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="msg"></param>
@@ -134,7 +134,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// 写真撮影
+        /// 写真撮影 / ChatControlのみで使用
         /// </summary>
         /// <returns></returns>
         public async Task<string> TakePicture()
@@ -147,7 +147,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// ライブラリからの画像選択
+        /// ライブラリからの画像選択 / ChatControlのみで使用
         /// </summary>
         /// <returns></returns>
         public async Task<string> SelectImage()
@@ -290,7 +290,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// ファイルの共有
+        /// ファイルの共有 / ChatControlで使用
         /// </summary>
         /// <param name="imagePath"></param>
         /// <returns></returns>
@@ -338,7 +338,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// 画像を端末にダウンロード(Androidはダウンロードフォルダ、iOSはカメラロール)
+        /// 画像を端末にダウンロード(Androidはダウンロードフォルダ、iOSはカメラロール  / ChatControlのみで使用
         /// </summary>
         /// <param name="imageUrl"></param>
         /// <returns></returns>
@@ -370,18 +370,30 @@ namespace ChatSample
                 await Application.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
         }
 
+        /// <summary>
+        /// ChatControlで使用
+        /// </summary>
+        /// <returns></returns>
         public string GetSendImageSaveFolderPath()
         {
             var path = FileManager.GetContentsPath(FileManager.AppDataFolders.SendImage) + "/";
             return path;
         }
 
+        /// <summary>
+        /// ChatControlで使用
+        /// </summary>
+        /// <returns></returns>
         public string GetNotSendImageSaveFolderPath()
         {
             var path = FileManager.GetContentsPath(FileManager.AppDataFolders.NotSendImage) + "/";
             return path;
         }
 
+        /// <summary>
+        /// UserId取得
+        /// </summary>
+        /// <returns></returns>
         public string GetUserId()
         {
             return UserDataManager.Instance.UserId;
