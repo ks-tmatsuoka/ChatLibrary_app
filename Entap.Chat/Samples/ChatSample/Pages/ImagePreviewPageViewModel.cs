@@ -19,12 +19,12 @@ namespace ChatSample
 
         public Command DownloadCmd => new Command(async() =>
         {
-            await Settings.Current.ChatService.ImageDownload(ImageUrl);
+            await ImageManager.ImageDownload(ImageUrl);
         });
 
         public Command ShareCmd => new Command(async () =>
         {
-            await Settings.Current.ChatService.ImageShare(ImageUrl);
+            await ImageManager.ImageShare(ImageUrl);
         });
 
         public Command TapCommadn => new Command(() =>

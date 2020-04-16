@@ -38,7 +38,7 @@ namespace ChatSample
             bool result;
             if (imagePath.Contains("http://") || imagePath.Contains("https://"))
             {
-                result = await ImageManager.DownloadWebImageFile(imagePath, filePath);
+                result = await DownloadWebImageFile(imagePath, filePath);
             }
             else
             {
@@ -91,6 +91,65 @@ namespace ChatSample
                 System.Diagnostics.Debug.WriteLine("FileDownLoadError : " + ex);
             }
             return cmp.Task;
+        }
+
+        public static async Task ImageDownload(string imageUrl)
+        {
+            var dlFolderPath = DependencyService.Get<IFileService>().GetDownloadFolderPath();
+            var extension = System.IO.Path.GetExtension(imageUrl);
+            string filePath = dlFolderPath;
+            if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
+            {
+                filePath += "/" + Guid.NewGuid() + ".jpeg";
+            }
+            else if (extension.ToLower() == ".pdf")
+            {
+                filePath += "/" + Guid.NewGuid() + ".pdf";
+            }
+            else
+            {
+                filePath += "/" + Guid.NewGuid() + ".png";
+            }
+            bool? dlResult;
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                dlResult = await DownloadWebImageFile(imageUrl, filePath);
+            }
+            else
+            {
+                if (imageUrl.Contains("http://") || imageUrl.Contains("https://"))
+                {
+                    var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
+                    if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
+                    {
+                        mediaFolderPath += "/" + Guid.NewGuid() + ".jpeg";
+                    }
+                    else if (extension.ToLower() == ".pdf")
+                    {
+                        mediaFolderPath += "/" + Guid.NewGuid() + ".pdf";
+                    }
+                    else
+                    {
+                        mediaFolderPath += "/" + Guid.NewGuid() + ".png";
+                    }
+                    var result = await DownloadWebImageFile(imageUrl, mediaFolderPath);
+                    if (!result)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("エラー", "ファイルが取得できませんでした", "閉じる");
+                        return;
+                    }
+                    dlResult = DependencyService.Get<IFileService>().SaveImageiOSLibrary(mediaFolderPath);
+                }
+                else
+                {
+                    dlResult = DependencyService.Get<IFileService>().SaveImageiOSLibrary(imageUrl);
+                }
+            }
+
+            if (dlResult == true)
+                await Application.Current.MainPage.DisplayAlert("", "保存しました", "閉じる");
+            else if (dlResult == false)
+                await Application.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
         }
     }
 }

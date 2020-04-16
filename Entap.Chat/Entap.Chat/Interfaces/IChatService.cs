@@ -22,7 +22,6 @@ namespace Entap.Chat
         void DeleteNotSendMessageData(int id);
 
         Task ImageShare(string imagePath);
-        Task ImageDownload(string imageUrl);
         string GetSendImageSaveFolderPath();
         string GetNotSendImageSaveFolderPath();
         string GetUserId();

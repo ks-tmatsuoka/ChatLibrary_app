@@ -296,78 +296,7 @@ namespace ChatSample
         /// <returns></returns>
         public async Task ImageShare(string imagePath)
         {
-            var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
-            var extension = System.IO.Path.GetExtension(imagePath);
-            string filePath = mediaFolderPath;
-            if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
-            {
-                filePath += "/temp.jpeg";
-            }
-            else if (extension.ToLower() == ".png")
-            {
-                filePath += "/temp.png";
-            }
-            else if (extension.ToLower() == ".pdf")
-            {
-                filePath += "/temp.pdf";
-            }
-            else
-            {
-                await Application.Current.MainPage.DisplayAlert("エラー", "こちらのファイルは表示できません", "閉じる");
-                return;
-            }
-
-            bool result;
-            if (imagePath.Contains("http://") || imagePath.Contains("https://"))
-            {
-                result = await ImageManager.DownloadWebImageFile(imagePath, filePath);
-            }
-            else
-            {
-                result = FileManager.FileCopy(imagePath, filePath);
-            }
-
-            if (!result)
-            {
-                await Application.Current.MainPage.DisplayAlert("エラー", "ファイルが取得できませんでした", "閉じる");
-                return;
-            }
-
-            string str = "error";
-            DependencyService.Get<IFileService>().OpenShareMenu(filePath, ref str);
-        }
-
-        /// <summary>
-        /// 画像を端末にダウンロード(Androidはダウンロードフォルダ、iOSはカメラロール  / ChatControlのみで使用
-        /// </summary>
-        /// <param name="imageUrl"></param>
-        /// <returns></returns>
-        public async Task ImageDownload(string imageUrl)
-        {
-            var dlFolderPath = DependencyService.Get<IFileService>().GetDownloadFolderPath();
-            var extension = System.IO.Path.GetExtension(imageUrl);
-            string filePath = dlFolderPath;
-            if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
-            {
-                filePath += "/" + Guid.NewGuid() + ".jpeg";
-            }
-            else if (extension.ToLower() == ".pdf")
-            {
-                filePath += "/" + Guid.NewGuid() + ".pdf";
-            }
-            else
-            {
-                filePath += "/" + Guid.NewGuid() + ".png";
-            }
-            bool? dlResult;
-            if (Device.RuntimePlatform == Device.Android)
-                dlResult = await ImageManager.DownloadWebImageFile(imageUrl, filePath);
-            else
-                dlResult = DependencyService.Get<IFileService>().SaveImageiOSLibrary(imageUrl);
-            if (dlResult == true)
-                await Application.Current.MainPage.DisplayAlert("", "保存しました", "閉じる");
-            else if (dlResult == false)
-                await Application.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
+            await ImageManager.ImageShare(imagePath);
         }
 
         /// <summary>
