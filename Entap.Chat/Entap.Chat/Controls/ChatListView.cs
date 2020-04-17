@@ -553,6 +553,7 @@ namespace Entap.Chat
                 firstVisibleItemIndex = e.ItemIndex;
                 //System.Diagnostics.Debug.WriteLine("OnItemAppearing firstVisibleItem" + ((MessageBase)e.Item).MessageId.ToString());
                 firstVisibleItem = e.Item;
+                SendAlreadyRead(firstVisibleItem);
             }
             else if (chatScrollDirection == ScrollDirection.Down)
             {
@@ -590,7 +591,8 @@ namespace Entap.Chat
         async Task SendAlreadyRead(object obj)
         {
             var messageBase = obj as MessageBase;
-            if (messageBase != null && lastReadMessageId < messageBase.MessageId)
+            var userId = Settings.Current.ChatService.GetUserId();
+            if (messageBase != null && userId != messageBase.SendUserId && lastReadMessageId < messageBase.MessageId)
             {
                 System.Diagnostics.Debug.WriteLine("SendAlreadyRead: " + messageBase.MessageId);
                 var result = await Settings.Current.ChatService.SendAlreadyRead(RoomId, messageBase.MessageId);
