@@ -27,7 +27,7 @@
                 <ViewCell>
                     <Image
                         HeightRequest="150"
-                        Source="{Binding ImageUrl}"
+                        Source="{Binding MediaUrl}"
                     />
                 </ViewCell>
             </DataTemplate>
@@ -50,7 +50,7 @@
                 <ViewCell>
                     <Image
                         HeightRequest="150"
-                        Source="{Binding ImageUrl}"
+                        Source="{Binding MediaUrl}"
                     />
                 </ViewCell>
             </DataTemplate>

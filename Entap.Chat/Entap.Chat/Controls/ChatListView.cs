@@ -323,7 +323,7 @@ namespace Entap.Chat
                     if (_messages.Count > 0)
                         ScrollTo(_messages?.Last(), ScrollToPosition.End, false);
                     _messages.CollectionChanged += OnMessagesCollectionChanged;
-                    Settings.Current.ChatService.UpdateData(_messages);
+                    Settings.Current.ChatService.UpdateData(_messages, RoomId);
                 });
             });
         }

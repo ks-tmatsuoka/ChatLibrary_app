@@ -191,7 +191,7 @@
                                     Source="share_icon.png"
                                     Aspect="AspectFit"
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
-                                    CommandParameter="{Binding ImageUrl}"
+                                    CommandParameter="{Binding MediaUrl}"
                                     Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
                                 <StackLayout
                                     HorizontalOptions="EndAndExpand"
@@ -225,10 +225,10 @@
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     Aspect="AspectFit"
-                                    Source="{Binding ImageUrl}"/>
+                                    Source="{Binding MediaUrl}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
-                                        CommandParameter="{Binding ImageUrl}"
+                                        CommandParameter="{Binding MediaUrl}"
                                         Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
                                 </Frame.GestureRecognizers>
                             </Frame>
@@ -303,10 +303,10 @@
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     Aspect="AspectFit"
-                                    Source="{Binding ImageUrl}"/>
+                                    Source="{Binding MediaUrl}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
-                                        CommandParameter="{Binding ImageUrl}"
+                                        CommandParameter="{Binding MediaUrl}"
                                         Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
                                 </Frame.GestureRecognizers>
                             </Frame>
@@ -320,7 +320,7 @@
                                     WidthRequest="30"
                                     HeightRequest="30"
                                     Source="share_icon.png"
-                                    CommandParameter="{Binding ImageUrl}"
+                                    CommandParameter="{Binding MediaUrl}"
                                     Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
                                 <StackLayout
                                     HorizontalOptions="StartAndExpand"

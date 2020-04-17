@@ -48,7 +48,7 @@ namespace ChatSample
                         Text = val.Text,
                         SendUserId = val.SendUserId,
                         DateTime = val.SendDateTime,
-                        ImageUrl = val.MediaUrl,
+                        MediaUrl = val.MediaUrl,
                         MessageType = val.MessageType,
                         AlreadyReadCount = val.AlreadyReadCount,
                         UserIcon = members.Where(w => w.UserId == val.SendUserId).LastOrDefault()?.UserIcon
@@ -82,11 +82,11 @@ namespace ChatSample
             byte[] bytes = null;
             string name = "";
             string fileType = "";
-            if (msg.MessageType == (int)MessageType.Image && !string.IsNullOrEmpty(msg.ImageUrl))
+            if (msg.MessageType == (int)MessageType.Image && !string.IsNullOrEmpty(msg.MediaUrl))
             {
                 // 画像
-                bytes = FileManager.ReadBytes(msg.ImageUrl);
-                var extension = System.IO.Path.GetExtension(msg.ImageUrl);
+                bytes = FileManager.ReadBytes(msg.MediaUrl);
+                var extension = System.IO.Path.GetExtension(msg.MediaUrl);
                 name = Guid.NewGuid().ToString() + extension;
                 fileType = "Image";
                 if (bytes == null || bytes.Length < 1)
@@ -205,7 +205,7 @@ namespace ChatSample
         }
 
         public IDisposable subscription;
-        public void UpdateData(ObservableCollection<MessageBase> messageBases)
+        public void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId)
         {
             Task.Run(async () =>
             {
@@ -232,11 +232,20 @@ namespace ChatSample
             channel.Open();
 
             // PubSub subscription:
-            ISubject<JToken> subject = channel.GetSubject<JToken>("1");
+            ISubject<JToken> subject = channel.GetSubject<JToken>(roomId.ToString());
             //var s = subscription;
             subscription = subject.Subscribe(x =>
             {
-                System.Diagnostics.Debug.WriteLine("Received " + x);
+                System.Diagnostics.Debug.WriteLine(x);
+                //var data = JsonConvert.DeserializeObject<WebSocketReceiveDataBase>(x.ToString());
+                //if (!string.IsNullOrEmpty(data.Message))
+                //{
+
+                //}
+                //if (!string.IsNullOrEmpty(data.AlreadyReadInfomation))
+                //{
+
+                //}
             });
         }
 
@@ -369,7 +378,7 @@ namespace ChatSample
                     });
                     return await Task.FromResult<IEnumerable<MessageBase>>(null);
                 }
-                var msg = new MessageBase { MessageId = notSendMessageId, ImageUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+                var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
                 return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
             }
             else if (type == (int)BottomControllerMenuType.Library)
@@ -393,7 +402,7 @@ namespace ChatSample
                     });
                     return await Task.FromResult<IEnumerable<MessageBase>>(null);
                 }
-                var msg = new MessageBase { MessageId = notSendMessageId, ImageUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+                var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
                 return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
             }
             else

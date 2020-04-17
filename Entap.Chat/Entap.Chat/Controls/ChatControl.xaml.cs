@@ -207,12 +207,12 @@ namespace Entap.Chat
             if (sendMessageResponseBase.MessageId < 0)
             {
                 // 通信エラー
-                var delImgPath = msg.ImageUrl;
+                var delImgPath = msg.MediaUrl;
                 string extension = System.IO.Path.GetExtension(delImgPath);
                 ChatList.Messages[index].ResendVisible = true;
                 var sendErrorImgPath = Settings.Current.ChatService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + extension;
                 FileManager.FileCopy(delImgPath, sendErrorImgPath);
-                ChatList.Messages[index].ImageUrl = sendErrorImgPath;
+                ChatList.Messages[index].MediaUrl = sendErrorImgPath;
                 FileManager.FileDelete(delImgPath);
                 ChatList.NotSendMessageSaveInStorage(ChatList.Messages[index]);
             }

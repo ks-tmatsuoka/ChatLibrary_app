@@ -16,7 +16,7 @@ namespace Entap.Chat
             MessageId = messageBase.MessageId;
             DateTime = messageBase.DateTime;
             Text = messageBase.Text;
-            ImageUrl = messageBase.ImageUrl;
+            MediaUrl = messageBase.MediaUrl;
             UserIcon = messageBase.UserIcon;
             MessageType = messageBase.MessageType;
             SendUserId = messageBase.SendUserId;
