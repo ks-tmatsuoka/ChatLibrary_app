@@ -10,6 +10,7 @@ namespace Entap.Chat
         public DataTemplate MyTextMessageTemplate { get; set; }
         public DataTemplate MyImageMessageTemplate { get; set; }
         public DataTemplate OthersImageMessageTemplate { get; set; }
+        public DataTemplate MemberInAndOutMessageTemplate { get; set; }
 
         public MessageDataTemplateSelector()
         {
@@ -35,10 +36,10 @@ namespace Entap.Chat
                     return OthersTextMessageTemplate;
 
                 case (int)MessageType.MemberAddRoom:
-                    return OthersTextMessageTemplate;
+                    return MemberInAndOutMessageTemplate;
 
                 case (int)MessageType.MemberLeaveRoom:
-                    return OthersTextMessageTemplate;
+                    return MemberInAndOutMessageTemplate;
 
                 case (int)MessageType.Custom:
                     return OthersTextMessageTemplate;

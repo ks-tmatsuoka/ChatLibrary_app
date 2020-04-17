@@ -339,12 +339,48 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
+            <DataTemplate x:Key="memberInAndOutMessageTemplate" x:DataType="local:MessageBase">
+                <ViewCell>
+                    <StackLayout
+                        Spacing="0"
+                        Margin="16,6,16,6"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Transparent">
+                        <Frame
+                            Margin="10"
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Fill"
+                            HasShadow="False"
+                            CornerRadius="14"
+                            BackgroundColor="{Binding Source={x:Reference Content}, Path=DateBackgroundColor}"
+                            Padding="0">
+                            <StackLayout
+                                Margin="12,2"
+                                Spacing="0">
+                                <Label
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"
+                                    TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
+                                    Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
+                                    FontSize="10"/>
+                                <Label
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"
+                                    TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
+                                    Text="{Binding Text}"
+                                    FontSize="14"/>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
             <local:MessageDataTemplateSelector
                 x:Key="messageDataTemplateSelector"
                 MyTextMessageTemplate="{StaticResource myTextMessageTemplate}"
                 OthersTextMessageTemplate="{StaticResource othersTextMessageTemplate}"
                 MyImageMessageTemplate="{StaticResource myImageMessageTemplate}"
                 OthersImageMessageTemplate="{StaticResource othersImageMessageTemplate}"
+                MemberInAndOutMessageTemplate="{StaticResource memberInAndOutMessageTemplate}"
             />
             <local:TimeConverter x:Key="timeConverter"/>
             <local:DateConverter x:Key="dateConverter"/>

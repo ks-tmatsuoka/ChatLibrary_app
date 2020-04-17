@@ -249,8 +249,6 @@ namespace Entap.Chat
         {
             ProcessManager.Current.Invoke(nameof(ImageShareCommand), async () =>
             {
-                // TODO パーミッションチェック
-
                 var imagePath = pm as string;
                 await Settings.Current.ChatService.ImageShare(imagePath);
             });
