@@ -159,13 +159,13 @@ namespace Entap.Chat
                 if (index == ChatList.Messages.Count - 1)
                 {
                     ChatList.Messages[index].MessageId = sendMessageResponseBase.MessageId;
-                    ChatList.Messages[index].DateTime = sendMessageResponseBase.SendDateTime;
+                    ChatList.Messages[index].SendDateTime = sendMessageResponseBase.SendDateTime;
                 }
                 else
                 {
                     ChatList.Messages.RemoveAt(index);
                     msg.MessageId = sendMessageResponseBase.MessageId;
-                    msg.DateTime = sendMessageResponseBase.SendDateTime;
+                    msg.SendDateTime = sendMessageResponseBase.SendDateTime;
                     ChatList.Messages.Add(msg);
                 }
 
@@ -223,13 +223,13 @@ namespace Entap.Chat
                 if (index == ChatList.Messages.Count - 1)
                 {
                     ChatList.Messages[index].MessageId = sendMessageResponseBase.MessageId;
-                    ChatList.Messages[index].DateTime = sendMessageResponseBase.SendDateTime;
+                    ChatList.Messages[index].SendDateTime = sendMessageResponseBase.SendDateTime;
                 }
                 else
                 {
                     ChatList.Messages.RemoveAt(index);
                     msg.MessageId = sendMessageResponseBase.MessageId;
-                    msg.DateTime = sendMessageResponseBase.SendDateTime;
+                    msg.SendDateTime = sendMessageResponseBase.SendDateTime;
                     ChatList.Messages.Add(msg);
                 }
                 ChatList.NotSendMessageDeleteFromStorage(msg.NotSendId);

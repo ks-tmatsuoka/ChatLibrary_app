@@ -30,7 +30,7 @@
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
                                 TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
-                                Text="{Binding DateTime, Converter={StaticResource dateConverter}}"
+                                Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
                         <StackLayout
@@ -55,7 +55,7 @@
                                 </Label>
                                 <Label
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
-                                    Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                    Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
                                     FontSize="10"/>
                             </StackLayout>
                             <Frame
@@ -107,7 +107,7 @@
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
                                 TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
-                                Text="{Binding DateTime, Converter={StaticResource dateConverter}}"
+                                Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
                         <StackLayout
@@ -143,7 +143,7 @@
                             </Frame>
                             <Label
                                 VerticalOptions="EndAndExpand"
-                                Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
                                 FontSize="10"/>
                         </StackLayout>
                     </StackLayout>
@@ -171,7 +171,7 @@
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
                                 TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
-                                Text="{Binding DateTime, Converter={StaticResource dateConverter}}"
+                                Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
                         <StackLayout
@@ -210,7 +210,7 @@
                                         </Label.Text>
                                     </Label>
                                     <Label
-                                        Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                        Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
                                         FontSize="10"/>
                                 </StackLayout>
                             </StackLayout>
@@ -270,7 +270,7 @@
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
                                 TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
-                                Text="{Binding DateTime, Converter={StaticResource dateConverter}}"
+                                Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
                         <StackLayout
@@ -329,7 +329,7 @@
                                     <Label
                                         FontSize="10"/>
                                     <Label
-                                        Text="{Binding DateTime, Converter={StaticResource timeConverter}}"
+                                        Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
                                         FontSize="10"/>
                                 </StackLayout>
                             </StackLayout>

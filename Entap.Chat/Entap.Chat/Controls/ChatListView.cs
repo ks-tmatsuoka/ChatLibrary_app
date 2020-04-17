@@ -323,7 +323,7 @@ namespace Entap.Chat
                     if (_messages.Count > 0)
                         ScrollTo(_messages?.Last(), ScrollToPosition.End, false);
                     _messages.CollectionChanged += OnMessagesCollectionChanged;
-                    Settings.Current.ChatService.UpdateData(_messages, RoomId);
+                    Settings.Current.ChatService.UpdateData(_messages, RoomId, chatMembers);
                 });
             });
         }
@@ -400,7 +400,7 @@ namespace Entap.Chat
             if (_messages.Count < 1)
                 return;
             var first = _messages.FirstOrDefault();
-            DateTime dateTime = first.DateTime;
+            DateTime dateTime = first.SendDateTime;
             Device.BeginInvokeOnMainThread(() =>
             {
                 first.DateVisible = true;
@@ -409,9 +409,9 @@ namespace Entap.Chat
             {
                 if (first.Equals(msg))
                     continue;
-                if (msg.DateTime.Equals(new DateTime()))
+                if (msg.SendDateTime.Equals(new DateTime()))
                     continue;
-                if (dateTime.ToString("yyyy/MM/dd") == msg.DateTime.ToString("yyyy/MM/dd"))
+                if (dateTime.ToString("yyyy/MM/dd") == msg.SendDateTime.ToString("yyyy/MM/dd"))
                 {
                     if (msg.DateVisible)
                     {
@@ -426,7 +426,7 @@ namespace Entap.Chat
                 {
                     msg.DateVisible = true;
                 });
-                dateTime = msg.DateTime;
+                dateTime = msg.SendDateTime;
             }
         }
 

@@ -47,7 +47,7 @@ namespace ChatSample
                         MessageId = val.MessageId,
                         Text = val.Text,
                         SendUserId = val.SendUserId,
-                        DateTime = val.SendDateTime,
+                        SendDateTime = val.SendDateTime,
                         MediaUrl = val.MediaUrl,
                         MessageType = val.MessageType,
                         AlreadyReadCount = val.AlreadyReadCount,
@@ -205,24 +205,24 @@ namespace ChatSample
         }
 
         public IDisposable subscription;
-        public void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId)
+        public void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId, List<ChatMemberBase> members)
         {
-            Task.Run(async () =>
-            {
-                // 既読つける処理
-                while (true)
-                {
-                    await Task.Delay(2000);
-                    var msgs = messageBases.Where(w => w.MessageId >= 120);
-                    foreach (var msg in msgs)
-                    {
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            msg.AlreadyReadCount = 1;
-                        });
-                    }
-                }
-            });
+            //Task.Run(async () =>
+            //{
+            //    // 既読つける処理
+            //    while (true)
+            //    {
+            //        await Task.Delay(2000);
+            //        var msgs = messageBases.Where(w => w.MessageId >= 120);
+            //        foreach (var msg in msgs)
+            //        {
+            //            Device.BeginInvokeOnMainThread(() =>
+            //            {
+            //                msg.AlreadyReadCount = 1;
+            //            });
+            //        }
+            //    }
+            //});
 
 
             DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
@@ -233,19 +233,25 @@ namespace ChatSample
 
             // PubSub subscription:
             ISubject<JToken> subject = channel.GetSubject<JToken>(roomId.ToString());
-            //var s = subscription;
             subscription = subject.Subscribe(x =>
             {
                 System.Diagnostics.Debug.WriteLine(x);
-                //var data = JsonConvert.DeserializeObject<WebSocketReceiveDataBase>(x.ToString());
-                //if (!string.IsNullOrEmpty(data.Message))
-                //{
-
-                //}
-                //if (!string.IsNullOrEmpty(data.AlreadyReadInfomation))
-                //{
-
-                //}
+                var data = JsonConvert.DeserializeObject<WebSocketReceiveDataBase>(x.ToString());
+                if (!string.IsNullOrEmpty(data.Message))
+                {
+                    var msg = JsonConvert.DeserializeObject<MessageBase>(data.Message);
+                    if (msg.SendUserId == GetUserId())
+                        return;
+                    msg.UserIcon = members.Where(w => w.UserId == msg.SendUserId)?.LastOrDefault()?.UserIcon;
+                    messageBases.Add(msg);
+                }
+                if (!string.IsNullOrEmpty(data.AlreadyReadInfomation))
+                {
+                    var info = JsonConvert.DeserializeObject<WebSocketReciveAlreadyReadInfomation>(data.AlreadyReadInfomation);
+                    var msg = messageBases.Where(w => w.MessageId == info.MessageId).LastOrDefault();
+                    if (msg != null)
+                        msg.AlreadyReadCount = info.AlreadyReadCount;
+                }
             });
         }
 

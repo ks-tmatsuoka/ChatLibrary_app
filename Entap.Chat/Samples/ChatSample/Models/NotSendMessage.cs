@@ -14,7 +14,7 @@ namespace Entap.Chat
         public NotSendMessage(int roomId,MessageBase messageBase)
         {
             MessageId = messageBase.MessageId;
-            DateTime = messageBase.DateTime;
+            SendDateTime = messageBase.SendDateTime;
             Text = messageBase.Text;
             MediaUrl = messageBase.MediaUrl;
             UserIcon = messageBase.UserIcon;

@@ -15,7 +15,7 @@ namespace Entap.Chat
         Task<string> SelectImage();
         Task<string> TakePicture();
         Task<List<ChatMemberBase>> GetRoomMembers(int roomId);
-        void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId);
+        void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId, List<ChatMemberBase> members);
         void Dispose();
         void AddNotSendMessages(int roomId, ObservableCollection<MessageBase> messageBases);
         void SaveNotSendMessageData(int roomId, MessageBase messageBase);

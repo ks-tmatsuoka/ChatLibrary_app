@@ -16,7 +16,7 @@ namespace Entap.Chat
         public MessageBase(MessageBase notSendMessage)
         {
             MessageId = notSendMessage.MessageId;
-            DateTime = notSendMessage.DateTime;
+            SendDateTime = notSendMessage.SendDateTime;
             Text = notSendMessage.Text;
             MediaUrl = notSendMessage.MediaUrl;
             UserIcon = notSendMessage.UserIcon;
@@ -29,19 +29,19 @@ namespace Entap.Chat
 
         public int MessageId { get; set; }
         
-        private DateTime dateTime;
-        public DateTime DateTime
+        private DateTime sendDateTime;
+        public DateTime SendDateTime
         {
             get
             {
-                return dateTime;
+                return sendDateTime;
             }
             set
             {
-                if (dateTime != value)
+                if (sendDateTime != value)
                 {
-                    dateTime = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("DateTime"));
+                    sendDateTime = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("SendDateTime"));
                 }
             }
         }
