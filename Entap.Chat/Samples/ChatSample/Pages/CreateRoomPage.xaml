@@ -4,13 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ChatSample"
     x:Class="ChatSample.CreateRoomPage">
-    <ContentPage.BindingContext>
-        <local:CreateRoomPageViewModel/>
-    </ContentPage.BindingContext>
     <ContentPage.ToolbarItems>
         <ToolbarItem
             Priority="1"
-            Text="作成"
+            Text="{Binding ToolberText}"
             Command="{Binding ToolbarCmd}"/>
     </ContentPage.ToolbarItems>
     <StackLayout
@@ -19,8 +16,10 @@
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand">
         <Label
+            IsVisible="{Binding RoomNameVisible}"
             Text="ルーム名"/>
         <Editor
+            IsVisible="{Binding RoomNameVisible}"
             BackgroundColor="LightGray"
             HeightRequest="35"
             HorizontalOptions="FillAndExpand"

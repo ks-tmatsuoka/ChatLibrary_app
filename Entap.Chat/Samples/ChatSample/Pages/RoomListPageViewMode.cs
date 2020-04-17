@@ -84,6 +84,12 @@ namespace ChatSample
                 }
             }
         }
+        
+        public Command MemberAddCmd => new Command(async (roomId) =>
+        {
+            var page = new CreateRoomPage(2, (int)roomId);
+            await App.Current.MainPage.Navigation.PushAsync(page);
+        });
 
         public Command LeaveCmd => new Command(async(roomId) =>
         {
@@ -121,7 +127,7 @@ namespace ChatSample
 
         public Command CreateRoomCmd => new Command(() =>
         {
-            var page = new CreateRoomPage();
+            var page = new CreateRoomPage(1);
             App.Current.MainPage.Navigation.PushAsync(page);
         });
     }

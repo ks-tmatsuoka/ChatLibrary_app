@@ -88,6 +88,7 @@ namespace ChatSample
             public const string RegistContactAddress = "regist_contact_address.php";
             public const string DeleteContactAddress = "delete_contact_address.php";
             public const string LeaveRoom = "leave_room.php";
+            public const string AddRoomMember = "add_room_member.php";
         }
 
         /// <summary>
