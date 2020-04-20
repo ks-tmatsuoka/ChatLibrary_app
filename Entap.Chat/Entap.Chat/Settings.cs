@@ -24,7 +24,7 @@ namespace Entap.Chat
         public void Init(IChatService chatService, IChatControlService chatControlService=null)
         {
             ChatService = chatService;
-            if (ChatControlService != null)
+            if (chatControlService != null)
                 ChatControlService = chatControlService;
             TimeFormat = "H:mm";
             AlreadyReadText = "既読";
