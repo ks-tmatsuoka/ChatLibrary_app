@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:ChatSample"
+    x:Class="ChatSample.SettingPage">
+    <StackLayout
+        Spacing="0"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+        <Button
+            Margin="10"
+            HorizontalOptions="CenterAndExpand"
+            HeightRequest="40"
+            WidthRequest="150"
+            Text="連絡先一覧"
+            Command="{Binding MoveContactPageCmd}"/>
+        <Button 
+            Margin="10,0,10,10"
+            HorizontalOptions="CenterAndExpand"
+            HeightRequest="40"
+            WidthRequest="150"
+            Text="ルーム作成"
+            Command="{Binding CreateRoomCmd}"/>
+
+        <Button 
+            Margin="10,0,10,10"
+            HorizontalOptions="CenterAndExpand"
+            HeightRequest="40"
+            WidthRequest="150"
+            Text="自分の情報"
+            Command="{Binding MyInfoCmd}"/>
+    </StackLayout>
+</ContentPage>

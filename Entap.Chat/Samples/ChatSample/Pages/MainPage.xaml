@@ -14,14 +14,21 @@
 
     <StackLayout>
         <!--  Place new controls here  -->
+
         <Button
-            Text="サンプル（標準）"
+            Text="設定ページサンプル"
+            Command="{Binding PushPageCommand}"
+            CommandParameter="{x:Type local:SettingPage}"
+        />
+
+        <Button
+            Text="ChatControlサンプル"
             Command="{Binding PushPageCommand}"
             CommandParameter="{x:Type local:RoomListPage}"
         />
 
         <Button
-            Text="サンプル（カスタマイズ）"
+            Text="ChatListView サンプル"
             Command="{Binding PushPageCommand}"
             CommandParameter="{x:Type local:CustomChatPage}"
         />
