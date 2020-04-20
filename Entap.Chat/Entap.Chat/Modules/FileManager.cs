@@ -51,6 +51,47 @@ namespace Entap.Chat.Modules
             }
         }
 
+        public static bool ClearDirectory(string path)
+        {
+            try
+            {
+                if (FolderExists(path))
+                {
+                    var dir = new DirectoryInfo(path);
+                    var files = dir.GetFiles();
+                    foreach (var file in files)
+                    {
+                        file.Delete();
+                    }
+                    return true;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("ClearDirectory NotExists");
+                    return false;
+                }
+            }
+            catch (SystemException ex)
+            {
+                System.Diagnostics.Debug.WriteLine("ClearDirectory " + ex);
+                return false;
+            }
+        }
+
+        public static bool FolderExists(string folderPath)
+        {
+            try
+            {
+                var dir = new DirectoryInfo(folderPath);
+                return dir.Exists;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("FolderExists " + ex);
+                return false;
+            }
+        }
+
         public static bool FileExists(string filePath)
         {
             try

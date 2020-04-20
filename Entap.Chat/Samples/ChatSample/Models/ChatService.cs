@@ -188,6 +188,9 @@ namespace ChatSample
         public void DeleteNotSendMessageData(int id)
         {
             var mg = new NotSendMessageManager();
+            var delItem = mg.GetItem(id);
+            if (!string.IsNullOrEmpty(delItem.MediaUrl))
+                FileManager.FileDelete(delItem.MediaUrl);
             mg.DeleteItem(id);
         }
 
@@ -198,6 +201,16 @@ namespace ChatSample
         public string GetUserId()
         {
             return UserDataManager.Instance.UserId;
+        }
+
+        /// <summary>
+        /// 送信する画像を保存するフォルダのパスを取得
+        /// </summary>
+        /// <returns></returns>
+        public string GetSendImageSaveFolderPath()
+        {
+            var path = FileManager.GetContentsPath(FileManager.AppDataFolders.SendImage) + "/";
+            return path;
         }
     }
 }

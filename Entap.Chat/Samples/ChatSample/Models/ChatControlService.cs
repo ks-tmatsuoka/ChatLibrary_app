@@ -10,7 +10,7 @@ namespace ChatSample
     public class ChatControlService : IChatControlService
     {
         /// <summary>
-        /// メッセージ送信/ChatControlのみで使用
+        /// メッセージ送信
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="msg"></param>
@@ -37,14 +37,14 @@ namespace ChatSample
                 if (bytes == null || bytes.Length < 1)
                 {
                     await App.Current.MainPage.DisplayAlert("この写真は送れません", "", "閉じる");
-                    return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = -1 });
+                    return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = notSendMessageId });
                 }
             }
             else if (msg.MessageType == (int)MessageType.Movie)
             {
                 //TODO 動画
                 fileType = "Movie";
-                return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = -1 });
+                return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = notSendMessageId });
             }
 
             var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, fileType);
@@ -52,11 +52,11 @@ namespace ChatSample
             if (resp.Status == APIManager.APIStatus.Succeeded)
                 return await Task.FromResult<SendMessageResponseBase>(resp.Data);
 
-            return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = -1 });
+            return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = notSendMessageId });
         }
 
         /// <summary>
-        /// 写真撮影 / ChatControlのみで使用
+        /// 写真撮影
         /// </summary>
         /// <returns></returns>
         public async Task<string> TakePicture()
@@ -69,7 +69,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// ライブラリからの画像選択 / ChatControlのみで使用
+        /// ライブラリからの画像選択
         /// </summary>
         /// <returns></returns>
         public async Task<string> SelectImage()
@@ -104,7 +104,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// ファイルの共有 / ChatControlで使用
+        /// ファイルの共有
         /// </summary>
         /// <param name="imagePath"></param>
         /// <returns></returns>
@@ -114,17 +114,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// ChatControlで使用
-        /// </summary>
-        /// <returns></returns>
-        public string GetSendImageSaveFolderPath()
-        {
-            var path = FileManager.GetContentsPath(FileManager.AppDataFolders.SendImage) + "/";
-            return path;
-        }
-
-        /// <summary>
-        /// ChatControlで使用
+        /// 送信できなかった画像を保存するフォルダのパスを取得
         /// </summary>
         /// <returns></returns>
         public string GetNotSendImageSaveFolderPath()
@@ -134,7 +124,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// 画像のプレビューページへ遷移 / ChatControlで使用
+        /// 画像のプレビューページへ遷移
         /// </summary>
         /// <param name="imageUrl"></param>
         public void MoveImagePreviewPage(string imageUrl)
@@ -144,7 +134,7 @@ namespace ChatSample
 
 
         /// <summary>
-        /// BottomControllerの各メニュー押した際の動作指定 / ChatControlで使用
+        /// BottomControllerの各メニュー押した際の動作指定
         /// </summary>
         /// <param name="notSendMessageId"></param>
         /// <param name="type"></param>
@@ -165,7 +155,7 @@ namespace ChatSample
                 {
                     return await Task.FromResult<IEnumerable<MessageBase>>(null);
                 }
-                var copyImgPath = GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
                 if (!FileManager.FileCopy(imgPath, copyImgPath))
                 {
                     Device.BeginInvokeOnMainThread(() =>
@@ -189,7 +179,7 @@ namespace ChatSample
                 {
                     return await Task.FromResult<IEnumerable<MessageBase>>(null);
                 }
-                var copyImgPath = GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
                 if (!FileManager.FileCopy(imgPath, copyImgPath))
                 {
                     Device.BeginInvokeOnMainThread(() =>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Entap.Chat.Modules;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -268,6 +269,7 @@ namespace Entap.Chat
 
         public void Dispose()
         {
+            FileManager.ClearDirectory(Settings.Current.ChatService.GetSendImageSaveFolderPath());
             Settings.Current.ChatService.Dispose();
         }
 
