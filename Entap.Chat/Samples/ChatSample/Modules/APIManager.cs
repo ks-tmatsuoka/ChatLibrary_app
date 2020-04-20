@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace ChatSample
 {
-    public class APIManager
+    public class _APIManager
     {
         static HttpClient client;
 
