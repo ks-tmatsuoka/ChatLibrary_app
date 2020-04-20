@@ -10,7 +10,7 @@ namespace ChatSample.Views
         public CustomBottomMenuView()
         {
             InitializeComponent();
-            SendPhotoButton.CommandParameter = (int)BottomControllerMenuType.Camera;
+            SendPhotoButton.CommandParameter = (int)BottomControllerMenuType.Library;
             this.SendPhotoButton.Clicked += (sender, e) =>
             {
                 MenuCommand?.Execute(((Button)sender).CommandParameter);

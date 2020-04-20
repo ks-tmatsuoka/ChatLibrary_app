@@ -24,9 +24,14 @@ namespace Entap.Chat
             {
                 SendButton.ImageSource = "send_icon.png";
             }
-            this.SendButton.Clicked += (sender, e) => SendCommand?.Execute(null);
+            this.SendButton.Clicked += SendButtonClicked;
             this.MsgEditor.Text = EditorText;
             MsgEditor.TextChanged += EditorTextChanged;
+        }
+
+        private void SendButtonClicked(object sender, EventArgs e)
+        {
+            SendCommand?.Execute(null);
         }
 
         private void EditorTextChanged(object sender, TextChangedEventArgs e)

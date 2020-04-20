@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Entap.Chat.Modules;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -237,7 +238,7 @@ namespace Entap.Chat
     public class ChatListView : ListView
     {
         const int DefaultRemainingItemsThreshold = 7;
-        const int NotSendMessageId = -1;
+        public static int NotSendMessageId = -1;
         int lastReadMessageId;
         ObservableCollection<MessageBase> _messages;
         List<ChatMemberBase> chatMembers = new List<ChatMemberBase>();
@@ -259,7 +260,10 @@ namespace Entap.Chat
             SelectionMode = ListViewSelectionMode.None;
             SeparatorVisibility = SeparatorVisibility.None;
             Scrolled += OnScrolled;
-
+            AddMessageCommand = new Command(()=>
+            {
+                AddMessage(AddMessageCommandParameter);
+            });
             if (Device.RuntimePlatform == Device.iOS)
             {
                 ItemAppearing += OnItemAppearing;
@@ -686,15 +690,6 @@ namespace Entap.Chat
         }
 
         /// <summary>
-        /// 未送信メッセージに指定するMessageIdを取得
-        /// </summary>
-        /// <returns></returns>
-        public int GetNotSendMessageId()
-        {
-            return NotSendMessageId;
-        }
-
-        /// <summary>
         /// 未送信メッセージをストレージに保存
         /// </summary>
         /// <param name="messageBase"></param>
@@ -773,6 +768,29 @@ namespace Entap.Chat
         {
             get { return (int)GetValue(LastReadMessageIdProperty); }
             set { SetValue(LastReadMessageIdProperty, value); }
+        }
+
+
+        public static readonly BindableProperty AddMessageCommandProperty =
+            BindableProperty.Create(nameof(AddMessageCommand), typeof(ICommand), typeof(ChatListView), null,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((ChatListView)bindable).AddMessageCommand = (ICommand)newValue);
+
+        public ICommand AddMessageCommand
+        {
+            get { return (ICommand)GetValue(AddMessageCommandProperty); }
+            set { SetValue(AddMessageCommandProperty, value); }
+        }
+
+        public static readonly BindableProperty AddMessageCommandParameterProperty =
+            BindableProperty.Create(nameof(AddMessageCommandParameter), typeof(MessageBase), typeof(ChatListView), null,
+                propertyChanged: (bindable, oldValue, newValue) =>
+                                    ((ChatListView)bindable).AddMessageCommandParameter = (MessageBase)newValue);
+
+        public MessageBase AddMessageCommandParameter
+        {
+            get { return (MessageBase)GetValue(AddMessageCommandParameterProperty); }
+            set { SetValue(AddMessageCommandParameterProperty, value); }
         }
 
         enum ScrollDirection

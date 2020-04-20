@@ -14,7 +14,9 @@
                 Margin="10,0,5,0"
                 WidthRequest="48"
                 HeightRequest="48"
-                Text="カメラ"
+                Text="ライブラリ"
+                FontSize="8"
+                FontAttributes="Bold"
                 BackgroundColor="Red"
                 VerticalOptions="EndAndExpand"
                 TextColor="White"/>

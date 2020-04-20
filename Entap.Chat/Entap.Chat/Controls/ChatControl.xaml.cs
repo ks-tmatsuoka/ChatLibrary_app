@@ -133,7 +133,7 @@ namespace Entap.Chat
             {
                 if (string.IsNullOrEmpty(Controller.EditorText))
                     return;
-                msg = new MessageBase { MessageId = ChatList.GetNotSendMessageId(), Text = Controller.EditorText, AlreadyReadCount = 0, MessageType = (int)MessageType.Text, SendUserId = Settings.Current.ChatService.GetUserId() };
+                msg = new MessageBase { MessageId = ChatListView.NotSendMessageId, Text = Controller.EditorText, AlreadyReadCount = 0, MessageType = (int)MessageType.Text, SendUserId = Settings.Current.ChatService.GetUserId() };
                 Controller.EditorText = "";
             }
             else
@@ -144,7 +144,7 @@ namespace Entap.Chat
             }
             ChatList.AddMessage(msg);
 
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId ,msg, ChatList.GetNotSendMessageId());
+            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId ,msg, ChatListView.NotSendMessageId);
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
@@ -178,7 +178,7 @@ namespace Entap.Chat
             ProcessManager.Current.Invoke(nameof(MenuCommand), async () =>
             {
                 var pm = int.Parse(obj.ToString());
-                var msgBases = await Settings.Current.ChatControlService.BottomControllerMenuExecute(ChatList.GetNotSendMessageId(), pm, RoomId, ChatList);
+                var msgBases = await Settings.Current.ChatControlService.BottomControllerMenuExecute(ChatListView.NotSendMessageId, pm, RoomId, ChatList);
                 if (msgBases is null)
                     return;
                 if (pm == (int)BottomControllerMenuType.Camera || pm == (int)BottomControllerMenuType.Library)
@@ -202,7 +202,7 @@ namespace Entap.Chat
         async Task ChatAddImg(MessageBase msg)
         {
             ChatList.AddMessage(msg);
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId ,msg, ChatList.GetNotSendMessageId());
+            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId ,msg, ChatListView.NotSendMessageId);
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
