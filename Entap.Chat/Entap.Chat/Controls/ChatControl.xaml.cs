@@ -144,7 +144,7 @@ namespace Entap.Chat
             }
             ChatList.AddMessage(msg);
 
-            var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(RoomId ,msg);
+            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId ,msg, ChatList.GetNotSendMessageId());
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
@@ -178,7 +178,7 @@ namespace Entap.Chat
             ProcessManager.Current.Invoke(nameof(MenuCommand), async () =>
             {
                 var pm = int.Parse(obj.ToString());
-                var msgBases = await Settings.Current.ChatService.BottomControllerMenuExecute(ChatList.GetNotSendMessageId(), pm, RoomId, ChatList);
+                var msgBases = await Settings.Current.ChatControlService.BottomControllerMenuExecute(ChatList.GetNotSendMessageId(), pm, RoomId, ChatList);
                 if (msgBases is null)
                     return;
                 if (pm == (int)BottomControllerMenuType.Camera || pm == (int)BottomControllerMenuType.Library)
@@ -202,7 +202,7 @@ namespace Entap.Chat
         async Task ChatAddImg(MessageBase msg)
         {
             ChatList.AddMessage(msg);
-            var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(RoomId ,msg);
+            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId ,msg, ChatList.GetNotSendMessageId());
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
@@ -210,7 +210,7 @@ namespace Entap.Chat
                 var delImgPath = msg.MediaUrl;
                 string extension = System.IO.Path.GetExtension(delImgPath);
                 ChatList.Messages[index].ResendVisible = true;
-                var sendErrorImgPath = Settings.Current.ChatService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                var sendErrorImgPath = Settings.Current.ChatControlService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + extension;
                 FileManager.FileCopy(delImgPath, sendErrorImgPath);
                 ChatList.Messages[index].MediaUrl = sendErrorImgPath;
                 FileManager.FileDelete(delImgPath);
@@ -241,7 +241,7 @@ namespace Entap.Chat
             ProcessManager.Current.Invoke(nameof(ImageTapCommand), async () =>
             {
                 var imagePath = pm as string;
-                Settings.Current.ChatService.MoveImagePreviewPage(imagePath);
+                Settings.Current.ChatControlService.MoveImagePreviewPage(imagePath);
             });
         });
 
@@ -250,7 +250,7 @@ namespace Entap.Chat
             ProcessManager.Current.Invoke(nameof(ImageShareCommand), async () =>
             {
                 var imagePath = pm as string;
-                await Settings.Current.ChatService.ImageShare(imagePath);
+                await Settings.Current.ChatControlService.ImageShare(imagePath);
             });
         });
 

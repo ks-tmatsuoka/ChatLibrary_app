@@ -14,15 +14,18 @@ namespace Entap.Chat
         public static Settings Current => _settings.Value;
 
         public IChatService ChatService;
+        public IChatControlService ChatControlService;
 
         public string TimeFormat;
         public string AlreadyReadText;
         public string TodayText;
         public string DateFormat;
 
-        public void Init(IChatService chatService)
+        public void Init(IChatService chatService, IChatControlService chatControlService=null)
         {
             ChatService = chatService;
+            if (ChatControlService != null)
+                ChatControlService = chatControlService;
             TimeFormat = "H:mm";
             AlreadyReadText = "既読";
             TodayText = "今日";

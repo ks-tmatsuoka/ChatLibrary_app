@@ -25,7 +25,7 @@ namespace ChatSample
 
         public Command SelectCmd => new Command(async() =>
         {
-            ChangeIcon = await new ChatService().SelectImage();
+            ChangeIcon = await new ChatControlService().SelectImage();
         });
 
         public Command SaveCmd => new Command(async() =>

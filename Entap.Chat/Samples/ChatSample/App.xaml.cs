@@ -11,8 +11,7 @@ namespace ChatSample
 
             MainPage = new NavigationPage(new MainPage());
 
-            var service = new ChatService();
-            Entap.Chat.Settings.Current.Init(service);
+            Entap.Chat.Settings.Current.Init(new ChatService(), new ChatControlService());
             FileManager.CreateFolders();
         }
 
