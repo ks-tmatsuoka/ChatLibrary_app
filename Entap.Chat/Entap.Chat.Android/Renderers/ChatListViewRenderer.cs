@@ -38,7 +38,7 @@ namespace Entap.Chat.Android
             if (_ChatListView.Messages is null)
                 return;
 
-            _ChatListView.OnScrolled(null, new ScrolledEventArgs(0, Control.GetChildAt(0).GetY() * -1));
+            
             
             var firstIndex = e.FirstVisibleItem;
 
@@ -71,6 +71,7 @@ namespace Entap.Chat.Android
                 }
                 _ChatListView.VisibleItemUpdateForAndroid(firstVisibleIndex, firstVisibleItem, lastVisibleIndex, lastVisibleItem);
             }
+            _ChatListView.OnScrolled(null, new ScrolledEventArgs(0, Control.GetChildAt(0).GetY() * -1));
         }
 
     }

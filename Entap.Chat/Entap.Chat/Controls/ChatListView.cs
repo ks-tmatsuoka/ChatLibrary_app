@@ -65,10 +65,14 @@ namespace Entap.Chat
                 if (lastReadMessageId == 0)
                 {
                     messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId + 1, (int)MessageDirection.New, chatMembers);
+                    if (messages is null)
+                        messages = new List<MessageBase>();
                 }
                 else
                 {
                     messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId, (int)MessageDirection.Old, chatMembers);
+                    if (messages is null)
+                        messages = new List<MessageBase>();
                     messages = messages.Reverse();
                 }
                 var first = messages.FirstOrDefault();
@@ -81,20 +85,25 @@ namespace Entap.Chat
                 if (first != null)
                 {
                     var messageList = await Settings.Current.ChatService.GetMessagesAsync(RoomId, first.MessageId - 1, (int)MessageDirection.Old, chatMembers);
-                    foreach (var msg in messageList)
+                    if (messageList != null)
                     {
-                        _messages.Insert(0, msg);
-                        //_messages.Add(msg);
+                        foreach (var msg in messageList)
+                        {
+                            _messages.Insert(0, msg);
+                        }
                     }
                 }
                 var last = _messages.LastOrDefault();
                 if (last != null)
                 {
                     var messageList = await Settings.Current.ChatService.GetMessagesAsync(RoomId, last.MessageId + 1, (int)MessageDirection.New, chatMembers);
-                    foreach (var msg in messageList)
+                    if (messageList != null)
                     {
-                        _messages.Add(msg);
-                    }
+                        foreach (var msg in messageList)
+                        {
+                            _messages.Add(msg);
+                        }
+                    } 
                 }
 
                 SetNotSendMessage();
@@ -144,14 +153,11 @@ namespace Entap.Chat
                 if (lastVisibleMessageBase is null)
                     return;
 
-                System.Diagnostics.Debug.WriteLine("msgLast.MessageId: " + msgLast.MessageId);
-                System.Diagnostics.Debug.WriteLine("lastVisibleMessageBase.MessageId: " + lastVisibleMessageBase.MessageId);
                 var secondFromLastItemIndex = _messages.IndexOf(msgLast) - 1;
                 MessageBase secondFromLastItem = null;
                 if (secondFromLastItemIndex >= 0)
                 {
                     secondFromLastItem = _messages[secondFromLastItemIndex];
-                    System.Diagnostics.Debug.WriteLine("secondFromLastItem.MessageId: " + secondFromLastItem.MessageId);
                 }
                 //if (msgLast != null && lastVisibleMessageBase != null && (msgLast.MessageId == lastVisibleMessageBase.MessageId + 1 || lastVisibleMessageBase.MessageId == NotSendMessageId))
                 if (msgLast != null && lastVisibleMessageBase != null && secondFromLastItem != null && lastVisibleMessageBase.MessageId == secondFromLastItem.MessageId)
@@ -262,7 +268,13 @@ namespace Entap.Chat
             Task.Run(async () =>
             {
                 var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.Old, chatMembers);
-
+                if (messages is null)
+                {
+                    // 通信エラー時
+                    lastOldRequestMessageId = 0;
+                    IsRunningGetOldMessage = false;
+                    return;
+                }
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     IsEnabled = false;
@@ -275,8 +287,8 @@ namespace Entap.Chat
                     IsEnabled = true;
                     // firstVisibleItemIndexを一度ありえない値にしておかないとどんどん前のデータの読み込みが行われる
                     firstVisibleItemIndex = -1;
-                    IsRunningGetOldMessage = false;
                     DateVisibleUpdate();
+                    IsRunningGetOldMessage = false;
                 });
             });
         }
@@ -291,12 +303,19 @@ namespace Entap.Chat
             Task.Run(async () =>
             {
                 var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.New, chatMembers);
+                if (messages is null)
+                {
+                    // 通信エラー時
+                    lastNewRequestMessageId = 0;
+                    IsRunningGetNewMessage = false;
+                    return;
+                }
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     _messages.AddRange(messages);
-                    IsRunningGetNewMessage = false;
                     ReplaceNotSendMessage(false);
                     DateVisibleUpdate();
+                    IsRunningGetNewMessage = false;
                 });
             });
         }
@@ -333,14 +352,12 @@ namespace Entap.Chat
             if (chatScrollDirection == ScrollDirection.Up)
             {
                 firstVisibleItemIndex = e.ItemIndex;
-                //System.Diagnostics.Debug.WriteLine("OnItemAppearing firstVisibleItem" + ((MessageBase)e.Item).MessageId.ToString());
                 firstVisibleItem = e.Item;
                 SendAlreadyRead(firstVisibleItem);
             }
             else if (chatScrollDirection == ScrollDirection.Down)
             {
                 lastVisibleItemIndex = e.ItemIndex;
-                //System.Diagnostics.Debug.WriteLine("OnItemAppearing" + ((MessageBase)e.Item).MessageId.ToString());
                 lastVisibleItem = e.Item;
                 SendAlreadyRead(lastVisibleItem);
             }
@@ -359,9 +376,6 @@ namespace Entap.Chat
             firstVisibleItem = firstItem;
             lastVisibleItemIndex = lastIndex;
             lastVisibleItem = lastItem;
-            //System.Diagnostics.Debug.WriteLine("firstVisibleItem" + ((MessageBase)firstVisibleItem).MessageId.ToString());
-            //System.Diagnostics.Debug.WriteLine("lastVisibleItem" + ((MessageBase)lastVisibleItem).MessageId.ToString());
-
             SendAlreadyRead(lastVisibleItem);
         }
 
@@ -387,6 +401,8 @@ namespace Entap.Chat
         }
 
         double lastScrollY = 0;
+        int lastOldRequestMessageId;
+        int lastNewRequestMessageId;
         public void OnScrolled(object sender, ScrolledEventArgs e)
         {
             if (lastScrollY > e.ScrollY)
@@ -412,8 +428,12 @@ namespace Entap.Chat
             {
                 IsRunningGetOldMessage = true;
                 var first = _messages.First();
-                if (first == null || first.MessageId - 1 < 1)
+                if (first == null || first.MessageId - 1 < 1 || first.MessageId - 1 == lastOldRequestMessageId)
+                {
+                    IsRunningGetOldMessage = false;
                     return;
+                }
+                lastOldRequestMessageId = first.MessageId - 1;
                 LoadMessages(first.MessageId - 1);
             }
             else if (
@@ -426,8 +446,17 @@ namespace Entap.Chat
                 IsRunningGetNewMessage = true;
                 var last = _messages.LastOrDefault();
                 if (last == null || (!last.ResendVisible && last.MessageId < 0))
+                {
+                    IsRunningGetNewMessage = false;
                     return;
+                }
                 last = _messages.Where(w=>w.NotSendId < 1 && w.MessageId > 0)?.Last();
+                if (last.MessageId + 1 == lastNewRequestMessageId)
+                {
+                    IsRunningGetNewMessage = false;
+                    return;
+                }
+                lastNewRequestMessageId = last.MessageId + 1;
                 LoadNewMessages(last.MessageId + 1);
             }
 

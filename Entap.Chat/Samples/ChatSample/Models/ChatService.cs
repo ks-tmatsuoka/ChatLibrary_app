@@ -58,6 +58,11 @@ namespace ChatSample
                     messages.Add(val);
                 }
             }
+            else
+            {
+                // 通信失敗時はnull返す
+                return await Task.FromResult<IEnumerable<MessageBase>>(null);
+            }
             
             if (messageDirection == (int)MessageDirection.Old)
                 messages.Reverse();
@@ -110,6 +115,9 @@ namespace ChatSample
             return list;
         }
 
+        /// <summary>
+        /// データの更新
+        /// </summary>
         public IDisposable subscription;
         public void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId, List<ChatMemberBase> members)
         {
