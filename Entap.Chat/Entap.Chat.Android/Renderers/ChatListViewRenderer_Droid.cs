@@ -4,13 +4,13 @@ using Xamarin.Forms.Platform.Android;
 using Android.Content;
 using Android.Runtime;
 
-[assembly: ExportRenderer(typeof(Entap.Chat.ChatListView), typeof(Entap.Chat.Android.ChatListViewRenderer))]
+[assembly: ExportRenderer(typeof(Entap.Chat.ChatListView), typeof(Entap.Chat.Android.ChatListViewRenderer_Droid))]
 namespace Entap.Chat.Android
 {
     [Preserve(AllMembers = true)]
-    public class ChatListViewRenderer : ListViewRenderer
+    public class ChatListViewRenderer_Droid : ListViewRenderer
     {
-        public ChatListViewRenderer(Context context) : base(context)
+        public ChatListViewRenderer_Droid(Context context) : base(context)
         {
         }
 

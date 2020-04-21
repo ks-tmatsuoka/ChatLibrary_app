@@ -48,7 +48,7 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Platform.cs" />
-    <Compile Include="Renderers\ChatListViewRenderer.cs" />
+    <Compile Include="Renderers\ChatListViewRenderer_Droid.cs" />
     <Compile Include="DependencyService\DisplayService_Droid.cs" />
     <Compile Include="Renderers\DynamicResizedEditorRenderer_Droid.cs" />
     <Compile Include="Renderers\CustomContentViewRenderer_Droid.cs" />

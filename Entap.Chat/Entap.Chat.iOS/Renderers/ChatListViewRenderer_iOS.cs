@@ -5,14 +5,14 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(Entap.Chat.ChatListView), typeof(Entap.Chat.iOS.ChatListViewRenderer))]
+[assembly: ExportRenderer(typeof(Entap.Chat.ChatListView), typeof(Entap.Chat.iOS.ChatListViewRenderer_iOS))]
 namespace Entap.Chat.iOS
 {
     [Preserve(AllMembers = true)]
-    public class ChatListViewRenderer : ListViewRenderer
+    public class ChatListViewRenderer_iOS : ListViewRenderer
     {
         object lastItem;
-        public ChatListViewRenderer()
+        public ChatListViewRenderer_iOS()
         {
 
         } 

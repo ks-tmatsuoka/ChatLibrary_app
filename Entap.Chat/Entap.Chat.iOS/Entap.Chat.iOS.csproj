@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Platform.cs" />
-    <Compile Include="Renderers\ChatListViewRenderer.cs" />
+    <Compile Include="Renderers\ChatListViewRenderer_iOS.cs" />
     <Compile Include="DependencyServices\DisplayService_iOS.cs" />
     <Compile Include="Renderers\DynamicResizedEditorRenderer_iOS.cs" />
     <Compile Include="Renderers\CustomContentViewRenderer_iOS.cs" />
