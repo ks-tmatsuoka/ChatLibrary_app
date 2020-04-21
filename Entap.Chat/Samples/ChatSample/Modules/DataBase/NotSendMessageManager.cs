@@ -48,6 +48,9 @@ namespace ChatSample
             lock (Locker)
             {
                 var id = Connection.Insert(item);
+                var lastItem = Connection.Table<NotSendMessage>().OrderByDescending(o => o.Id).FirstOrDefault();
+                if (lastItem != null)
+                    id = lastItem.Id;
                 return id;
             }
         }

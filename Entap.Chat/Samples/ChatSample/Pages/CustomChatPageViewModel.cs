@@ -15,12 +15,14 @@ namespace ChatSample
     {
         public CustomChatPageViewModel()
         {
+            // サービス管理者との1対1のルームを強制表示している
+
             RoomType = 1;
             //RoomType = 4;
             RoomId = InitRoomData();
             
             var bottomMenuView = new CustomBottomMenuView();
-            bottomMenuView.MenuCommand = LibraryCommand;
+            bottomMenuView.MenuCommand = MenuCommand;
             BottomControllerMenuView = bottomMenuView;
         }
 
@@ -136,24 +138,7 @@ namespace ChatSample
             }
         }
 
-        public Command ResendCommand => new Command(() =>
-        {
-
-        });
-        public Command ImageShareCommand => new Command(() =>
-        {
-
-        });
-        public Command ImageTapCommand => new Command(() =>
-        {
-
-        });
-        public Command SendCommand => new Command(async(obj) =>
-        {
-            await SendMessage();
-        });
-        
-        public Command LibraryCommand => new Command(async() =>
+        async Task SendLibraryImage()
         {
             var mg = new MediaPluginManager();
             var paths = await mg.PickPhotoAsyncGetPathAndAlbumPath();
@@ -161,16 +146,16 @@ namespace ChatSample
                 return;
             byte[] bytes = null;
             string extension = "";
-            string sendImgUrl = "";
+            string imgPath = "";
             if (!string.IsNullOrEmpty(paths[0]))
             {
-                sendImgUrl = paths[0];
-                bytes = FileManager.ReadBytes(sendImgUrl);
+                imgPath = paths[0];
+                bytes = FileManager.ReadBytes(imgPath);
                 if ((bytes == null || bytes.Length < 1) && paths.Count > 1)
                 {
-                    sendImgUrl = paths[1];
-                    bytes = FileManager.ReadBytes(sendImgUrl);
-                    extension = System.IO.Path.GetExtension(sendImgUrl);
+                    imgPath = paths[1];
+                    bytes = FileManager.ReadBytes(imgPath);
+                    extension = System.IO.Path.GetExtension(imgPath);
                 }
             }
 
@@ -181,7 +166,116 @@ namespace ChatSample
                 return;
             }
 
-            //return await Task.FromResult<string>(sendImgUrl);
+            extension = System.IO.Path.GetExtension(imgPath);
+            var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+            if (!FileManager.FileCopy(imgPath, copyImgPath))
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
+                });
+                return;
+            }
+            var msg = new MessageBase { MessageId = ChatListView.NotSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+            await ChatAddImg(msg);
+        }
+
+        async Task ChatAddImg(MessageBase msg)
+        {
+            AddMessageCommandParameter = msg;
+            AddMessageCommand?.Execute(AddMessageCommandParameter);
+
+            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
+            var index = ItemsSource.IndexOf(msg);
+            if (sendMessageResponseBase.MessageId < 0)
+            {
+                // 通信エラー
+                var delImgPath = msg.MediaUrl;
+                string delImgExtension = System.IO.Path.GetExtension(delImgPath);
+                var target = ItemsSource[index];
+                target.ResendVisible = true;
+                var sendErrorImgPath = Settings.Current.ChatControlService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + delImgExtension;
+                FileManager.FileCopy(delImgPath, sendErrorImgPath);
+                target.MediaUrl = sendErrorImgPath;
+                FileManager.FileDelete(delImgPath);
+                if (target.NotSendId < 1)
+                {
+                    Settings.Current.ChatService.SaveNotSendMessageData(RoomId, target);
+                }
+            }
+            else
+            {
+                msg.ResendVisible = false;
+                // サーバへ送信できた段階でメッセージの表示位置を再確認
+                if (index == ItemsSource.Count - 1)
+                {
+                    ItemsSource[index].MessageId = sendMessageResponseBase.MessageId;
+                    ItemsSource[index].SendDateTime = sendMessageResponseBase.SendDateTime;
+                }
+                else
+                {
+                    ItemsSource.RemoveAt(index);
+                    msg.MessageId = sendMessageResponseBase.MessageId;
+                    msg.SendDateTime = sendMessageResponseBase.SendDateTime;
+                    ItemsSource.Add(msg);
+                }
+
+                if (msg.NotSendId > 0)
+                {
+                    Settings.Current.ChatService.DeleteNotSendMessageData(msg.NotSendId);
+                }
+            }
+        }
+
+        public Command ResendCommand => new Command(async(obj) =>
+        {
+            var msg = obj as MessageBase;
+            var button = new string[] { "再送する", "取り消し" };
+            var result = await Application.Current.MainPage.DisplayActionSheet(null, "キャンセル", null, button);
+            if (result.Equals(button[0]))
+            {
+                if (msg.MessageType == (int)MessageType.Text)
+                {
+                    await SendMessage(msg);
+                }
+                else if (msg.MessageType == (int)MessageType.Image)
+                {
+                    var oldMsgIndex = ItemsSource.IndexOf(msg);
+                    ItemsSource.RemoveAt(oldMsgIndex);
+                    msg.ResendVisible = false;
+                    await ChatAddImg(msg);
+                }
+            }
+            else if (result.Equals(button[1]))
+            {
+                if (msg.NotSendId > 0)
+                {
+                    Settings.Current.ChatService.DeleteNotSendMessageData(msg.NotSendId);
+                    ItemsSource.Remove(msg);
+                }
+            }
+        });
+        public Command ImageShareCommand => new Command(async(obj) =>
+        {
+            var imagePath = obj as string;
+            await ImageManager.ImageShare(imagePath);
+        });
+        public Command ImageTapCommand => new Command((obj) =>
+        {
+            var imagePath = obj as string;
+            App.Current.MainPage.Navigation.PushModalAsync(new ImagePreviewPage(imagePath));
+        });
+        public Command SendCommand => new Command(async(obj) =>
+        {
+            await SendMessage();
+        });
+        
+        public Command MenuCommand => new Command(async(obj) =>
+        {
+            if (int.Parse(obj.ToString()) == (int)BottomControllerMenuType.Library)
+            {
+                SendLibraryImage();
+            }
         });
 
         private int roomId;

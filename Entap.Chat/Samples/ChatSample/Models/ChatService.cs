@@ -189,7 +189,7 @@ namespace ChatSample
         {
             var mg = new NotSendMessageManager();
             var delItem = mg.GetItem(id);
-            if (!string.IsNullOrEmpty(delItem.MediaUrl))
+            if (delItem != null && !string.IsNullOrEmpty(delItem.MediaUrl))
                 FileManager.FileDelete(delItem.MediaUrl);
             mg.DeleteItem(id);
         }
