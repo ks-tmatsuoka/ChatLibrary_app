@@ -56,25 +56,7 @@ namespace Entap.Chat.iOS
 
         void OnKeyboardShown(object sender, UIKeyboardEventArgs e)
         {
-            //// キーボード出現時に画面全体をずらす。
-            //var keyboardFrame = e.FrameEnd;
-            //nfloat dy = 0;
-            //if (UIDevice.CurrentDevice.CheckSystemVersion(11, 0))
-            //{
-            //    var window = UIApplication.SharedApplication.KeyWindow;
-            //    if (window != null)
-            //    {
-            //        dy = window.SafeAreaInsets.Bottom;
-            //    }
-            //}
-            //var duration = e.AnimationDuration;
-            //var pageFrame = Element.Bounds;
-            //UIView.Animate(duration, () =>
-            //{
-            //    var trans = CGAffineTransform.MakeTranslation(0, -keyboardFrame.Height + dy);
-            //    this.Transform = trans;
-            //});
-
+            // キーボード出現時に画面全体をずらす。
             NSValue result = (NSValue)e.Notification.UserInfo.ObjectForKey(new NSString(UIKeyboard.FrameEndUserInfoKey));
             CGSize keyboardSize = result.RectangleFValue.Size;
             if (Element != null)
@@ -86,18 +68,7 @@ namespace Entap.Chat.iOS
 
         void OnKeyboardHidden(object sender, UIKeyboardEventArgs e)
         {
-            //// キーボード消滅時に画面を元に戻す。
-            //var duration = e.AnimationDuration;
-
-            //var pageFrame = Element.Bounds;
-            //UIView.Animate(duration, async () =>
-            //{
-            //    // 少し遅延させないと、UIButtonのタップが正常に取れない
-            //    await System.Threading.Tasks.Task.Delay(10);
-            //    var trans = CGAffineTransform.MakeIdentity();
-            //    this.Transform = trans;
-            //}); 
-
+            // キーボード消滅時に画面を元に戻す。
             if (Element != null)
             {
                 Element.TranslationY -= _translationY;

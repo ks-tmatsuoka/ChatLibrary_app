@@ -129,36 +129,6 @@ namespace Entap.Chat
         }
         #endregion
 
-        ///// <summary>
-        ///// カメラボタン押した際のコマンド
-        ///// </summary>
-        //#region CameraCommand BindableProperty
-        //public static readonly BindableProperty CameraCommandProperty =
-        //    BindableProperty.Create(nameof(CameraCommand), typeof(ICommand), typeof(BottomController), null,
-        //        propertyChanged: (bindable, oldValue, newValue) =>
-        //                            ((BottomController)bindable).CameraCommand = (ICommand)newValue);
-        //public ICommand CameraCommand
-        //{
-        //    get { return (ICommand)GetValue(CameraCommandProperty); }
-        //    set { SetValue(CameraCommandProperty, value); }
-        //}
-        //#endregion
-
-        ///// <summary>
-        ///// ライブラリボタン押した際のコマンド
-        ///// </summary>
-        //#region LibraryCommand BindableProperty
-        //public static readonly BindableProperty LibraryCommandProperty =
-        //    BindableProperty.Create(nameof(LibraryCommand), typeof(ICommand), typeof(BottomController), null,
-        //        propertyChanged: (bindable, oldValue, newValue) =>
-        //                            ((BottomController)bindable).LibraryCommand = (ICommand)newValue);
-        //public ICommand LibraryCommand
-        //{
-        //    get { return (ICommand)GetValue(LibraryCommandProperty); }
-        //    set { SetValue(LibraryCommandProperty, value); }
-        //}
-        //#endregion
-
         /// <summary>
         /// メニュー
         /// </summary>

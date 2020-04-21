@@ -126,26 +126,18 @@ namespace ChatSample
         }
         public async Task<bool> CheckPermission(Permission requestPermission)
         {
-            //if (
-            //        Device.RuntimePlatform == Device.iOS ||
-            //        (Device.RuntimePlatform == Device.Android && DependencyService.Get<IDeviceService>().GetAndroidAPIVersion() >= 23)
-            //    )
-            //{
-                // iOS or Android6.0以上のみパーミッションチェック
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(requestPermission);
-                if (status != PermissionStatus.Granted)
+            var status = await CrossPermissions.Current.CheckPermissionStatusAsync(requestPermission);
+            if (status != PermissionStatus.Granted)
+            {
+                var results = await CrossPermissions.Current.RequestPermissionsAsync(requestPermission);
+                if (results.ContainsKey(requestPermission) &&
+                    results[requestPermission] != PermissionStatus.Granted)
                 {
-                    var results = await CrossPermissions.Current.RequestPermissionsAsync(requestPermission);
-                    if (results.ContainsKey(requestPermission) &&
-                        results[requestPermission] != PermissionStatus.Granted)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
+            }
 
-                return true;
-            //}
-            //return true;
+            return true;
         }
     }
 }

@@ -16,9 +16,7 @@ namespace ChatSample
         public CustomChatPageViewModel()
         {
             // サービス管理者との1対1のルームを強制表示している
-
             RoomType = 1;
-            //RoomType = 4;
             RoomId = InitRoomData();
             
             var bottomMenuView = new CustomBottomMenuView();
@@ -33,11 +31,6 @@ namespace ChatSample
             {
                 var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.GetRoomList), new ReqGetRoomList());
                 var respGetRooms = JsonConvert.DeserializeObject<RespGetRoomList>(json);
-
-                //comp.SetResult(19);
-                //LastReadMessageId = respGetRooms.Data.Rooms.Where(w => w.RoomId == 19).LastOrDefault().AlreadyReadMessageId;
-
-                
                 if (respGetRooms.Status == APIManager.APIStatus.Succeeded)
                 {
                     var chatService = new ChatService();

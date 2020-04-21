@@ -151,11 +151,9 @@ namespace Entap.Chat.Android
         void SetOneLineSize()
         {
             _dynamicResizedEditor.HeightRequest = _dynamicResizedEditor.MinimumHeightRequest;
-            //Control.SetPadding(12, 0, 12, 0);
         }
         void SetMultiLineSize()
         {
-            //Control.SetPadding(12, 0, 12, 0);
             _dynamicResizedEditor.HeightRequest = -1;
         }
     }

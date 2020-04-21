@@ -21,37 +21,6 @@ namespace ChatSample.iOS
             }
 
             var controller = GetVisibleViewController();
-
-            // UIActivityViewController
-            //var item = UIActivity.FromObject(filePath);
-            //var activityItems = new Foundation.NSObject[] { item };
-            //UIActivity[] applicationActivities = null;
-            //var activityController = new UIActivityViewController(activityItems, applicationActivities);
-            //controller.PresentViewController(activityController, true, null);
-
-            //QuickLook
-            //FileInfo fi = new FileInfo(filePath);
-            //QLPreviewItemBundle prevItem = new QLPreviewItemBundle(fi.Name, fi.FullName);
-            //QLPreviewController previewController = new QLPreviewController();
-            //previewController.DataSource = new PreviewControllerDS(prevItem);
-            //if (controller != null)
-            //{
-            //    //GetVisibleViewController().PresentViewController(previewController, true, null);
-            //    GetVisibleViewController().PresentViewController(previewController, true, null);
-            //}
-            //else
-            //{
-            //    UINavigationController nav = new UINavigationController(previewController);
-            //    UIApplication.SharedApplication.Windows[1].RootViewController.PresentViewController(
-            //        nav, true, null);
-            //}
-
-            ////PresentOpenInMenu
-            //var _previewController = UIDocumentInteractionController.FromUrl(Foundation.NSUrl.FromFilename(filePath));
-            //_previewController.Delegate = new MyInteractionDelegate(controller);
-            //var a = _previewController.PresentOpenInMenu(controller.View.Frame, controller.View, true);
-
-            ////PresentOptionsMenu
             var _previewController = UIDocumentInteractionController.FromUrl(Foundation.NSUrl.FromFilename(filePath));
             _previewController.Delegate = new MyInteractionDelegate(controller);
             _previewController.PresentOptionsMenu(controller.View.Frame, controller.View, true);

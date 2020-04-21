@@ -406,7 +406,6 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <chat:ChatListView
-                x:Name="ChatList"
                 RoomId="{Binding RoomId}"
                 RoomType="{Binding RoomType}"
                 LastReadMessageId="{Binding LastReadMessageId}"

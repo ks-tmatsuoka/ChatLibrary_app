@@ -47,30 +47,6 @@ namespace Entap.Chat.iOS
             {
                 ResizeIfNeeded();
             }
-            //if (e.PropertyName == DynamicResizedEditor.IsFocusedProperty.PropertyName)
-            //{
-            //    var dynamicResizedEditor = Element as DynamicResizedEditor;
-            //    if (dynamicResizedEditor.IsFocused)
-            //    {
-            //        dynamicResizedEditor.HeightRequest = -1;
-            //        Control.ScrollEnabled = true;
-            //    }
-            //    //Resize();
-            //    ResizeIfNeeded();
-            //    if (dynamicResizedEditor.IsFocused)
-            //    {
-            //        EditorCursorMoveEnd();
-            //    }
-            //}
-            //if (e.PropertyName == DynamicResizedEditor.ForcedMinimumHeightProperty.PropertyName)
-            //{
-            //    var dynamicResizedEditor = Element as DynamicResizedEditor;
-            //    if (dynamicResizedEditor.ForcedMinimumHeight)
-            //    {
-            //        dynamicResizedEditor.HeightRequest = dynamicResizedEditor.MinimumHeightRequest;
-            //        Control.ScrollEnabled = false;
-            //    }
-            //}
             if (e.PropertyName == DynamicResizedEditor.HeightRequestProperty.PropertyName)
             {
                 var dynamicResizedEditor = Element as DynamicResizedEditor;
@@ -86,15 +62,6 @@ namespace Entap.Chat.iOS
                 }
             }
         }
-
-        //void UpdateInputAccessoryView()
-        //{
-        //    if (_dynamicResizedEditor.IsInputAccessoryViewHiddeniOS)
-        //    {
-        //        Control.InputAccessoryView = null;
-        //    }
-        //}
-
         void EditorCursorMoveEnd()
         {
             Task.Run(async () =>

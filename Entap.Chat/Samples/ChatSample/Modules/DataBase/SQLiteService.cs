@@ -21,7 +21,7 @@ namespace ChatSample
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "EntapChat.db3");
         }
 
-        static SQLiteAsyncConnection _asyncConnection;
+        //static SQLiteAsyncConnection _asyncConnection;
         //public static SQLiteAsyncConnection AsyncConnection = _asyncConnection ?? (_asyncConnection = GetAsyncConnection());
         //public static SQLiteAsyncConnection GetAsyncConnection()
         //{
@@ -35,7 +35,7 @@ namespace ChatSample
         });
 
 
-        static SQLiteConnection _connection;
+        //static SQLiteConnection _connection;
         //public static SQLiteConnection Connection = _connection ?? (_connection = GetConnection());
         //public static SQLiteConnection GetConnection()
         //{

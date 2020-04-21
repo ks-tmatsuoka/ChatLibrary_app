@@ -19,23 +19,6 @@ namespace ChatSample.Android
             try
             {
                 Intent intent = new Intent();
-
-                ////MimeTypeの取得
-                //string mimetype = GetMimeType(filePath);
-                //if (String.IsNullOrEmpty(mimetype))
-                //{
-                //    //MimeTypeが取得できなかった場合
-                //    //アクションにACTION_SENDを指定して暗黙的インテントを呼び出すことで、
-                //    //インストールされているアプリで対応可能なものが列挙されます。
-                //    mimetype = "*/*";
-                //    intent.SetAction(Intent.ActionSend);
-                //}
-                //else
-                //{
-                //    //MimeTypeが取得できた場合
-                //    intent.SetAction(Intent.ActionView);
-                //}
-
                 string mimetype = "*/*";
                 intent.SetAction(Intent.ActionSend);
 

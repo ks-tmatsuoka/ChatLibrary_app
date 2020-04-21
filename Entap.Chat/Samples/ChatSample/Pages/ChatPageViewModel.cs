@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ChatSample.Views;
-using Entap.Chat;
+﻿using Entap.Chat;
 using Xamarin.Forms;
 
 namespace ChatSample
