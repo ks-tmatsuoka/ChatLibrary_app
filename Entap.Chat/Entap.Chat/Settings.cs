@@ -20,6 +20,8 @@ namespace Entap.Chat
         public string AlreadyReadText;
         public string TodayText;
         public string DateFormat;
+        public string MemberAddRoomText;
+        public string MemberLeaveRoomText;
 
         public void Init(IChatService chatService, IChatControlService chatControlService=null)
         {
@@ -30,6 +32,8 @@ namespace Entap.Chat
             AlreadyReadText = "既読";
             TodayText = "今日";
             DateFormat = "MM/dd";
+            MemberAddRoomText = " が追加されました";
+            MemberLeaveRoomText = " が退出しました";
         }
     }
 }

@@ -363,12 +363,24 @@
                                     TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
                                     Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
                                     FontSize="10"/>
+                                <!-- MessageTypeをMemberInAndOutMessageConverterのMessageTypeにバインドする最善策がわからなかったので一旦このLabelを使ってバインドさせている -->
+                                <Label
+                                    x:Name="MessageType"
+                                    Text="{Binding MessageType}"
+                                    IsVisible="false"/>
                                 <Label
                                     HorizontalTextAlignment="Center"
                                     VerticalTextAlignment="Center"
                                     TextColor="{Binding Source={x:Reference Content}, Path=DateTextColor}"
-                                    Text="{Binding Text}"
-                                    FontSize="14"/>
+                                    FontSize="14">
+                                    <Label.Text>
+                                        <Binding Path="Text">
+                                            <Binding.Converter>
+                                                <local:MemberInAndOutMessageConverter MessageType="{Binding Source={x:Reference MessageType}, Path=Text}"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </Label.Text>
+                                </Label>
                             </StackLayout>
                         </Frame>
                     </StackLayout>
