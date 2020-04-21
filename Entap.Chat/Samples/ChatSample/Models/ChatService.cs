@@ -220,5 +220,15 @@ namespace ChatSample
             var path = FileManager.GetContentsPath(FileManager.AppDataFolders.SendImage) + "/";
             return path;
         }
+
+        /// <summary>
+        /// 送信する画像を保存するフォルダのパスを取得
+        /// </summary>
+        /// <returns></returns>
+        public string GetSendMovieSaveFolderPath()
+        {
+            var path = FileManager.GetContentsPath(FileManager.AppDataFolders.SendMovie) + "/";
+            return path;
+        }
     }
 }

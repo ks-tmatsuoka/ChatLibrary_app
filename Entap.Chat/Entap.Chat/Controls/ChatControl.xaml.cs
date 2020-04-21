@@ -185,7 +185,10 @@ namespace Entap.Chat
                 {
                     foreach(var msgBase in msgBases)
                     {
-                        await ChatAddImg(msgBase);
+                        if (msgBase.MessageType == (int)MessageType.Image)
+                            await ChatAddImg(msgBase);
+                        else if (msgBase.MessageType == (int)MessageType.Movie)
+                            await ChatAddMovie(msgBase);
                     }
                 }
             });
@@ -197,6 +200,10 @@ namespace Entap.Chat
             ChatList.Messages.RemoveAt(oldMsgIndex);
             msg.ResendVisible = false;
             await ChatAddImg(msg);
+        }
+        async Task ChatAddMovie(MessageBase msg)
+        {
+            ChatList.AddMessage(msg);
         }
 
         async Task ChatAddImg(MessageBase msg)
@@ -242,6 +249,14 @@ namespace Entap.Chat
             {
                 var imagePath = pm as string;
                 Settings.Current.ChatControlService.MoveImagePreviewPage(imagePath);
+            });
+        });
+
+        public Command MoviewTapCommand => new Command((pm) =>
+        {
+            ProcessManager.Current.Invoke(nameof(ImageTapCommand), async () =>
+            {
+                
             });
         });
 

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
 
 namespace ChatSample
@@ -65,6 +63,33 @@ namespace ChatSample
                 return null;
             }
         }
+        public async Task<string> TakeVideoAsync()
+        {
+            try
+            {
+                if (!CrossMedia.Current.IsCameraAvailable)
+                {
+                    await App.Current.MainPage.DisplayAlert("カメラを使用できません", "この端末にはカメラ機能がありません", "OK");
+                    return null;
+                }
+                var file = await CrossMedia.Current.TakeVideoAsync(new StoreVideoOptions
+                {
+                    DefaultCamera = CameraDevice.Rear,
+                    CompressionQuality = 80,
+                    SaveToAlbum = true,
+                    SaveMetaData = false
+                });
+                if (file != null)
+                    System.Diagnostics.Debug.WriteLine("TakeVideoAsync filePath :  " + file.Path);
+
+                return file?.Path;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("TakeVideoAsync error :  " + ex);
+                return null;
+            }
+        }
         public async Task<string> PickPhotoAsync()
         {
             try
@@ -90,13 +115,36 @@ namespace ChatSample
                 return null;
             }
         }
+
+        public async Task<string> PickVideoAsync()
+        {
+            try
+            {
+                if (!CrossMedia.Current.IsPickPhotoSupported)
+                {
+                    await App.Current.MainPage.DisplayAlert("ライブラリを使用できません", "この端末ではライブラリにアクセスできません", "OK");
+                    return null;
+                }
+                var file = await CrossMedia.Current.PickVideoAsync();
+                if (file != null)
+                    System.Diagnostics.Debug.WriteLine("PickPhotoAsync filePath :  " + file.Path);
+
+                return file?.Path;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("PickPhotoAsync error :  " + ex);
+                return null;
+            }
+        }
+
         public async Task<List<string>> PickPhotoAsyncGetPathAndAlbumPath()
         {
             try
             {
-                var ret = await CheckPermission(Permission.Photos);
-                if (!ret)
-                    return null;
+                //var ret = await CheckPermission(Permission.Photos);
+                //if (!ret)
+                //    return null;
 
                 if (!CrossMedia.Current.IsPickPhotoSupported)
                 {
@@ -124,20 +172,20 @@ namespace ChatSample
                 return null;
             }
         }
-        public async Task<bool> CheckPermission(Permission requestPermission)
-        {
-            var status = await CrossPermissions.Current.CheckPermissionStatusAsync(requestPermission);
-            if (status != PermissionStatus.Granted)
-            {
-                var results = await CrossPermissions.Current.RequestPermissionsAsync(requestPermission);
-                if (results.ContainsKey(requestPermission) &&
-                    results[requestPermission] != PermissionStatus.Granted)
-                {
-                    return false;
-                }
-            }
+        //public async Task<bool> CheckPermission(Permission requestPermission)
+        //{
+        //    var status = await CrossPermissions.Current.CheckPermissionStatusAsync(requestPermission);
+        //    if (status != PermissionStatus.Granted)
+        //    {
+        //        var results = await CrossPermissions.Current.RequestPermissionsAsync(requestPermission);
+        //        if (results.ContainsKey(requestPermission) &&
+        //            results[requestPermission] != PermissionStatus.Granted)
+        //        {
+        //            return false;
+        //        }
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
     }
 }

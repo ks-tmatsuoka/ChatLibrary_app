@@ -48,6 +48,7 @@
     <Compile Include="DependencyServices\DisplayService_iOS.cs" />
     <Compile Include="Renderers\DynamicResizedEditorRenderer_iOS.cs" />
     <Compile Include="Renderers\CustomContentViewRenderer_iOS.cs" />
+    <Compile Include="DependencyServices\VideoService_iOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms">

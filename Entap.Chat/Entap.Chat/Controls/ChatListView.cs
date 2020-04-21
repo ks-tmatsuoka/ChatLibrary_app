@@ -50,6 +50,7 @@ namespace Entap.Chat
         public void Dispose()
         {
             FileManager.ClearDirectory(Settings.Current.ChatService.GetSendImageSaveFolderPath());
+            FileManager.ClearDirectory(Settings.Current.ChatService.GetSendMovieSaveFolderPath());
             Settings.Current.ChatService.Dispose();
         }
 

@@ -10,6 +10,7 @@ namespace Entap.Chat
         public DataTemplate MyTextMessageTemplate { get; set; }
         public DataTemplate MyImageMessageTemplate { get; set; }
         public DataTemplate OthersImageMessageTemplate { get; set; }
+        public DataTemplate MyMovieMessageTemplate { get; set; }
         public DataTemplate MemberInAndOutMessageTemplate { get; set; }
         public DataTemplate CustomMessageTemplate { get; set; }
 
@@ -34,7 +35,7 @@ namespace Entap.Chat
                     else
                         return OthersImageMessageTemplate;
                 case (int)MessageType.Movie:
-                    return OthersTextMessageTemplate;
+                    return MyMovieMessageTemplate;
 
                 case (int)MessageType.MemberAddRoom:
                     return MemberInAndOutMessageTemplate;

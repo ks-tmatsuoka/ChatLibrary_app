@@ -69,6 +69,32 @@ namespace ChatSample
         }
 
         /// <summary>
+        /// 動画撮影
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> TakeVideo()
+        {
+            var mg = new MediaPluginManager();
+            var path = await mg.TakeVideoAsync();
+            if (path is null)
+                return await Task.FromResult<string>("");
+            return await Task.FromResult<string>(path);
+        }
+
+        /// <summary>
+        /// 動画撮影
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> SelectVideo()
+        {
+            var mg = new MediaPluginManager();
+            var path = await mg.PickVideoAsync();
+            if (path is null)
+                return await Task.FromResult<string>("");
+            return await Task.FromResult<string>(path);
+        }
+
+        /// <summary>
         /// ライブラリからの画像選択
         /// </summary>
         /// <returns></returns>
@@ -143,92 +169,122 @@ namespace ChatSample
         /// <returns></returns>
         public async Task<IEnumerable<MessageBase>> BottomControllerMenuExecute(int notSendMessageId, int type, int roomId, ChatListView chatListView)
         {
+            string photoStr = "写真";
+            string VideoStr = "動画";
             if (type == (int)BottomControllerMenuType.Camera)
             {
-                var imgPath = await TakePicture();
-                if (string.IsNullOrEmpty(imgPath))
-                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
-                byte[] bytes = FileManager.ReadBytes(imgPath);
-                string extension = System.IO.Path.GetExtension(imgPath);
-                string name = Guid.NewGuid().ToString() + extension;
-                if (bytes == null || bytes.Length < 1)
+                var selected = await App.Current.MainPage.DisplayActionSheet("選択してください", null, null, new string[2] { photoStr, VideoStr });
+                if (selected == photoStr)
                 {
-                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
-                }
-                var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
-                if (!FileManager.FileCopy(imgPath, copyImgPath))
-                {
-                    Device.BeginInvokeOnMainThread(() =>
+                    var imgPath = await TakePicture();
+                    if (string.IsNullOrEmpty(imgPath))
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    byte[] bytes = FileManager.ReadBytes(imgPath);
+                    string extension = System.IO.Path.GetExtension(imgPath);
+                    string name = Guid.NewGuid().ToString() + extension;
+                    if (bytes == null || bytes.Length < 1)
                     {
-                        Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
-                    });
-                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
-                }
-                var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
-                return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
-            }
-            else if (type == (int)BottomControllerMenuType.Library)
-            {
-                var imgPath = await SelectImage();
-                if (string.IsNullOrEmpty(imgPath))
-                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
-                byte[] bytes = FileManager.ReadBytes(imgPath);
-                string extension = System.IO.Path.GetExtension(imgPath);
-                string name = Guid.NewGuid().ToString() + extension;
-                if (bytes == null || bytes.Length < 1)
-                {
-                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
-                }
-                var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
-                if (!FileManager.FileCopy(imgPath, copyImgPath))
-                {
-                    Device.BeginInvokeOnMainThread(() =>
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    }
+                    var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                    if (!FileManager.FileCopy(imgPath, copyImgPath))
                     {
-                        Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
-                    });
-                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
+                        });
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    }
+                    var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+                    return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
                 }
-                var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
-                return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
-            }
-            else
-            {
-                /*
-                var msg = new MessageBase();
-                chatListView.AddMessage(msg);
-                var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(roomId, msg);
-                var index = chatListView.Messages.IndexOf(msg);
-                if (sendMessageResponseBase.MessageId < 0)
+                else if (selected == VideoStr)
                 {
-                    // 通信エラー
-                    var delImgPath = msg.ImageUrl;
-                    string extension = System.IO.Path.GetExtension(delImgPath);
-                    chatListView.Messages[index].ResendVisible = true;
-                    var sendErrorImgPath = Settings.Current.ChatService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + extension;
-                    FileManager.FileCopy(delImgPath, sendErrorImgPath);
-                    chatListView.Messages[index].ImageUrl = sendErrorImgPath;
-                    FileManager.FileDelete(delImgPath);
-                    chatListView.NotSendMessageSaveInStorage(chatListView.Messages[index]);
-                }
-                else
-                {
-                    msg.ResendVisible = false;
-                    // サーバへ送信できた段階でメッセージの表示位置を再確認
-                    if (index == chatListView.Messages.Count - 1)
+                    var videoPath = await TakeVideo();
+                    if (string.IsNullOrEmpty(videoPath))
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    byte[] bytes = FileManager.ReadBytes(videoPath);
+                    string extension = ".mp4";
+                    string name = Guid.NewGuid().ToString() + extension;
+                    if (bytes == null || bytes.Length < 1)
                     {
-                        chatListView.Messages[index].MessageId = sendMessageResponseBase.MessageId;
-                        chatListView.Messages[index].DateTime = sendMessageResponseBase.SendDateTime;
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    }
+                    var copyPath = Settings.Current.ChatService.GetSendMovieSaveFolderPath() + Guid.NewGuid() + extension;
+                    bool result;
+                    if (Device.RuntimePlatform == Device.iOS)
+                    {
+                        result = DependencyService.Get<IVideoService>().ConvertMp4(videoPath, copyPath);
                     }
                     else
                     {
-                        chatListView.Messages.RemoveAt(index);
-                        msg.MessageId = sendMessageResponseBase.MessageId;
-                        msg.DateTime = sendMessageResponseBase.SendDateTime;
-                        chatListView.Messages.Add(msg);
+                        result = FileManager.FileCopy(videoPath, copyPath);
                     }
-                    chatListView.NotSendMessageDeleteFromStorage(msg.NotSendId);
+                    if (result)
+                    {
+                        var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Movie, SendUserId = Settings.Current.ChatService.GetUserId() };
+                        return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
+                    }
+                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    
                 }
-                */
+            }
+            else if (type == (int)BottomControllerMenuType.Library)
+            {
+                var selected = await App.Current.MainPage.DisplayActionSheet("選択してください", null, null, new string[2] { photoStr, VideoStr });
+                if (selected == photoStr)
+                {
+                    var imgPath = await SelectImage();
+                    if (string.IsNullOrEmpty(imgPath))
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    byte[] bytes = FileManager.ReadBytes(imgPath);
+                    string extension = System.IO.Path.GetExtension(imgPath);
+                    string name = Guid.NewGuid().ToString() + extension;
+                    if (bytes == null || bytes.Length < 1)
+                    {
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    }
+                    var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                    if (!FileManager.FileCopy(imgPath, copyImgPath))
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
+                        });
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    }
+                    var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+                    return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
+                }
+                else if (selected == VideoStr)
+                {
+                    var videoPath = await SelectVideo();
+                    if (string.IsNullOrEmpty(videoPath))
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    byte[] bytes = FileManager.ReadBytes(videoPath);
+                    string extension = ".mp4";
+                    string name = Guid.NewGuid().ToString() + extension;
+                    if (bytes == null || bytes.Length < 1)
+                    {
+                        return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                    }
+                    var copyPath = Settings.Current.ChatService.GetSendMovieSaveFolderPath() + Guid.NewGuid() + extension;
+                    bool result;
+                    if (Device.RuntimePlatform == Device.iOS)
+                    {
+                        result = DependencyService.Get<IVideoService>().ConvertMp4(videoPath, copyPath);
+                    }
+                    else
+                    {
+                        result = FileManager.FileCopy(videoPath, copyPath);
+                    }
+                    if (result)
+                    {
+                        var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Movie, SendUserId = Settings.Current.ChatService.GetUserId() };
+                        return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
+                    }
+                    return await Task.FromResult<IEnumerable<MessageBase>>(null);
+                }
             }
             return await Task.FromResult<IEnumerable<MessageBase>>(null);
         }

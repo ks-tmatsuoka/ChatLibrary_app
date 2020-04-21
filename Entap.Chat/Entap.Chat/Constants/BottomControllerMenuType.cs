@@ -9,7 +9,6 @@ namespace Entap.Chat
         None,
         Camera,
         Library,
-        Movie,
         Custom=100
     }
 }
