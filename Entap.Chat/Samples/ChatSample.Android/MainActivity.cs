@@ -13,6 +13,7 @@ namespace ChatSample.Droid
     [Activity(Label = "ChatSample", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        public static Activity CurrentActivity;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -24,6 +25,7 @@ namespace ChatSample.Droid
             Entap.Chat.Android.Platform.Init(this);
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
             LoadApplication(new App());
+            CurrentActivity = this;
             // Webviewで入力箇所がキーボードに隠れないようにするのに必要な処理
             //App.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
         }

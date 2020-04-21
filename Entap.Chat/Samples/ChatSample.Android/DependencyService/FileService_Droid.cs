@@ -1,13 +1,12 @@
 ﻿using System;
 using Android.Content;
-using Android.Webkit;
 using V4 = Android.Support.V4;
 using Uri = Android.Net.Uri;
 using Environment = Android.OS.Environment;
-using Entap.Chat.Android;
 using Xamarin.Forms;
 using Android.OS;
 using ChatSample.Android;
+using ChatSample.Droid;
 
 [assembly: Dependency(typeof(FileService_Droid))]
 namespace ChatSample.Android
@@ -34,8 +33,8 @@ namespace ChatSample.Android
                 {
                     //Android7.0以降
                     uri = V4.Content.FileProvider.GetUriForFile(
-                        Platform.Activity.ApplicationContext,
-                        Platform.Activity.PackageName + ".fileprovider",
+                        MainActivity.CurrentActivity.ApplicationContext,
+                        MainActivity.CurrentActivity.PackageName + ".fileprovider",
                         file
                     );
                 }
@@ -50,7 +49,7 @@ namespace ChatSample.Android
                 var chooserIntent = Intent.CreateChooser(intent, "");
                 chooserIntent.SetFlags(ActivityFlags.ClearTop);
                 chooserIntent.SetFlags(ActivityFlags.NewTask);
-                Platform.Activity.ApplicationContext.StartActivity(chooserIntent);
+                MainActivity.CurrentActivity.ApplicationContext.StartActivity(chooserIntent);
             }
             catch (ActivityNotFoundException ex)
             {
@@ -66,8 +65,7 @@ namespace ChatSample.Android
 
         public string GetMediaFolderPath()
         {
-            var path = Platform.Activity.GetExternalFilesDir(Environment.DirectoryPictures).AbsolutePath + "/ChatLibDir/";
-            //var path = CrossCurrentActivity.Current.Activity.GetExternalFilesDir(Android.OS.Environment.DirectoryPictures).AbsolutePath + "/temp";
+            var path = MainActivity.CurrentActivity.GetExternalFilesDir(Environment.DirectoryPictures).AbsolutePath + "/ChatLibDir/";
             using (var mediaStorageDir = new Java.IO.File(path))
             {
                 if (!mediaStorageDir.Exists())
