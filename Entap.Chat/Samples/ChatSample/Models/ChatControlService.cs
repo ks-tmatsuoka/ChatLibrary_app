@@ -136,13 +136,23 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// ファイルの共有
+        /// 画像ファイルの共有
         /// </summary>
         /// <param name="imagePath"></param>
         /// <returns></returns>
         public async Task ImageShare(string imagePath)
         {
             await MediaManager.ImageShare(imagePath);
+        }
+
+        /// <summary>
+        /// 動画ファイルの共有
+        /// </summary>
+        /// <param name="imagePath"></param>
+        /// <returns></returns>
+        public async Task VideoShare(string videoPath)
+        {
+            await MediaManager.VideoShare(videoPath);
         }
 
         /// <summary>

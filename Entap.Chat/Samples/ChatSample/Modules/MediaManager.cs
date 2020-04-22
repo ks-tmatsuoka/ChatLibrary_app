@@ -11,6 +11,14 @@ namespace ChatSample
         {
         }
 
+        public static async Task VideoShare(string videoPath)
+        {
+            var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
+            string filePath = mediaFolderPath + "/temp.mp4";
+
+            await OpenShareMenu(videoPath, filePath);
+        }
+
         public static async Task ImageShare(string imagePath)
         {
             var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
@@ -33,15 +41,19 @@ namespace ChatSample
                 await Application.Current.MainPage.DisplayAlert("エラー", "こちらのファイルは表示できません", "閉じる");
                 return;
             }
+            await OpenShareMenu(imagePath, filePath);
+        }
 
+        static async Task OpenShareMenu(string source, string copyPath)
+        {
             bool result;
-            if (imagePath.Contains("http://") || imagePath.Contains("https://"))
+            if (source.Contains("http://") || source.Contains("https://"))
             {
-                result = await DownloadWebFile(imagePath, filePath);
+                result = await DownloadWebFile(source, copyPath);
             }
             else
             {
-                result = FileManager.FileCopy(imagePath, filePath);
+                result = FileManager.FileCopy(source, copyPath);
             }
 
             if (!result)
@@ -51,7 +63,7 @@ namespace ChatSample
             }
 
             string str = "error";
-            DependencyService.Get<IFileService>().OpenShareMenu(filePath, ref str);
+            DependencyService.Get<IFileService>().OpenShareMenu(copyPath, ref str);
         }
 
         public static Task<bool> DownloadWebFile(string dlPath, string savePath)

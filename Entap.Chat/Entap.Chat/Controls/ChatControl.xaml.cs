@@ -251,8 +251,8 @@ namespace Entap.Chat
         {
             ProcessManager.Current.Invoke(nameof(MovieShareCommand), async () =>
             {
-                var imagePath = pm as string;
-                await Settings.Current.ChatControlService.ImageShare(imagePath);
+                var path = pm as string;
+                await Settings.Current.ChatControlService.VideoShare(path);
             });
         });
         
