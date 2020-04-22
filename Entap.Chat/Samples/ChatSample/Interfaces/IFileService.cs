@@ -7,5 +7,6 @@ namespace ChatSample
         string GetMediaFolderPath();
         string GetDownloadFolderPath();
         bool? SaveImageiOSLibrary(string filePath);
+        bool? SaveVideoiOSLibrary(string filePath);
     }
 }

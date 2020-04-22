@@ -260,7 +260,8 @@ namespace Entap.Chat
         {
             ProcessManager.Current.Invoke(nameof(MovieTapCommand), async () =>
             {
-                
+                var videoPath = pm as string;
+                Settings.Current.ChatControlService.MoveVideoPreviewPage(videoPath);
             });
         });
 

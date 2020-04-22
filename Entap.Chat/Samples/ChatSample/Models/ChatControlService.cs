@@ -174,6 +174,14 @@ namespace ChatSample
             App.Current.MainPage.Navigation.PushModalAsync(new ImagePreviewPage(imageUrl));
         }
 
+        /// <summary>
+        /// 動画のプレビューページへ遷移
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        public void MoveVideoPreviewPage(string imageUrl)
+        {
+            App.Current.MainPage.Navigation.PushModalAsync(new VideoPreviewPage(imageUrl));
+        }
 
         /// <summary>
         /// BottomControllerの各メニュー押した際の動作指定

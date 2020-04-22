@@ -2,46 +2,49 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ChatSample"
-    x:Class="ChatSample.ImagePreviewPage">
-    <AbsoluteLayout
+    x:Class="ChatSample.VideoPreviewPage">
+    <Grid
+        Padding="16,0,16,0"
         BackgroundColor="Black"
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand">
-        <Image
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding TopSafeArea}" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="{Binding BottomSafeArea}" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ImageButton
+            Grid.Row="1"
             BackgroundColor="Transparent"
-            AbsoluteLayout.LayoutBounds="0,0,1,1"
-            AbsoluteLayout.LayoutFlags="All"
-            Source="{Binding ImageUrl}">
-            <Image.GestureRecognizers>
-                <TapGestureRecognizer
-                    Command="{Binding TapCommadn}"/>
-            </Image.GestureRecognizers>
-        </Image>
+            HorizontalOptions="StartAndExpand"
+            VerticalOptions="StartAndExpand"
+            HeightRequest="25"
+            WidthRequest="25"
+            Command="{Binding CloseCmd}"
+            Source="close_icon.png"/>
+
+        <MediaElement
+            Grid.Row="2"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            Aspect="AspectFill"
+            BackgroundColor="Transparent"
+            Source="{Binding VideoUrl}"
+            ShowsPlaybackControls="True"/>
+
 
         <StackLayout
-            x:Name="Menu"
+            Grid.Row="3"
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             Spacing="0"
-            Padding="{Binding MenuPadding}"
-            Opacity="0.5"
-            IsVisible="{Binding MenuVisible}"
-            BackgroundColor="Black">
-            <StackLayout.GestureRecognizers>
-                <TapGestureRecognizer
-                    Command="{Binding TapCommadn}"/>
-            </StackLayout.GestureRecognizers>
-            <ImageButton
-                x:Name="CloseButton"
-                BackgroundColor="Transparent"
-                HorizontalOptions="StartAndExpand"
-                VerticalOptions="StartAndExpand"
-                HeightRequest="25"
-                WidthRequest="25"
-                Command="{Binding CloseCmd}"
-                Source="close_icon.png"/>
-
+            BackgroundColor="Transparent">
             <StackLayout
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="End"
@@ -66,5 +69,5 @@
                     Source="share_icon.png"/>
             </StackLayout>
         </StackLayout>
-    </AbsoluteLayout>
+    </Grid>
 </ContentPage>

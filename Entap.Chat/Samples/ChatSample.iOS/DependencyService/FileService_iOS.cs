@@ -95,6 +95,32 @@ namespace ChatSample.iOS
 
             return rootController.PresentedViewController;
         }
+
+
+        public bool? SaveVideoiOSLibrary(string filePath)
+        {
+            var cmp = new TaskCompletionSource<bool?>();
+            //var data = FileManager.ReadBytes(filePath);
+            try
+            {
+                //File.WriteAllBytes(filePath, data);
+                ALAssetsLibrary lib = new ALAssetsLibrary();
+                lib.WriteVideoToSavedPhotosAlbum(NSUrl.FromFilename(filePath), (t, error) =>
+                {
+                    var hasError = (error != null);
+                    if (!hasError)
+                        App.Current.MainPage.DisplayAlert("", "保存しました", "閉じる");
+                    else
+                        App.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
+                });
+                cmp.SetResult(null);
+            }
+            catch (Exception ex)
+            {
+                cmp.SetResult(false);
+            }
+            return cmp.Task.Result;
+        }
     }
 
     public class MyInteractionDelegate : UIDocumentInteractionControllerDelegate

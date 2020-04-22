@@ -162,5 +162,41 @@ namespace ChatSample
             else if (dlResult == false)
                 await Application.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
         }
+
+        public static async Task VideoDownload(string videoUrl)
+        {
+            var dlFolderPath = DependencyService.Get<IFileService>().GetDownloadFolderPath();
+            string filePath = dlFolderPath + "/" + Guid.NewGuid() + ".mp4";
+            
+            bool? dlResult;
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                dlResult = await DownloadWebFile(videoUrl, filePath);
+            }
+            else
+            {
+                if (videoUrl.Contains("http://") || videoUrl.Contains("https://"))
+                {
+                    var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
+                    mediaFolderPath += "/" + Guid.NewGuid() + ".mp4";
+                    var result = await DownloadWebFile(videoUrl, mediaFolderPath);
+                    if (!result)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("エラー", "ファイルが取得できませんでした", "閉じる");
+                        return;
+                    }
+                    dlResult = DependencyService.Get<IFileService>().SaveVideoiOSLibrary(mediaFolderPath);
+                }
+                else
+                {
+                    dlResult = DependencyService.Get<IFileService>().SaveVideoiOSLibrary(videoUrl);
+                }
+            }
+
+            if (dlResult == true)
+                await Application.Current.MainPage.DisplayAlert("", "保存しました", "閉じる");
+            else if (dlResult == false)
+                await Application.Current.MainPage.DisplayAlert("", "保存できませんでした", "閉じる");
+        }
     }
 }

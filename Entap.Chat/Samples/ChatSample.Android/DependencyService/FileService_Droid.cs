@@ -82,5 +82,10 @@ namespace ChatSample.Android
         {
             return false;
         }
+
+        public bool? SaveVideoiOSLibrary(string filePath)
+        {
+            return false;
+        }
     }
 }
