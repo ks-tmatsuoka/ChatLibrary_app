@@ -19,6 +19,6 @@ namespace Entap.Chat
         void DeleteNotSendMessageData(int id);
         string GetUserId();
         string GetSendImageSaveFolderPath();
-        string GetSendMovieSaveFolderPath();
+        string GetSendVideoSaveFolderPath();
     }
 }

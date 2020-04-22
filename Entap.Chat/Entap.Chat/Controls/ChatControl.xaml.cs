@@ -185,7 +185,7 @@ namespace Entap.Chat
                 {
                     foreach(var msgBase in msgBases)
                     {
-                        if (msgBase.MessageType == (int)MessageType.Image || msgBase.MessageType == (int)MessageType.Movie)
+                        if (msgBase.MessageType == (int)MessageType.Image || msgBase.MessageType == (int)MessageType.Video)
                             await ChatAddMedia(msgBase);
                     }
                 }
@@ -247,18 +247,18 @@ namespace Entap.Chat
             });
         });
 
-        public Command MovieShareCommand => new Command((pm) =>
+        public Command VideoShareCommand => new Command((pm) =>
         {
-            ProcessManager.Current.Invoke(nameof(MovieShareCommand), async () =>
+            ProcessManager.Current.Invoke(nameof(VideoShareCommand), async () =>
             {
                 var path = pm as string;
                 await Settings.Current.ChatControlService.VideoShare(path);
             });
         });
         
-        public Command MovieTapCommand => new Command((pm) =>
+        public Command VideoTapCommand => new Command((pm) =>
         {
-            ProcessManager.Current.Invoke(nameof(MovieTapCommand), async () =>
+            ProcessManager.Current.Invoke(nameof(VideoTapCommand), async () =>
             {
                 var videoPath = pm as string;
                 Settings.Current.ChatControlService.MoveVideoPreviewPage(videoPath);

@@ -144,10 +144,4 @@ namespace Entap.Chat
         }
         #endregion
     }
-
-    public enum ControllerIconStyles
-    {
-        Light,
-        Dark
-    }
 }

@@ -50,7 +50,7 @@ namespace Entap.Chat
         public void Dispose()
         {
             FileManager.ClearDirectory(Settings.Current.ChatService.GetSendImageSaveFolderPath());
-            FileManager.ClearDirectory(Settings.Current.ChatService.GetSendMovieSaveFolderPath());
+            FileManager.ClearDirectory(Settings.Current.ChatService.GetSendVideoSaveFolderPath());
             Settings.Current.ChatService.Dispose();
         }
 
@@ -583,7 +583,9 @@ namespace Entap.Chat
             set { SetValue(LastReadMessageIdProperty, value); }
         }
 
-
+        /// <summary>
+        /// AddMessageメソッドをViewModelから呼ぶためのコマンド
+        /// </summary>
         public static readonly BindableProperty AddMessageCommandProperty =
             BindableProperty.Create(nameof(AddMessageCommand), typeof(ICommand), typeof(ChatListView), null,
                 propertyChanged: (bindable, oldValue, newValue) =>

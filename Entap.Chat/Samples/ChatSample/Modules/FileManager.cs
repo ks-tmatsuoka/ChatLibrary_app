@@ -15,8 +15,8 @@ namespace ChatSample
             temp,
             SendImage,
             NotSendImage,
-            SendMovie,
-            NotSendMovie
+            SendVideo,
+            NotSendVideo
         }
 
         public static byte[] ReadBytes(string filePath)

@@ -40,7 +40,7 @@ namespace ChatSample
                     return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = notSendMessageId });
                 }
             }
-            else if (msg.MessageType == (int)MessageType.Movie)
+            else if (msg.MessageType == (int)MessageType.Video)
             {
                 bytes = FileManager.ReadBytes(msg.MediaUrl);
                 var extension = System.IO.Path.GetExtension(msg.MediaUrl);
@@ -234,7 +234,7 @@ namespace ChatSample
                     {
                         return await Task.FromResult<IEnumerable<MessageBase>>(null);
                     }
-                    var copyPath = Settings.Current.ChatService.GetSendMovieSaveFolderPath() + Guid.NewGuid() + extension;
+                    var copyPath = Settings.Current.ChatService.GetSendVideoSaveFolderPath() + Guid.NewGuid() + extension;
                     bool result;
                     if (Device.RuntimePlatform == Device.iOS)
                     {
@@ -246,7 +246,7 @@ namespace ChatSample
                     }
                     if (result)
                     {
-                        var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Movie, SendUserId = Settings.Current.ChatService.GetUserId() };
+                        var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Video, SendUserId = Settings.Current.ChatService.GetUserId() };
                         return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
                     }
                     return await Task.FromResult<IEnumerable<MessageBase>>(null);
@@ -292,7 +292,7 @@ namespace ChatSample
                     {
                         return await Task.FromResult<IEnumerable<MessageBase>>(null);
                     }
-                    var copyPath = Settings.Current.ChatService.GetSendMovieSaveFolderPath() + Guid.NewGuid() + extension;
+                    var copyPath = Settings.Current.ChatService.GetSendVideoSaveFolderPath() + Guid.NewGuid() + extension;
                     bool result;
                     if (Device.RuntimePlatform == Device.iOS)
                     {
@@ -304,7 +304,7 @@ namespace ChatSample
                     }
                     if (result)
                     {
-                        var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Movie, SendUserId = Settings.Current.ChatService.GetUserId() };
+                        var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Video, SendUserId = Settings.Current.ChatService.GetUserId() };
                         return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
                     }
                     return await Task.FromResult<IEnumerable<MessageBase>>(null);

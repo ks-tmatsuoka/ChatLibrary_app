@@ -339,7 +339,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="myMovieMessageTemplate" x:DataType="local:MessageBase">
+            <DataTemplate x:Key="myVideoMessageTemplate" x:DataType="local:MessageBase">
                 <ViewCell
                     x:Name="Cell">
                     <StackLayout
@@ -382,7 +382,7 @@
                                     Aspect="AspectFit"
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                     CommandParameter="{Binding MediaUrl}"
-                                    Command="{Binding Source={x:Reference Content}, Path=MovieShareCommand}"/>
+                                    Command="{Binding Source={x:Reference Content}, Path=VideoShareCommand}"/>
                                 <StackLayout
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="End"
@@ -419,7 +419,7 @@
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
-                                        Command="{Binding Source={x:Reference Content}, Path=MovieTapCommand}"/>
+                                        Command="{Binding Source={x:Reference Content}, Path=VideoTapCommand}"/>
                                 </Frame.GestureRecognizers>
                             </Frame>
 
@@ -439,7 +439,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersMovieMessageTemplate" x:DataType="local:MessageBase">
+            <DataTemplate x:Key="othersVideoMessageTemplate" x:DataType="local:MessageBase">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -498,7 +498,7 @@
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
-                                        Command="{Binding Source={x:Reference Content}, Path=MovieTapCommand}"/>
+                                        Command="{Binding Source={x:Reference Content}, Path=VideoTapCommand}"/>
                                 </Frame.GestureRecognizers>
                             </Frame>
                             <StackLayout
@@ -512,7 +512,7 @@
                                     HeightRequest="30"
                                     Source="share_icon.png"
                                     CommandParameter="{Binding MediaUrl}"
-                                    Command="{Binding Source={x:Reference Content}, Path=MovieShareCommand}"/>
+                                    Command="{Binding Source={x:Reference Content}, Path=VideoShareCommand}"/>
                                 <StackLayout
                                     HorizontalOptions="StartAndExpand"
                                     VerticalOptions="End"
@@ -581,8 +581,8 @@
                 OthersTextMessageTemplate="{StaticResource othersTextMessageTemplate}"
                 MyImageMessageTemplate="{StaticResource myImageMessageTemplate}"
                 OthersImageMessageTemplate="{StaticResource othersImageMessageTemplate}"
-                MyMovieMessageTemplate="{StaticResource myMovieMessageTemplate}"
-                OthersMovieMessageTemplate="{StaticResource othersMovieMessageTemplate}"
+                MyVideoMessageTemplate="{StaticResource myVideoMessageTemplate}"
+                OthersVideoMessageTemplate="{StaticResource othersVideoMessageTemplate}"
                 MemberInAndOutMessageTemplate="{StaticResource memberInAndOutMessageTemplate}"
             />
             <local:TimeConverter x:Key="timeConverter"/>

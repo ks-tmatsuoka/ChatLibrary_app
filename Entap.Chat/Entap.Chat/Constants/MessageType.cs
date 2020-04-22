@@ -9,7 +9,7 @@ namespace Entap.Chat
         None,
         Text,
         Image,
-        Movie,
+        Video,
         MemberAddRoom=10,
         MemberLeaveRoom=11,
         Custom=100

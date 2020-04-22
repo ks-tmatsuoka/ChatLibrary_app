@@ -10,10 +10,10 @@ namespace Entap.Chat
         public DataTemplate MyTextMessageTemplate { get; set; }
         public DataTemplate MyImageMessageTemplate { get; set; }
         public DataTemplate OthersImageMessageTemplate { get; set; }
-        public DataTemplate MyMovieMessageTemplate { get; set; }
+        public DataTemplate MyVideoMessageTemplate { get; set; }
         public DataTemplate MemberInAndOutMessageTemplate { get; set; }
         public DataTemplate CustomMessageTemplate { get; set; }
-        public DataTemplate OthersMovieMessageTemplate { get; set; }
+        public DataTemplate OthersVideoMessageTemplate { get; set; }
 
         public MessageDataTemplateSelector()
         {
@@ -37,11 +37,11 @@ namespace Entap.Chat
                     else
                         return OthersImageMessageTemplate;
 
-                case (int)MessageType.Movie:
+                case (int)MessageType.Video:
                     if (message.SendUserId == Settings.Current.ChatService.GetUserId())
-                        return MyMovieMessageTemplate;
+                        return MyVideoMessageTemplate;
                     else
-                        return OthersMovieMessageTemplate;
+                        return OthersVideoMessageTemplate;
 
                 case (int)MessageType.MemberAddRoom:
                     return MemberInAndOutMessageTemplate;
