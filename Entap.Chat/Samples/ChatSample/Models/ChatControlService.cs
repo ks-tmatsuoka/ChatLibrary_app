@@ -142,7 +142,7 @@ namespace ChatSample
         /// <returns></returns>
         public async Task ImageShare(string imagePath)
         {
-            await ImageManager.ImageShare(imagePath);
+            await MediaManager.ImageShare(imagePath);
         }
 
         /// <summary>

@@ -5,9 +5,9 @@ using Xamarin.Forms;
 
 namespace ChatSample
 {
-    public class ImageManager
+    public class MediaManager
     {
-        public ImageManager()
+        public MediaManager()
         {
         }
 
@@ -37,7 +37,7 @@ namespace ChatSample
             bool result;
             if (imagePath.Contains("http://") || imagePath.Contains("https://"))
             {
-                result = await DownloadWebImageFile(imagePath, filePath);
+                result = await DownloadWebFile(imagePath, filePath);
             }
             else
             {
@@ -54,14 +54,14 @@ namespace ChatSample
             DependencyService.Get<IFileService>().OpenShareMenu(filePath, ref str);
         }
 
-        public static Task<bool> DownloadWebImageFile(string dlImagPath, string savePath)
+        public static Task<bool> DownloadWebFile(string dlPath, string savePath)
         {
             var cmp = new TaskCompletionSource<bool>();
             bool downloadWebImageFileCmp = false;
             try
             {
                 WebClient client = new WebClient();
-                client.DownloadFileAsync(new Uri(dlImagPath), savePath);
+                client.DownloadFileAsync(new Uri(dlPath), savePath);
                 client.DownloadFileCompleted += (object sender, System.ComponentModel.AsyncCompletedEventArgs e) =>
                 {
                     try
@@ -112,7 +112,7 @@ namespace ChatSample
             bool? dlResult;
             if (Device.RuntimePlatform == Device.Android)
             {
-                dlResult = await DownloadWebImageFile(imageUrl, filePath);
+                dlResult = await DownloadWebFile(imageUrl, filePath);
             }
             else
             {
@@ -131,7 +131,7 @@ namespace ChatSample
                     {
                         mediaFolderPath += "/" + Guid.NewGuid() + ".png";
                     }
-                    var result = await DownloadWebImageFile(imageUrl, mediaFolderPath);
+                    var result = await DownloadWebFile(imageUrl, mediaFolderPath);
                     if (!result)
                     {
                         await Application.Current.MainPage.DisplayAlert("エラー", "ファイルが取得できませんでした", "閉じる");

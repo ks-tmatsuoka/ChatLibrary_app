@@ -257,7 +257,7 @@ namespace ChatSample
         public Command ImageShareCommand => new Command(async(obj) =>
         {
             var imagePath = obj as string;
-            await ImageManager.ImageShare(imagePath);
+            await MediaManager.ImageShare(imagePath);
         });
         public Command ImageTapCommand => new Command((obj) =>
         {
