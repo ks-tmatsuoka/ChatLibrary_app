@@ -286,7 +286,7 @@ namespace Entap.Chat
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     IsEnabled = false;
-                    foreach (var msg in messages.Reverse())
+                    foreach (var msg in messages)
                     {
                         _messages.Insert(0, msg);
                     }
