@@ -385,11 +385,11 @@ namespace Entap.Chat
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        async Task SendAlreadyRead(object obj)
+        public async Task SendAlreadyRead(object obj)
         {
             var messageBase = obj as MessageBase;
             var userId = Settings.Current.ChatService.GetUserId();
-            if (messageBase != null && userId != messageBase.SendUserId && lastReadMessageId < messageBase.MessageId)
+            if (messageBase != null && lastReadMessageId < messageBase.MessageId)
             {
                 System.Diagnostics.Debug.WriteLine("SendAlreadyRead: " + messageBase.MessageId);
                 var result = await Settings.Current.ChatService.SendAlreadyRead(RoomId, messageBase.MessageId);

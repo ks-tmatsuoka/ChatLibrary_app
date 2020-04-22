@@ -16,10 +16,10 @@ namespace Entap.Chat
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var count = (int)value;
-            if (count > 0)
+            if (count > 1)
             {
                 if (RoomType == 2 || RoomType == 4)
-                    return Settings.Current.AlreadyReadText + " " + count;
+                    return Settings.Current.AlreadyReadText + " " + (count - 1);
                 return Settings.Current.AlreadyReadText;
             }
             return "";
