@@ -18,11 +18,11 @@ namespace Entap.Chat
             var val = value as string;
             if (MessageType == (int)Entap.Chat.MessageType.MemberAddRoom)
             {
-                val += Settings.Current.MemberAddRoomText;
+                return val + Settings.Current.MemberAddRoomText;
             }
             else if (MessageType == (int)Entap.Chat.MessageType.MemberLeaveRoom)
             {
-                val += Settings.Current.MemberLeaveRoomText;
+                return val + Settings.Current.MemberLeaveRoomText;
             }
             return val;
         }

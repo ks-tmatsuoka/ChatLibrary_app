@@ -37,23 +37,8 @@ namespace ChatSample
                     if (respGetRooms.Data.Rooms.Count < 1)
                     {
                         //サービス管理者とのルーム作成
-                        var data = new ReqCreateRoomData()
-                        {
-                            UserId = UserDataManager.Instance.UserId,
-                            RoomType = RoomType
-                        };
-                        var reqJson = JsonConvert.SerializeObject(data);
-                        json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.CreateRoom), new ReqCreateRoom { Data = reqJson });
-                        var respCreateRoom = JsonConvert.DeserializeObject<RespCreateRoom>(json);
-                        if (respCreateRoom.Status == APIManager.APIStatus.Succeeded)
-                        {
-                            LastReadMessageId = respCreateRoom.Data.AlreadyReadMessageId;
-                            comp.SetResult(respCreateRoom.Data.RoomId);
-                        }
-                        else
-                        {
-                            comp.SetResult(0);
-                        }
+                        var id = await CreateAdminRoom();
+                        comp.SetResult(id);
                     }
                     else
                     {
@@ -65,7 +50,9 @@ namespace ChatSample
                         }
                         else
                         {
-                            comp.SetResult(0);
+                            //サービス管理者とのルーム作成
+                            var id = await CreateAdminRoom();
+                            comp.SetResult(id);
                         }
                     }
                 }
@@ -77,6 +64,25 @@ namespace ChatSample
             });
 
             return comp.Task.Result;
+        }
+
+        async Task<int> CreateAdminRoom()
+        {
+            //サービス管理者とのルーム作成
+            var data = new ReqCreateRoomData()
+            {
+                UserId = UserDataManager.Instance.UserId,
+                RoomType = RoomType
+            };
+            var reqJson = JsonConvert.SerializeObject(data);
+            var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.CreateRoom), new ReqCreateRoom { Data = reqJson });
+            var respCreateRoom = JsonConvert.DeserializeObject<RespCreateRoom>(json);
+            if (respCreateRoom.Status == APIManager.APIStatus.Succeeded)
+            {
+                LastReadMessageId = respCreateRoom.Data.AlreadyReadMessageId;
+                return respCreateRoom.Data.RoomId;
+            }
+            return 0;
         }
 
         async Task SendMessage(MessageBase msg = null)

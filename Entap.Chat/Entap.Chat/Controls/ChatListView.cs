@@ -112,8 +112,15 @@ namespace Entap.Chat
                 Device.BeginInvokeOnMainThread(async () =>
                 {
                     ItemsSource = _messages;
-                    if (_messages.Count > 0)
-                        ScrollTo(_messages?.Last(), ScrollToPosition.End, false);
+                    var lastReadMessage =_messages.Where(w => w.MessageId == LastReadMessageId).LastOrDefault();
+                    if (lastReadMessage != null && _messages.Count > 0)
+                    {
+                        var index = _messages.IndexOf(lastReadMessage);
+                        if (_messages.Count - 1 <= index)
+                            ScrollTo(_messages[index], ScrollToPosition.End, false);
+                        else
+                            ScrollTo(_messages[index + 1], ScrollToPosition.End, false);
+                    }
                     _messages.CollectionChanged += OnMessagesCollectionChanged;
                     Settings.Current.ChatService.UpdateData(_messages, RoomId, chatMembers);
                 });
