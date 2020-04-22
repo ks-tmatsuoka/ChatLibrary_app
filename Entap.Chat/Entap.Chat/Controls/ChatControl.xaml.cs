@@ -168,7 +168,7 @@ namespace Entap.Chat
                     msg.SendDateTime = sendMessageResponseBase.SendDateTime;
                     ChatList.Messages.Add(msg);
                 }
-
+                ChatList.SendAlreadyRead(msg);
                 ChatList.NotSendMessageDeleteFromStorage(msg.NotSendId);
             }
         }
@@ -233,6 +233,7 @@ namespace Entap.Chat
                     msg.SendDateTime = sendMessageResponseBase.SendDateTime;
                     ChatList.Messages.Add(msg);
                 }
+                ChatList.SendAlreadyRead(msg);
                 ChatList.NotSendMessageDeleteFromStorage(msg.NotSendId);
             }
         }
