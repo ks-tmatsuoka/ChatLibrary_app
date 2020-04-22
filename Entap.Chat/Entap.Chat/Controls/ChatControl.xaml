@@ -382,7 +382,7 @@
                                     Aspect="AspectFit"
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                     CommandParameter="{Binding MediaUrl}"
-                                    Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
+                                    Command="{Binding Source={x:Reference Content}, Path=MovieShareCommand}"/>
                                 <StackLayout
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="End"
@@ -419,7 +419,7 @@
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
-                                        Command="{Binding Source={x:Reference Content}, Path=MoviewTapCommand}"/>
+                                        Command="{Binding Source={x:Reference Content}, Path=MovieTapCommand}"/>
                                 </Frame.GestureRecognizers>
                             </Frame>
 
@@ -498,7 +498,7 @@
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
-                                        Command="{Binding Source={x:Reference Content}, Path=ImageTapCommand}"/>
+                                        Command="{Binding Source={x:Reference Content}, Path=MovieTapCommand}"/>
                                 </Frame.GestureRecognizers>
                             </Frame>
                             <StackLayout
@@ -512,7 +512,7 @@
                                     HeightRequest="30"
                                     Source="share_icon.png"
                                     CommandParameter="{Binding MediaUrl}"
-                                    Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
+                                    Command="{Binding Source={x:Reference Content}, Path=MovieShareCommand}"/>
                                 <StackLayout
                                     HorizontalOptions="StartAndExpand"
                                     VerticalOptions="End"

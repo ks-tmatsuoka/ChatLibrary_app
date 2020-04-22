@@ -247,9 +247,18 @@ namespace Entap.Chat
             });
         });
 
-        public Command MoviewTapCommand => new Command((pm) =>
+        public Command MovieShareCommand => new Command((pm) =>
         {
-            ProcessManager.Current.Invoke(nameof(ImageTapCommand), async () =>
+            ProcessManager.Current.Invoke(nameof(MovieShareCommand), async () =>
+            {
+                var imagePath = pm as string;
+                await Settings.Current.ChatControlService.ImageShare(imagePath);
+            });
+        });
+        
+        public Command MovieTapCommand => new Command((pm) =>
+        {
+            ProcessManager.Current.Invoke(nameof(MovieTapCommand), async () =>
             {
                 
             });
