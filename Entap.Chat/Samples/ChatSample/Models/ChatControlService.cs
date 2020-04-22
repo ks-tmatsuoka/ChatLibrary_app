@@ -42,9 +42,15 @@ namespace ChatSample
             }
             else if (msg.MessageType == (int)MessageType.Movie)
             {
-                //TODO 動画
+                bytes = FileManager.ReadBytes(msg.MediaUrl);
+                var extension = System.IO.Path.GetExtension(msg.MediaUrl);
+                name = Guid.NewGuid().ToString() + extension;
                 fileType = "Movie";
-                return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = notSendMessageId });
+                if (bytes == null || bytes.Length < 1)
+                {
+                    await App.Current.MainPage.DisplayAlert("この動画は送れません", "", "閉じる");
+                    return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = notSendMessageId });
+                }
             }
 
             var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, fileType);

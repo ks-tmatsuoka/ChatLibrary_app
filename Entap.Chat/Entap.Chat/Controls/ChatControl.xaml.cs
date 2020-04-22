@@ -185,10 +185,8 @@ namespace Entap.Chat
                 {
                     foreach(var msgBase in msgBases)
                     {
-                        if (msgBase.MessageType == (int)MessageType.Image)
-                            await ChatAddImg(msgBase);
-                        else if (msgBase.MessageType == (int)MessageType.Movie)
-                            await ChatAddMovie(msgBase);
+                        if (msgBase.MessageType == (int)MessageType.Image || msgBase.MessageType == (int)MessageType.Movie)
+                            await ChatAddMedia(msgBase);
                     }
                 }
             });
@@ -199,14 +197,10 @@ namespace Entap.Chat
             var oldMsgIndex = ChatList.Messages.IndexOf(msg);
             ChatList.Messages.RemoveAt(oldMsgIndex);
             msg.ResendVisible = false;
-            await ChatAddImg(msg);
-        }
-        async Task ChatAddMovie(MessageBase msg)
-        {
-            ChatList.AddMessage(msg);
+            await ChatAddMedia(msg);
         }
 
-        async Task ChatAddImg(MessageBase msg)
+        async Task ChatAddMedia(MessageBase msg)
         {
             ChatList.AddMessage(msg);
             var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId ,msg, ChatListView.NotSendMessageId);
@@ -214,13 +208,13 @@ namespace Entap.Chat
             if (sendMessageResponseBase.MessageId < 0)
             {
                 // 通信エラー
-                var delImgPath = msg.MediaUrl;
-                string extension = System.IO.Path.GetExtension(delImgPath);
+                var delMediaPath = msg.MediaUrl;
+                string extension = System.IO.Path.GetExtension(delMediaPath);
                 ChatList.Messages[index].ResendVisible = true;
                 var sendErrorImgPath = Settings.Current.ChatControlService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + extension;
-                FileManager.FileCopy(delImgPath, sendErrorImgPath);
+                FileManager.FileCopy(delMediaPath, sendErrorImgPath);
                 ChatList.Messages[index].MediaUrl = sendErrorImgPath;
-                FileManager.FileDelete(delImgPath);
+                FileManager.FileDelete(delMediaPath);
                 ChatList.NotSendMessageSaveInStorage(ChatList.Messages[index]);
             }
             else
