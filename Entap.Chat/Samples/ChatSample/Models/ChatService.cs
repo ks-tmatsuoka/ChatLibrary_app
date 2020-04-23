@@ -45,32 +45,12 @@ namespace ChatSample
                     val.UserIcon = members.Where(w => w.UserId == val.SendUserId).LastOrDefault()?.UserIcon;
                     if (val.MessageType == (int)MessageType.Video)
                     {
-                        var msgBase = new VideoMessage
-                        {
-                            MessageId = val.MessageId,
-                            Text = val.Text,
-                            SendUserId = val.SendUserId,
-                            SendDateTime = val.SendDateTime,
-                            MediaUrl = val.MediaUrl,
-                            MessageType = val.MessageType,
-                            AlreadyReadCount = val.AlreadyReadCount,
-                            UserIcon = val.UserIcon
-                        };
+                        var msgBase = new VideoMessage(val);
                         messages.Add(msgBase);
                     }
                     else if (val.MessageType == (int)MessageType.Image)
                     {
-                        var msgBase = new ImageMessage
-                        {
-                            MessageId = val.MessageId,
-                            Text = val.Text,
-                            SendUserId = val.SendUserId,
-                            SendDateTime = val.SendDateTime,
-                            MediaUrl = val.MediaUrl,
-                            MessageType = val.MessageType,
-                            AlreadyReadCount = val.AlreadyReadCount,
-                            UserIcon = val.UserIcon
-                        };
+                        var msgBase = new ImageMessage(val);
                         messages.Add(msgBase);
                     }
                     else
@@ -164,32 +144,12 @@ namespace ChatSample
 
                     if (msg.MessageType == (int)MessageType.Video)
                     {
-                        var msgBase = new VideoMessage
-                        {
-                            MessageId = msg.MessageId,
-                            Text = msg.Text,
-                            SendUserId = msg.SendUserId,
-                            SendDateTime = msg.SendDateTime,
-                            MediaUrl = msg.MediaUrl,
-                            MessageType = msg.MessageType,
-                            AlreadyReadCount = msg.AlreadyReadCount,
-                            UserIcon = msg.UserIcon
-                        };
+                        var msgBase = new VideoMessage(msg);
                         messageBases.Add(msgBase);
                     }
                     else if (msg.MessageType == (int)MessageType.Image)
                     {
-                        var msgBase = new ImageMessage
-                        {
-                            MessageId = msg.MessageId,
-                            Text = msg.Text,
-                            SendUserId = msg.SendUserId,
-                            SendDateTime = msg.SendDateTime,
-                            MediaUrl = msg.MediaUrl,
-                            MessageType = msg.MessageType,
-                            AlreadyReadCount = msg.AlreadyReadCount,
-                            UserIcon = msg.UserIcon
-                        };
+                        var msgBase = new ImageMessage(msg);
                         messageBases.Add(msgBase);
                     }
                     else
@@ -224,7 +184,18 @@ namespace ChatSample
             {
                 var messageBase = new MessageBase(item);
                 messageBase.NotSendId = item.Id;
-                messageBases.Add(messageBase);
+                if (messageBase.MessageType == (int)MessageType.Video)
+                {
+                    var msgBase = new VideoMessage(messageBase);
+                    messageBases.Add(msgBase);
+                }
+                else if (messageBase.MessageType == (int)MessageType.Image)
+                {
+                    var msgBase = new ImageMessage(messageBase);
+                    messageBases.Add(msgBase);
+                }
+                else
+                    messageBases.Add(messageBase);
             }
         }
 
