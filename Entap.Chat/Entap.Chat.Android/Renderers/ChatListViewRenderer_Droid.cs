@@ -35,7 +35,7 @@ namespace Entap.Chat.Android
         {
             var _ChatListView = Element as ChatListView;
 
-            if (_ChatListView.Messages is null)
+            if (_ChatListView.Messages is null || _ChatListView.Messages.Count < 1)
                 return;
 
             
