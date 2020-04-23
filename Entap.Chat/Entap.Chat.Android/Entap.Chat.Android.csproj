@@ -53,6 +53,7 @@
     <Compile Include="Renderers\DynamicResizedEditorRenderer_Droid.cs" />
     <Compile Include="Renderers\CustomContentViewRenderer_Droid.cs" />
     <Compile Include="DependencyService\VideoService_Droid.cs" />
+    <Compile Include="DependencyService\ImageService_Droid.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -150,7 +150,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="local:MessageBase">
+            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="local:ImageMessage">
                 <ViewCell
                     x:Name="Cell">
                     <StackLayout
@@ -226,7 +226,7 @@
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     Aspect="AspectFit"
-                                    Source="{Binding MediaUrl}"/>
+                                    Source="{Binding Thumbnail}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -250,7 +250,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersImageMessageTemplate" x:DataType="local:MessageBase">
+            <DataTemplate x:Key="othersImageMessageTemplate" x:DataType="local:ImageMessage">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -305,7 +305,7 @@
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     Aspect="AspectFit"
-                                    Source="{Binding MediaUrl}"/>
+                                    Source="{Binding Thumbnail}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -339,7 +339,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="myVideoMessageTemplate" x:DataType="local:MessageBase">
+            <DataTemplate x:Key="myVideoMessageTemplate" x:DataType="local:VideoMessage">
                 <ViewCell
                     x:Name="Cell">
                     <StackLayout
@@ -418,7 +418,7 @@
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
-                                        Source="{Binding MediaUrl, Converter={StaticResource videoThumbnailConverter}}"/>
+                                        Source="{Binding Thumbnail}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
@@ -448,7 +448,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersVideoMessageTemplate" x:DataType="local:MessageBase">
+            <DataTemplate x:Key="othersVideoMessageTemplate" x:DataType="local:VideoMessage">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -505,7 +505,7 @@
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
-                                        Source="{Binding MediaUrl, Converter={StaticResource videoThumbnailConverter}}"/>
+                                        Source="{Binding Thumbnail}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"

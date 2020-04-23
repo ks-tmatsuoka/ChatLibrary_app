@@ -10,7 +10,15 @@ namespace Entap.Chat
     /// </summary>
     public class MessageBase : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
         public MessageBase()
         {
         }
@@ -43,7 +51,7 @@ namespace Entap.Chat
                 if (sendDateTime != value)
                 {
                     sendDateTime = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("SendDateTime"));
+                    OnPropertyChanged("SendDateTime");
                 }
             }
         }
@@ -69,7 +77,7 @@ namespace Entap.Chat
                 if (alreadyReadCount != value)
                 {
                     alreadyReadCount = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("AlreadyReadCount"));
+                    OnPropertyChanged("AlreadyReadCount");
                 }
             }
         }
@@ -86,7 +94,7 @@ namespace Entap.Chat
                 if (resendVisible != value)
                 {
                     resendVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("ResendVisible"));
+                    OnPropertyChanged("ResendVisible");
                 }
             }
         }
@@ -105,7 +113,7 @@ namespace Entap.Chat
                 if (dateVisible != value)
                 {
                     dateVisible = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("DateVisible"));
+                    OnPropertyChanged("DateVisible");
                 }
             }
         }

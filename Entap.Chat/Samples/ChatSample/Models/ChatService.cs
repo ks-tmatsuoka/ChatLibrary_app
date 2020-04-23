@@ -55,7 +55,38 @@ namespace ChatSample
                     //msgBase.AlreadyReadCount = 0;
 
                     val.UserIcon = members.Where(w => w.UserId == val.SendUserId).LastOrDefault()?.UserIcon;
-                    messages.Add(val);
+                    if (val.MessageType == (int)MessageType.Video)
+                    {
+                        var msgBase = new VideoMessage
+                        {
+                            MessageId = val.MessageId,
+                            Text = val.Text,
+                            SendUserId = val.SendUserId,
+                            SendDateTime = val.SendDateTime,
+                            MediaUrl = val.MediaUrl,
+                            MessageType = val.MessageType,
+                            AlreadyReadCount = val.AlreadyReadCount,
+                            UserIcon = val.UserIcon
+                        };
+                        messages.Add(msgBase);
+                    }
+                    else if (val.MessageType == (int)MessageType.Image)
+                    {
+                        var msgBase = new ImageMessage
+                        {
+                            MessageId = val.MessageId,
+                            Text = val.Text,
+                            SendUserId = val.SendUserId,
+                            SendDateTime = val.SendDateTime,
+                            MediaUrl = val.MediaUrl,
+                            MessageType = val.MessageType,
+                            AlreadyReadCount = val.AlreadyReadCount,
+                            UserIcon = val.UserIcon
+                        };
+                        messages.Add(msgBase);
+                    }
+                    else
+                        messages.Add(val);
                 }
             }
             else
@@ -139,7 +170,38 @@ namespace ChatSample
                     if (msg.SendUserId == GetUserId())
                         return;
                     msg.UserIcon = members.Where(w => w.UserId == msg.SendUserId)?.LastOrDefault()?.UserIcon;
-                    messageBases.Add(msg);
+                    if (msg.MessageType == (int)MessageType.Video)
+                    {
+                        var msgBase = new VideoMessage
+                        {
+                            MessageId = msg.MessageId,
+                            Text = msg.Text,
+                            SendUserId = msg.SendUserId,
+                            SendDateTime = msg.SendDateTime,
+                            MediaUrl = msg.MediaUrl,
+                            MessageType = msg.MessageType,
+                            AlreadyReadCount = msg.AlreadyReadCount,
+                            UserIcon = msg.UserIcon
+                        };
+                        messageBases.Add(msgBase);
+                    }
+                    else if (msg.MessageType == (int)MessageType.Image)
+                    {
+                        var msgBase = new ImageMessage
+                        {
+                            MessageId = msg.MessageId,
+                            Text = msg.Text,
+                            SendUserId = msg.SendUserId,
+                            SendDateTime = msg.SendDateTime,
+                            MediaUrl = msg.MediaUrl,
+                            MessageType = msg.MessageType,
+                            AlreadyReadCount = msg.AlreadyReadCount,
+                            UserIcon = msg.UserIcon
+                        };
+                        messageBases.Add(msgBase);
+                    }
+                    else
+                        messageBases.Add(msg);
                 }
                 if (!string.IsNullOrEmpty(data.AlreadyReadInfomation))
                 {
