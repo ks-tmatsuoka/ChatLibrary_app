@@ -14,7 +14,7 @@ namespace ChatSample
         public static async Task VideoShare(string videoPath)
         {
             var mediaFolderPath = DependencyService.Get<IFileService>().GetMediaFolderPath();
-            string filePath = mediaFolderPath + "/temp.mp4";
+            string filePath = mediaFolderPath + "/videofile.mp4";
 
             await OpenShareMenu(videoPath, filePath);
         }
@@ -26,15 +26,15 @@ namespace ChatSample
             string filePath = mediaFolderPath;
             if (extension.ToLower() == ".jpeg" || extension.ToLower() == ".jpg")
             {
-                filePath += "/temp.jpeg";
+                filePath += "/imgfile.jpeg";
             }
             else if (extension.ToLower() == ".png")
             {
-                filePath += "/temp.png";
+                filePath += "/imgfile.png";
             }
             else if (extension.ToLower() == ".pdf")
             {
-                filePath += "/temp.pdf";
+                filePath += "/imgfile.pdf";
             }
             else
             {
