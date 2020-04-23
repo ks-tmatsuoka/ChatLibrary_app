@@ -153,7 +153,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="chat:MessageBase">
+            <DataTemplate x:Key="myImageMessageTemplate" x:DataType="chat:ImageMessage">
                 <ViewCell
                     x:Name="Cell">
                     <StackLayout
@@ -229,7 +229,7 @@
                                     WidthRequest="100"
                                     HeightRequest="100"
                                     Aspect="AspectFit"
-                                    Source="{Binding MediaUrl}"/>
+                                    Source="{Binding Thumbnail}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -253,7 +253,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersImageMessageTemplate" x:DataType="chat:MessageBase">
+            <DataTemplate x:Key="othersImageMessageTemplate" x:DataType="chat:ImageMessage">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -308,7 +308,7 @@
                                     WidthRequest="100"
                                     HeightRequest="100"
                                     Aspect="AspectFit"
-                                    Source="{Binding MediaUrl}"/>
+                                    Source="{Binding Thumbnail}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"

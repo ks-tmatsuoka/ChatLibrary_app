@@ -229,13 +229,13 @@ namespace ChatSample
             catch (Exception ex)
             {
                 Debug.WriteLine("API_PostError : " + ex.Message);
-                if (showError)
-                {
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        App.Current.MainPage.DisplayAlert("エラー", "Exception:" + ex.Message, "閉じる");
-                    });
-                }
+                //if (showError)
+                //{
+                //    Device.BeginInvokeOnMainThread(() =>
+                //    {
+                //        App.Current.MainPage.DisplayAlert("エラー", "Exception:" + ex.Message, "閉じる");
+                //    });
+                //}
                 return "{\"Status\":" + APIStatus.Exception + ",\"Message\": \"" + ex.Message.Replace("\"", " ").Replace(":", " ") + "\",\"Data\": {}}";
             }
         }

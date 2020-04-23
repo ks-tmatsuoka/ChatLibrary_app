@@ -605,7 +605,6 @@
             <local:TimeConverter x:Key="timeConverter"/>
             <local:DateConverter x:Key="dateConverter"/>
             <local:BoolReverseConverter x:Key="boolReverseConverter"/>
-            <local:VideoThumbnailConverter x:Key="videoThumbnailConverter"/>
         </ResourceDictionary>
     </local:CustomContentView.Resources>
 

@@ -40,20 +40,8 @@ namespace ChatSample
             {
                 foreach (var val in resp.Data.MessageList)
                 {
-                    //var msgBase = new MessageBase
-                    //{
-                    //    MessageId = val.MessageId,
-                    //    Text = val.Text,
-                    //    SendUserId = val.SendUserId,
-                    //    SendDateTime = val.SendDateTime,
-                    //    MediaUrl = val.MediaUrl,
-                    //    MessageType = val.MessageType,
-                    //    AlreadyReadCount = val.AlreadyReadCount,
-                    //    UserIcon = members.Where(w => w.UserId == val.SendUserId).LastOrDefault()?.UserIcon
-                    //};
                     // もし既読の表示をつけたくない時はここで0を強制的に入れる
-                    //msgBase.AlreadyReadCount = 0;
-
+                    //val.AlreadyReadCount = 0;
                     val.UserIcon = members.Where(w => w.UserId == val.SendUserId).LastOrDefault()?.UserIcon;
                     if (val.MessageType == (int)MessageType.Video)
                     {
@@ -169,7 +157,11 @@ namespace ChatSample
                     var msg = JsonConvert.DeserializeObject<MessageBase>(data.Message);
                     if (msg.SendUserId == GetUserId())
                         return;
+
+                    // もし既読の表示をつけたくない時はここで0を強制的に入れる
+                    //msg.AlreadyReadCount = 0;
                     msg.UserIcon = members.Where(w => w.UserId == msg.SendUserId)?.LastOrDefault()?.UserIcon;
+
                     if (msg.MessageType == (int)MessageType.Video)
                     {
                         var msgBase = new VideoMessage
