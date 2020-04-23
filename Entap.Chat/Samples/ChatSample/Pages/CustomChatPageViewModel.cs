@@ -193,13 +193,14 @@ namespace ChatSample
                 string delImgExtension = System.IO.Path.GetExtension(delImgPath);
                 var target = ItemsSource[index];
                 target.ResendVisible = true;
-                var sendErrorImgPath = Settings.Current.ChatControlService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + delImgExtension;
+                var fileName = Guid.NewGuid() + delImgExtension;
+                var sendErrorImgPath = Settings.Current.ChatService.GetNotSendMediaSaveFolderPath() + fileName;
                 FileManager.FileCopy(delImgPath, sendErrorImgPath);
                 target.MediaUrl = sendErrorImgPath;
                 FileManager.FileDelete(delImgPath);
                 if (target.NotSendId < 1)
                 {
-                    Settings.Current.ChatService.SaveNotSendMessageData(RoomId, target);
+                    Settings.Current.ChatService.SaveNotSendMessageData(RoomId, target, fileName);
                 }
             }
             else

@@ -156,16 +156,6 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// 送信できなかった画像を保存するフォルダのパスを取得
-        /// </summary>
-        /// <returns></returns>
-        public string GetNotSendImageSaveFolderPath()
-        {
-            var path = FileManager.GetContentsPath(FileManager.AppDataFolders.NotSendImage) + "/";
-            return path;
-        }
-
-        /// <summary>
         /// 画像のプレビューページへ遷移
         /// </summary>
         /// <param name="imageUrl"></param>

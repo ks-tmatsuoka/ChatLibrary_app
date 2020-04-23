@@ -506,11 +506,11 @@ namespace Entap.Chat
         /// 未送信メッセージをストレージに保存
         /// </summary>
         /// <param name="messageBase"></param>
-        public void NotSendMessageSaveInStorage(MessageBase messageBase)
+        public void NotSendMessageSaveInStorage(MessageBase messageBase, string fileName="")
         {
             if (messageBase.NotSendId < 1)
             {
-                Settings.Current.ChatService.SaveNotSendMessageData(RoomId, messageBase);
+                Settings.Current.ChatService.SaveNotSendMessageData(RoomId, messageBase, fileName);
             }
         }
 

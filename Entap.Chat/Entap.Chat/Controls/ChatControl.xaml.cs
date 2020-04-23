@@ -213,11 +213,12 @@ namespace Entap.Chat
                 var delMediaPath = msg.MediaUrl;
                 string extension = System.IO.Path.GetExtension(delMediaPath);
                 ChatList.Messages[index].ResendVisible = true;
-                var sendErrorImgPath = Settings.Current.ChatControlService.GetNotSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                var fileName = Guid.NewGuid() + extension;
+                var sendErrorImgPath = Settings.Current.ChatService.GetNotSendMediaSaveFolderPath() + fileName;
                 FileManager.FileCopy(delMediaPath, sendErrorImgPath);
                 ChatList.Messages[index].MediaUrl = sendErrorImgPath;
                 FileManager.FileDelete(delMediaPath);
-                ChatList.NotSendMessageSaveInStorage(ChatList.Messages[index]);
+                ChatList.NotSendMessageSaveInStorage(ChatList.Messages[index], fileName);
             }
             else
             {

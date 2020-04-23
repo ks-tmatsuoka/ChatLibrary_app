@@ -182,6 +182,10 @@ namespace ChatSample
             var items = new NotSendMessageManager().GetItems(roomId);
             foreach (var item in items)
             {
+                if (item.MessageType == (int)MessageType.Video || item.MessageType == (int)MessageType.Image)
+                {
+                    item.MediaUrl = GetNotSendMediaSaveFolderPath() + item.FileName;
+                }
                 var messageBase = new MessageBase(item);
                 messageBase.NotSendId = item.Id;
                 if (messageBase.MessageType == (int)MessageType.Video)
@@ -205,10 +209,10 @@ namespace ChatSample
         /// <param name="roomId"></param>
         /// <param name="messageBase"></param>
         /// <returns></returns>
-        public void SaveNotSendMessageData(int roomId, MessageBase messageBase)
+        public void SaveNotSendMessageData(int roomId, MessageBase messageBase, string fileName)
         {
             var mg = new NotSendMessageManager();
-            var notSendMessage = new NotSendMessage(roomId, messageBase);
+            var notSendMessage = new NotSendMessage(roomId, messageBase, fileName);
             var id = mg.SaveItem(notSendMessage);
             // sqliteのデータととチャットのメッセージデータの紐付け
             messageBase.NotSendId = id;
@@ -253,6 +257,16 @@ namespace ChatSample
         public string GetSendVideoSaveFolderPath()
         {
             var path = FileManager.GetContentsPath(FileManager.AppDataFolders.SendVideo) + "/";
+            return path;
+        }
+
+        /// <summary>
+        /// 送信できなかった画像を保存するフォルダのパスを取得
+        /// </summary>
+        /// <returns></returns>
+        public string GetNotSendMediaSaveFolderPath()
+        {
+            var path = FileManager.GetContentsPath(FileManager.AppDataFolders.NotSendMedia) + "/";
             return path;
         }
     }

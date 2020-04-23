@@ -11,7 +11,7 @@ namespace Entap.Chat
         public NotSendMessage()
         {
         }
-        public NotSendMessage(int roomId,MessageBase messageBase)
+        public NotSendMessage(int roomId,MessageBase messageBase, string fileName)
         {
             MessageId = messageBase.MessageId;
             SendDateTime = messageBase.SendDateTime;
@@ -23,9 +23,11 @@ namespace Entap.Chat
             AlreadyReadCount = 0;
             ResendVisible = true;
             RoomId = roomId;
+            FileName = fileName;
         }
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public int RoomId { get; set; }
+        public string FileName { get; set; }
     }
 }

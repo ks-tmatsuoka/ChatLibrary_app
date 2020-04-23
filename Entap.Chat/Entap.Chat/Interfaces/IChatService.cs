@@ -15,10 +15,11 @@ namespace Entap.Chat
         void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId, List<ChatMemberBase> members);
         void Dispose();
         void AddNotSendMessages(int roomId, ObservableCollection<MessageBase> messageBases);
-        void SaveNotSendMessageData(int roomId, MessageBase messageBase);
+        void SaveNotSendMessageData(int roomId, MessageBase messageBase, string fileName="");
         void DeleteNotSendMessageData(int id);
         string GetUserId();
         string GetSendImageSaveFolderPath();
         string GetSendVideoSaveFolderPath();
+        string GetNotSendMediaSaveFolderPath();
     }
 }
