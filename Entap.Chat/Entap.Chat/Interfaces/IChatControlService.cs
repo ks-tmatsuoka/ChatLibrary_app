@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace Entap.Chat
 {
+    [Preserve(AllMembers = true)]
     public interface IChatControlService
     {
         Task<SendMessageResponseBase> SendMessage(int roomId, MessageBase msg, int notSendMessageId);

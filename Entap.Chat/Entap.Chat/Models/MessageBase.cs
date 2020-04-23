@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using Xamarin.Forms.Internals;
 
 namespace Entap.Chat
 {
+    [Preserve(AllMembers = true)]
     /// <summary>
     /// メッセージ
     /// </summary>

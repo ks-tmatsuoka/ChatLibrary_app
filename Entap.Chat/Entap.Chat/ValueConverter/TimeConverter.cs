@@ -2,9 +2,11 @@
 using System.Globalization;
 using System.Net.Http.Headers;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace Entap.Chat
 {
+    [Preserve(AllMembers = true)]
     public class TimeConverter : IValueConverter
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)

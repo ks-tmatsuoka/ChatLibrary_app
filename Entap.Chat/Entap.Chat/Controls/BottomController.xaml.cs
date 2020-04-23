@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace Entap.Chat
 {
+    [Preserve(AllMembers = true)]
     public partial class BottomController : ContentView
     {
         public BottomController()

@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Linq;
 using Entap.Chat.Modules;
+using Xamarin.Forms.Internals;
 
 namespace Entap.Chat
 {
+    [Preserve(AllMembers = true)]
     public partial class ChatControl : CustomContentView
     {
         public ChatControl()

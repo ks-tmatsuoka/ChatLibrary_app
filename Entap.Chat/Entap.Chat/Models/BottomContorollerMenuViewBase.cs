@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace Entap.Chat
 {
+    [Preserve(AllMembers = true)]
     public class BottomContorollerMenuViewBase : ContentView
     {
         public BottomContorollerMenuViewBase()
