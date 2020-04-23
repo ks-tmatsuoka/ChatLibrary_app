@@ -194,7 +194,7 @@ namespace Entap.Chat
             });
         });
 
-        async Task ResendImg(MessageBase msg)
+        async Task ResendMedia(MessageBase msg)
         {
             var oldMsgIndex = ChatList.Messages.IndexOf(msg);
             ChatList.Messages.RemoveAt(oldMsgIndex);
@@ -290,9 +290,9 @@ namespace Entap.Chat
                     {
                         await SendMessage(msg);
                     }
-                    else if (msg.MessageType == (int)MessageType.Image)
+                    else if (msg.MessageType == (int)MessageType.Image || msg.MessageType == (int)MessageType.Video)
                     {
-                        await ResendImg(msg);
+                        await ResendMedia(msg);
                     }
                 }
                 else if (result.Equals(button[1]))

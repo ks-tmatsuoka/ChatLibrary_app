@@ -410,12 +410,21 @@
                                 CornerRadius="8"
                                 BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
                                 Padding="0">
-                                <Image
+                                <AbsoluteLayout
                                     Margin="6"
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                    Aspect="AspectFit"
-                                    Source="{Binding MediaUrl, Converter={StaticResource videoThumbnailConverter}}"/>
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}">
+                                    <Image
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Aspect="AspectFit"
+                                        Source="{Binding MediaUrl, Converter={StaticResource videoThumbnailConverter}}"/>
+                                    <Image
+                                        BackgroundColor="Transparent"
+                                        AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Source="start_icon.png"/>
+                                </AbsoluteLayout>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -488,13 +497,21 @@
                                 CornerRadius="8"
                                 BackgroundColor="{Binding Source={x:Reference Content}, Path=OtherMessageViewBackgroundColor}"
                                 Padding="0">
-                                <Image
+                                <AbsoluteLayout
                                     Margin="6"
-                                    BackgroundColor="Transparent"
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                    Aspect="AspectFit"
-                                    Source="{Binding MediaUrl, Converter={StaticResource videoThumbnailConverter}}"/>
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}">
+                                    <Image
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Aspect="AspectFit"
+                                        Source="{Binding MediaUrl, Converter={StaticResource videoThumbnailConverter}}"/>
+                                    <Image
+                                        BackgroundColor="Transparent"
+                                        AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Source="start_icon.png"/>
+                                </AbsoluteLayout>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
