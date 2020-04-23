@@ -10,10 +10,13 @@ namespace Entap.Chat
     {
         public ImageMessage()
         {
+            PropertyChanged += ImageMessagePropertyChanged;
+            CreateThumbnail();
         }
 
         public ImageMessage(MessageBase messageBase)
         {
+            PropertyChanged += ImageMessagePropertyChanged;
             MessageId = messageBase.MessageId;
             SendDateTime = messageBase.SendDateTime;
             Text = messageBase.Text;
@@ -25,29 +28,29 @@ namespace Entap.Chat
             ResendVisible = messageBase.ResendVisible;
             NotSendId = messageBase.NotSendId;
             DateVisible = messageBase.DateVisible;
+
+            CreateThumbnail();
         }
 
-        private string mediaUrl;
-        public string MediaUrl
+        private void ImageMessagePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            get
+            if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(MediaUrl))
             {
-                return mediaUrl;
+                CreateThumbnail();
             }
-            set
+        }
+
+        void CreateThumbnail()
+        {
+            if (!string.IsNullOrEmpty(MediaUrl))
             {
-                if (mediaUrl != value)
+                Task.Run(() =>
                 {
-                    mediaUrl = value;
-                    Task.Run(() =>
-                    {
-                        // サイズを落とした画像をサムネイルとして表示
-                        // ValueConverterだとTaskで処理できないのでここで処理している
-                        var source = DependencyService.Get<IImageService>().DownSizeImage(mediaUrl);
-                        Thumbnail = source;
-                    });
-                    OnPropertyChanged("MediaUrl");
-                }
+                    // サイズを落とした画像をサムネイルとして表示
+                    // ValueConverterだとTaskで処理できないのでここで処理している
+                    //var source = DependencyService.Get<IImageService>().DownSizeImage(MediaUrl);
+                    Thumbnail = MediaUrl;
+                });
             }
         }
 

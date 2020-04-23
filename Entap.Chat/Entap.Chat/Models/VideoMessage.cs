@@ -11,9 +11,14 @@ namespace Entap.Chat
     {
         public VideoMessage()
         {
+            PropertyChanged += VideoMessagePropertyChanged;
+            CreateThumbnail();
         }
+
         public VideoMessage(MessageBase messageBase)
         {
+            PropertyChanged += VideoMessagePropertyChanged;
+
             MessageId = messageBase.MessageId;
             SendDateTime = messageBase.SendDateTime;
             Text = messageBase.Text;
@@ -25,29 +30,29 @@ namespace Entap.Chat
             ResendVisible = messageBase.ResendVisible;
             NotSendId = messageBase.NotSendId;
             DateVisible = messageBase.DateVisible;
+
+            CreateThumbnail();
         }
 
-        private string mediaUrl;
-        public string MediaUrl
+        private void VideoMessagePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            get
+            if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(MediaUrl))
             {
-                return mediaUrl;
+                CreateThumbnail();
             }
-            set
+        }
+
+        void CreateThumbnail()
+        {
+            if (!string.IsNullOrEmpty(MediaUrl))
             {
-                if (mediaUrl != value)
+                Task.Run(() =>
                 {
-                    mediaUrl = value;
-                    Task.Run(() =>
-                    {
-                        // サムネイルを生成
-                        // ValueConverterだとTaskで処理できないのでここで処理している
-                        var source = DependencyService.Get<IVideoService>().GenerateThumbImage(mediaUrl);
-                        Thumbnail = source;
-                    });
-                    OnPropertyChanged("MediaUrl");
-                }
+                    // サムネイルを生成
+                    // ValueConverterだとTaskで処理できないのでここで処理している
+                    var source = DependencyService.Get<IVideoService>().GenerateThumbImage(MediaUrl);
+                    Thumbnail = source;
+                });
             }
         }
 

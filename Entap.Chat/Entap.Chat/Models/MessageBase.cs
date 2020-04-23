@@ -57,7 +57,25 @@ namespace Entap.Chat
         }
 
         public string Text { get; set; }
-        public string MediaUrl { get; set; }
+
+        //public string MediaUrl { get; set; }
+        private string mediaUrl;
+        public string MediaUrl
+        {
+            get
+            {
+                return mediaUrl;
+            }
+            set
+            {
+                if (mediaUrl != value)
+                {
+                    mediaUrl = value;
+                    OnPropertyChanged("MediaUrl");
+                }
+            }
+        }
+
         public string UserIcon { get; set; }
         /// <summary>
         /// 1:テキスト, 2:画像, 3:動画

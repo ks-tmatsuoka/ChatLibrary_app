@@ -219,7 +219,7 @@ namespace ChatSample
                         });
                         return await Task.FromResult<IEnumerable<MessageBase>>(null);
                     }
-                    var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+                    var msg = new ImageMessage { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
                     return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
                 }
                 else if (selected == VideoStr)
@@ -246,7 +246,7 @@ namespace ChatSample
                     }
                     if (result)
                     {
-                        var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Video, SendUserId = Settings.Current.ChatService.GetUserId() };
+                        var msg = new VideoMessage { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Video, SendUserId = Settings.Current.ChatService.GetUserId() };
                         return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
                     }
                     return await Task.FromResult<IEnumerable<MessageBase>>(null);
@@ -277,7 +277,7 @@ namespace ChatSample
                         });
                         return await Task.FromResult<IEnumerable<MessageBase>>(null);
                     }
-                    var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+                    var msg = new ImageMessage { MessageId = notSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
                     return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
                 }
                 else if (selected == VideoStr)
@@ -304,7 +304,7 @@ namespace ChatSample
                     }
                     if (result)
                     {
-                        var msg = new MessageBase { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Video, SendUserId = Settings.Current.ChatService.GetUserId() };
+                        var msg = new VideoMessage { MessageId = notSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Video, SendUserId = Settings.Current.ChatService.GetUserId() };
                         return await Task.FromResult<IEnumerable<MessageBase>>(new List<MessageBase> { msg });
                     }
                     return await Task.FromResult<IEnumerable<MessageBase>>(null);
