@@ -19,7 +19,6 @@
     <Folder Include="Extensions\" />
     <Folder Include="Constants\" />
     <Folder Include="Modules\" />
-    <Folder Include="Behavior\" />
     <Folder Include="ValueConverter\" />
   </ItemGroup>
   <ItemGroup>
