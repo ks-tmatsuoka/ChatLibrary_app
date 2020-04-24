@@ -22,12 +22,4 @@
     <Folder Include="Modules\" />
     <Folder Include="ValueConverter\" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Controls\_ChatControl.xaml.cs">
-      <DependentUpon>_ChatControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Controls\ChatControl.xaml.cs">
-      <DependentUpon>ChatControl.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
 </Project>

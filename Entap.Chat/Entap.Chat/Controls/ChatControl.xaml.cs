@@ -146,7 +146,7 @@ namespace Entap.Chat
             }
             ChatList.AddMessage(msg);
 
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId ,msg, ChatListView.NotSendMessageId);
+            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
@@ -185,7 +185,7 @@ namespace Entap.Chat
                     return;
                 if (pm == (int)BottomControllerMenuType.Camera || pm == (int)BottomControllerMenuType.Library)
                 {
-                    foreach(var msgBase in msgBases)
+                    foreach (var msgBase in msgBases)
                     {
                         if (msgBase.MessageType == (int)MessageType.Image || msgBase.MessageType == (int)MessageType.Video)
                             await ChatAddMedia(msgBase);
@@ -205,7 +205,7 @@ namespace Entap.Chat
         async Task ChatAddMedia(MessageBase msg)
         {
             ChatList.AddMessage(msg);
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId ,msg, ChatListView.NotSendMessageId);
+            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
@@ -258,7 +258,7 @@ namespace Entap.Chat
                 await Settings.Current.ChatControlService.VideoShare(path);
             });
         });
-        
+
         public Command VideoTapCommand => new Command((pm) =>
         {
             ProcessManager.Current.Invoke(nameof(VideoTapCommand), async () =>

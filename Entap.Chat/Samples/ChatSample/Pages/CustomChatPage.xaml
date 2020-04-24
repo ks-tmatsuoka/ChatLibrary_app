@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ChatSample"
     xmlns:chat="clr-namespace:Entap.Chat;assembly=Entap.Chat"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     x:Class="ChatSample.CustomChatPage">
     <ContentPage.BindingContext>
         <local:CustomChatPageViewModel
@@ -124,11 +125,12 @@
                                 BorderColor="Transparent"
                                 IsClippedToBounds="True"
                                 Padding="0">
-                                <Image
+                                <ffimageloading:CachedImage
                                     WidthRequest="30"
                                     HeightRequest="30"
                                     Source="{Binding UserIcon}"
                                     Aspect="AspectFill"
+                                    DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
                             <Frame
@@ -224,11 +226,12 @@
                                 CornerRadius="8"
                                 BackgroundColor="LightPink"
                                 Padding="0">
-                                <Image
+                                <ffimageloading:CachedImage
                                     Margin="6"
                                     WidthRequest="100"
                                     HeightRequest="100"
                                     Aspect="AspectFit"
+                                    DownsampleUseDipUnits="True"
                                     Source="{Binding Thumbnail}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -289,11 +292,12 @@
                                 BorderColor="Transparent"
                                 IsClippedToBounds="True"
                                 Padding="0">
-                                <Image
+                                <ffimageloading:CachedImage
                                     WidthRequest="30"
                                     HeightRequest="30"
                                     Aspect="AspectFill"
                                     Source="{Binding UserIcon}"
+                                    DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
                             <Frame
@@ -302,12 +306,13 @@
                                 CornerRadius="8"
                                 BackgroundColor="Aqua"
                                 Padding="0">
-                                <Image
+                                <ffimageloading:CachedImage
                                     Margin="6"
                                     BackgroundColor="Transparent"
                                     WidthRequest="100"
                                     HeightRequest="100"
                                     Aspect="AspectFit"
+                                    DownsampleUseDipUnits="True"
                                     Source="{Binding Thumbnail}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -327,6 +332,215 @@
                                     Source="share_icon.png"
                                     CommandParameter="{Binding MediaUrl}"
                                     Command="{Binding Source={x:Reference ViewModel}, Path=ImageShareCommand}"/>
+                                <StackLayout
+                                    HorizontalOptions="StartAndExpand"
+                                    VerticalOptions="End"
+                                    Spacing="0">
+                                    <Label
+                                        FontSize="10"/>
+                                    <Label
+                                        Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
+                                        FontSize="10"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="myVideoMessageTemplate" x:DataType="chat:VideoMessage">
+                <ViewCell
+                    x:Name="Cell">
+                    <StackLayout
+                        Spacing="0"
+                        Margin="16,6,16,6"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Transparent">
+                        <Frame
+                            Margin="10"
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Fill"
+                            HasShadow="False"
+                            CornerRadius="10"
+                            IsVisible="{Binding DateVisible}"
+                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBackgroundColor}"
+                            Padding="0">
+                            <Label
+                                Margin="12,2"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"
+                                TextColor="{Binding Source={x:Reference ViewModel}, Path=DateTextColor}"
+                                Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
+                                FontSize="14"/>
+                        </Frame>
+                        <StackLayout
+                            Spacing="0"
+                            BackgroundColor="Transparent"
+                            Orientation="Horizontal">
+                            <StackLayout
+                                HorizontalOptions="EndAndExpand"
+                                Spacing="0"
+                                Margin="0,0,6,0">
+                                <ImageButton
+                                    HorizontalOptions="EndAndExpand"
+                                    VerticalOptions="CenterAndExpand"
+                                    BackgroundColor="Transparent"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    Source="share_icon.png"
+                                    Aspect="AspectFit"
+                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
+                                    CommandParameter="{Binding MediaUrl}"
+                                    Command="{Binding Source={x:Reference ViewModel}, Path=VideoShareCommand}"/>
+                                <StackLayout
+                                    HorizontalOptions="EndAndExpand"
+                                    VerticalOptions="End"
+                                    Spacing="0"
+                                    Margin="0,0,6,0"
+                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}">
+                                    <Label
+                                        FontSize="10">
+                                        <Label.Text>
+                                            <Binding Path="AlreadyReadCount">
+                                                <Binding.Converter>
+                                                    <chat:AlreadyReadConverter RoomType="{Binding Source={x:Reference ViewModel}, Path=RoomType}"/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Label.Text>
+                                    </Label>
+                                    <Label
+                                        Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
+                                        FontSize="10"/>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <Frame
+                                HasShadow="False"
+                                CornerRadius="8"
+                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=MyMessageViewBackgroundColor}"
+                                Padding="0">
+                                <AbsoluteLayout
+                                    Margin="6"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}">
+                                    <ffimageloading:CachedImage
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Aspect="AspectFit"
+                                        DownsampleUseDipUnits="True"
+                                        Source="{Binding Thumbnail}"/>
+                                    <Image
+                                        BackgroundColor="Transparent"
+                                        AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Source="start_icon.png"/>
+                                </AbsoluteLayout>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        CommandParameter="{Binding MediaUrl}"
+                                        Command="{Binding Source={x:Reference ViewModel}, Path=VideoTapCommand}"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+
+                            <ImageButton
+                                IsVisible="{Binding ResendVisible}"
+                                Margin="6,0,0,0"
+                                HorizontalOptions="End"
+                                VerticalOptions="CenterAndExpand"
+                                BackgroundColor="Transparent"
+                                WidthRequest="25"
+                                HeightRequest="25"
+                                Source="resend_icon.png"
+                                Aspect="AspectFit"
+                                CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
+                                Command="{Binding Source={x:Reference ViewModel}, Path=ResendCommand}"/>
+                        </StackLayout>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="othersVideoMessageTemplate" x:DataType="chat:VideoMessage">
+                <ViewCell>
+                    <StackLayout
+                        Spacing="0"
+                        Margin="16,6,16,6"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Transparent">
+                        <Frame
+                            Margin="10"
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Fill"
+                            HasShadow="False"
+                            CornerRadius="10"
+                            IsVisible="{Binding DateVisible}"
+                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBackgroundColor}"
+                            Padding="0">
+                            <Label
+                                Margin="12,2"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"
+                                TextColor="{Binding Source={x:Reference ViewModel}, Path=DateTextColor}"
+                                Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
+                                FontSize="14"/>
+                        </Frame>
+                        <StackLayout
+                            Spacing="0"
+                            BackgroundColor="Transparent"
+                            Orientation="Horizontal">
+                            <Frame
+                                Margin="1"
+                                HasShadow="False"
+                                VerticalOptions="StartAndExpand"
+                                CornerRadius="14"
+                                BorderColor="Transparent"
+                                IsClippedToBounds="True"
+                                Padding="0">
+                                <ffimageloading:CachedImage
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    Aspect="AspectFill"
+                                    Source="{Binding UserIcon}"
+                                    DownsampleUseDipUnits="True"
+                                    VerticalOptions="StartAndExpand"/>
+                            </Frame>
+                            <Frame
+                                Margin="6,0,6,0"
+                                HasShadow="False"
+                                CornerRadius="8"
+                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=OtherMessageViewBackgroundColor}"
+                                Padding="0">
+                                <AbsoluteLayout
+                                    Margin="6"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}">
+                                    <ffimageloading:CachedImage
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Aspect="AspectFit"
+                                        DownsampleUseDipUnits="True"
+                                        Source="{Binding Thumbnail}"/>
+                                    <Image
+                                        BackgroundColor="Transparent"
+                                        AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Source="start_icon.png"/>
+                                </AbsoluteLayout>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        CommandParameter="{Binding MediaUrl}"
+                                        Command="{Binding Source={x:Reference ViewModel}, Path=VideoTapCommand}"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+                            <StackLayout
+                                HorizontalOptions="StartAndExpand"
+                                Spacing="0">
+                                <ImageButton
+                                    HorizontalOptions="StartAndExpand"
+                                    VerticalOptions="CenterAndExpand"
+                                    BackgroundColor="Transparent"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    Source="share_icon.png"
+                                    CommandParameter="{Binding MediaUrl}"
+                                    Command="{Binding Source={x:Reference ViewModel}, Path=VideoShareCommand}"/>
                                 <StackLayout
                                     HorizontalOptions="StartAndExpand"
                                     VerticalOptions="End"
@@ -395,6 +609,8 @@
                 OthersTextMessageTemplate="{StaticResource othersTextMessageTemplate}"
                 MyImageMessageTemplate="{StaticResource myImageMessageTemplate}"
                 OthersImageMessageTemplate="{StaticResource othersImageMessageTemplate}"
+                MyVideoMessageTemplate="{StaticResource myVideoMessageTemplate}"
+                OthersVideoMessageTemplate="{StaticResource othersVideoMessageTemplate}"
                 MemberInAndOutMessageTemplate="{StaticResource memberInAndOutMessageTemplate}"
             />
             <chat:TimeConverter x:Key="timeConverter"/>

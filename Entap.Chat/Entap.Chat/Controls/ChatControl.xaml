@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Entap.Chat"
     x:Class="Entap.Chat.ChatControl"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     x:Name="Content"
     BackgroundColor="Transparent">
     <local:CustomContentView.Resources>
@@ -121,11 +122,12 @@
                                 BorderColor="Transparent"
                                 IsClippedToBounds="True"
                                 Padding="0">
-                                <Image
+                                <ffimageloading:CachedImage
                                     WidthRequest="30"
                                     HeightRequest="30"
                                     Source="{Binding UserIcon}"
                                     Aspect="AspectFill"
+                                    DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
                             <Frame
@@ -221,11 +223,12 @@
                                 CornerRadius="8"
                                 BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
                                 Padding="0">
-                                <Image
+                                <ffimageloading:CachedImage
                                     Margin="6"
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     Aspect="AspectFit"
+                                    DownsampleUseDipUnits="True"
                                     Source="{Binding Thumbnail}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -286,11 +289,12 @@
                                 BorderColor="Transparent"
                                 IsClippedToBounds="True"
                                 Padding="0">
-                                <Image
+                                <ffimageloading:CachedImage
                                     WidthRequest="30"
                                     HeightRequest="30"
                                     Aspect="AspectFill"
                                     Source="{Binding UserIcon}"
+                                    DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
                             <Frame
@@ -299,12 +303,13 @@
                                 CornerRadius="8"
                                 BackgroundColor="{Binding Source={x:Reference Content}, Path=OtherMessageViewBackgroundColor}"
                                 Padding="0">
-                                <Image
+                                <ffimageloading:CachedImage
                                     Margin="6"
                                     BackgroundColor="Transparent"
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     Aspect="AspectFit"
+                                    DownsampleUseDipUnits="True"
                                     Source="{Binding Thumbnail}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -414,10 +419,11 @@
                                     Margin="6"
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}">
-                                    <Image
+                                    <ffimageloading:CachedImage
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
+                                        DownsampleUseDipUnits="True"
                                         Source="{Binding Thumbnail}"/>
                                     <Image
                                         BackgroundColor="Transparent"
@@ -484,11 +490,12 @@
                                 BorderColor="Transparent"
                                 IsClippedToBounds="True"
                                 Padding="0">
-                                <Image
+                                <ffimageloading:CachedImage
                                     WidthRequest="30"
                                     HeightRequest="30"
                                     Aspect="AspectFill"
                                     Source="{Binding UserIcon}"
+                                    DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
                             <Frame
@@ -501,10 +508,11 @@
                                     Margin="6"
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}">
-                                    <Image
+                                    <ffimageloading:CachedImage
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
+                                        DownsampleToViewSize="True"
                                         Source="{Binding Thumbnail}"/>
                                     <Image
                                         BackgroundColor="Transparent"
