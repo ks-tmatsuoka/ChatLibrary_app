@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reactive.Subjects;
 using WampSharp.V1;
+using WebSocket4Net.Command;
 
 namespace ChatSample
 {
@@ -51,6 +52,11 @@ namespace ChatSample
                     else if (val.MessageType == (int)MessageType.Image)
                     {
                         var msgBase = new ImageMessage(val);
+                        messages.Add(msgBase);
+                    }
+                    else if (val.MessageType == (int)MessageType.Text)
+                    {
+                        var msgBase = new TextMessage(val);
                         messages.Add(msgBase);
                     }
                     else
@@ -152,6 +158,11 @@ namespace ChatSample
                         var msgBase = new ImageMessage(msg);
                         messageBases.Add(msgBase);
                     }
+                    else if (msg.MessageType == (int)MessageType.Text)
+                    {
+                        var msgBase = new TextMessage(msg);
+                        messageBases.Add(msgBase);
+                    }
                     else
                         messageBases.Add(msg);
                 }
@@ -196,6 +207,11 @@ namespace ChatSample
                 else if (messageBase.MessageType == (int)MessageType.Image)
                 {
                     var msgBase = new ImageMessage(messageBase);
+                    messageBases.Add(msgBase);
+                }
+                else if (messageBase.MessageType == (int)MessageType.Text)
+                {
+                    var msgBase = new TextMessage(messageBase);
                     messageBases.Add(msgBase);
                 }
                 else

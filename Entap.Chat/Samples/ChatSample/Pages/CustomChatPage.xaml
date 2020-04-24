@@ -12,7 +12,7 @@
     </ContentPage.BindingContext>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="myTextMessageTemplate" x:DataType="chat:MessageBase">
+            <DataTemplate x:Key="myTextMessageTemplate" x:DataType="chat:TextMessage">
                 <ViewCell
                     x:Name="Cell">
                     <StackLayout
@@ -90,7 +90,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersTextMessageTemplate" x:DataType="chat:MessageBase">
+            <DataTemplate x:Key="othersTextMessageTemplate" x:DataType="chat:TextMessage">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -128,7 +128,7 @@
                                 <ffimageloading:CachedImage
                                     WidthRequest="30"
                                     HeightRequest="30"
-                                    Source="{Binding UserIcon}"
+                                    Source="{Binding UserIcon, Mode=TwoWay}"
                                     Aspect="AspectFill"
                                     DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
@@ -232,7 +232,7 @@
                                     HeightRequest="100"
                                     Aspect="AspectFit"
                                     DownsampleUseDipUnits="True"
-                                    Source="{Binding Thumbnail}"/>
+                                    Source="{Binding MediaUrl, Mode=TwoWay}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -296,7 +296,7 @@
                                     WidthRequest="30"
                                     HeightRequest="30"
                                     Aspect="AspectFill"
-                                    Source="{Binding UserIcon}"
+                                    Source="{Binding UserIcon, Mode=TwoWay}"
                                     DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
@@ -313,7 +313,7 @@
                                     HeightRequest="100"
                                     Aspect="AspectFit"
                                     DownsampleUseDipUnits="True"
-                                    Source="{Binding Thumbnail}"/>
+                                    Source="{Binding MediaUrl, Mode=TwoWay}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -427,7 +427,7 @@
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
                                         DownsampleUseDipUnits="True"
-                                        Source="{Binding Thumbnail}"/>
+                                        Source="{Binding MediaThumbnail, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
@@ -497,7 +497,7 @@
                                     WidthRequest="30"
                                     HeightRequest="30"
                                     Aspect="AspectFill"
-                                    Source="{Binding UserIcon}"
+                                    Source="{Binding UserIcon, ModeTwoWay}"
                                     DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
@@ -516,7 +516,7 @@
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
                                         DownsampleUseDipUnits="True"
-                                        Source="{Binding Thumbnail}"/>
+                                        Source="{Binding MediaThumbnail, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"

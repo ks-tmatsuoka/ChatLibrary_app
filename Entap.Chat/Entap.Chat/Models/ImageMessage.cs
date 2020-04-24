@@ -10,13 +10,14 @@ namespace Entap.Chat
     {
         public ImageMessage()
         {
-            PropertyChanged += ImageMessagePropertyChanged;
-            CreateThumbnail();
+            //PropertyChanged += ImageMessagePropertyChanged;
+            //CreateMediaThumbnail();
+            //CreateUserIconThumbnail();
         }
 
         public ImageMessage(MessageBase messageBase)
         {
-            PropertyChanged += ImageMessagePropertyChanged;
+            //PropertyChanged += ImageMessagePropertyChanged;
             MessageId = messageBase.MessageId;
             SendDateTime = messageBase.SendDateTime;
             Text = messageBase.Text;
@@ -29,46 +30,82 @@ namespace Entap.Chat
             NotSendId = messageBase.NotSendId;
             DateVisible = messageBase.DateVisible;
 
-            CreateThumbnail();
+            //CreateMediaThumbnail();
+            //CreateUserIconThumbnail();
         }
 
-        private void ImageMessagePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(MediaUrl))
-            {
-                CreateThumbnail();
-            }
-        }
+        //private void ImageMessagePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        //{
+        //    if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(MediaUrl))
+        //    {
+        //        CreateMediaThumbnail();
+        //    }
+        //    else if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(UserIcon))
+        //    {
+        //        CreateUserIconThumbnail();
+        //    }
+        //}
 
-        void CreateThumbnail()
-        {
-            if (!string.IsNullOrEmpty(MediaUrl))
-            {
-                Task.Run(() =>
-                {
-                    // サイズを落とした画像をサムネイルとして表示
-                    // ValueConverterだとTaskで処理できないのでここで処理している
-                    //var source = DependencyService.Get<IImageService>().DownSizeImage(MediaUrl);
-                    Thumbnail = MediaUrl;
-                });
-            }
-        }
+        //void CreateMediaThumbnail()
+        //{
+        //    if (!string.IsNullOrEmpty(MediaUrl))
+        //    {
+        //        Task.Run(() =>
+        //        {
+        //            // サイズを落とした画像をサムネイルとして表示
+        //            // ValueConverterだとTaskで処理できないのでここで処理している
+        //            //var source = DependencyService.Get<IImageService>().DownSizeImage(MediaUrl);
+        //            MediaThumbnail = MediaUrl;
+        //        });
+        //    }
+        //}
 
-        private ImageSource thumbnail;
-        public ImageSource Thumbnail
-        {
-            get
-            {
-                return thumbnail;
-            }
-            set
-            {
-                if (thumbnail != value)
-                {
-                    thumbnail = value;
-                    OnPropertyChanged("Thumbnail");
-                }
-            }
-        }
+        //void CreateUserIconThumbnail()
+        //{
+        //    if (!string.IsNullOrEmpty(UserIcon) && SendUserId != Settings.Current.ChatService.GetUserId())
+        //    {
+        //        Task.Run(() =>
+        //        {
+        //            //サイズを落とした画像をサムネイルとして表示
+        //            //ValueConverterだとTaskで処理できないのでここで処理している
+        //            //var source = DependencyService.Get<IImageService>().DownSizeImage(UserIcon);
+        //            UserIconThumbnail = UserIcon;
+        //        });
+        //    }
+        //}
+
+        //private ImageSource mediaThumbnail;
+        //public ImageSource MediaThumbnail
+        //{
+        //    get
+        //    {
+        //        return mediaThumbnail;
+        //    }
+        //    set
+        //    {
+        //        if (mediaThumbnail != value)
+        //        {
+        //            mediaThumbnail = value;
+        //            OnPropertyChanged("MediaThumbnail");
+        //        }
+        //    }
+        //}
+
+        //private ImageSource userIconThumbnail;
+        //public ImageSource UserIconThumbnail
+        //{
+        //    get
+        //    {
+        //        return userIconThumbnail;
+        //    }
+        //    set
+        //    {
+        //        if (userIconThumbnail != value)
+        //        {
+        //            userIconThumbnail = value;
+        //            OnPropertyChanged("UserIconThumbnail");
+        //        }
+        //    }
+        //}
     }
 }

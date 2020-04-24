@@ -76,7 +76,23 @@ namespace Entap.Chat
             }
         }
 
-        public string UserIcon { get; set; }
+        private string userIcon;
+        public string UserIcon
+        {
+            get
+            {
+                return userIcon;
+            }
+            set
+            {
+                if (userIcon != value)
+                {
+                    userIcon = value;
+                    OnPropertyChanged("UserIcon");
+                }
+            }
+        }
+
         /// <summary>
         /// 1:テキスト, 2:画像, 3:動画
         /// </summary>

@@ -9,7 +9,7 @@
     BackgroundColor="Transparent">
     <local:CustomContentView.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="myTextMessageTemplate" x:DataType="local:MessageBase">
+            <DataTemplate x:Key="myTextMessageTemplate" x:DataType="local:TextMessage">
                 <ViewCell
                     x:Name="Cell">
                     <StackLayout
@@ -87,7 +87,7 @@
                     </StackLayout>
                 </ViewCell>
             </DataTemplate>
-            <DataTemplate x:Key="othersTextMessageTemplate" x:DataType="local:MessageBase">
+            <DataTemplate x:Key="othersTextMessageTemplate" x:DataType="local:TextMessage">
                 <ViewCell>
                     <StackLayout
                         Spacing="0"
@@ -123,11 +123,13 @@
                                 IsClippedToBounds="True"
                                 Padding="0">
                                 <ffimageloading:CachedImage
-                                    WidthRequest="30"
-                                    HeightRequest="30"
-                                    Source="{Binding UserIcon}"
+                                    WidthRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
+                                    Source="{Binding UserIcon, Mode=TwoWay}"
                                     Aspect="AspectFill"
                                     DownsampleUseDipUnits="True"
+                                    DownsampleHeight="{Binding Source={x:Reference Content}, Path=UserIconSize}"
+                                    DownsampleWidth="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
                             <Frame
@@ -189,8 +191,8 @@
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="CenterAndExpand"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     Aspect="AspectFit"
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
@@ -229,7 +231,9 @@
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     Aspect="AspectFit"
                                     DownsampleUseDipUnits="True"
-                                    Source="{Binding Thumbnail}"/>
+                                    DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                    DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                    Source="{Binding MediaUrl, Mode=TwoWay}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -290,11 +294,13 @@
                                 IsClippedToBounds="True"
                                 Padding="0">
                                 <ffimageloading:CachedImage
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     Aspect="AspectFill"
-                                    Source="{Binding UserIcon}"
+                                    Source="{Binding UserIcon, Mode=TwoWay}"
                                     DownsampleUseDipUnits="True"
+                                    DownsampleHeight="{Binding Source={x:Reference Content}, Path=UserIconSize}"
+                                    DownsampleWidth="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
                             <Frame
@@ -310,7 +316,9 @@
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     Aspect="AspectFit"
                                     DownsampleUseDipUnits="True"
-                                    Source="{Binding Thumbnail}"/>
+                                    DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                    DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                    Source="{Binding MediaUrl, Mode=TwoWay}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -324,8 +332,8 @@
                                     HorizontalOptions="StartAndExpand"
                                     VerticalOptions="CenterAndExpand"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     CommandParameter="{Binding MediaUrl}"
                                     Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
@@ -381,8 +389,8 @@
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="CenterAndExpand"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     Aspect="AspectFit"
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
@@ -423,8 +431,10 @@
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
+                                        DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                        DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                         DownsampleUseDipUnits="True"
-                                        Source="{Binding Thumbnail}"/>
+                                        Source="{Binding MediaThumbnail, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
@@ -491,10 +501,12 @@
                                 IsClippedToBounds="True"
                                 Padding="0">
                                 <ffimageloading:CachedImage
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     Aspect="AspectFill"
-                                    Source="{Binding UserIcon}"
+                                    Source="{Binding UserIcon, Mode=TwoWay}"
+                                    DownsampleWidth="{Binding Source={x:Reference Content}, Path=UserIconSize}"
+                                    DownsampleHeight="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
@@ -512,8 +524,10 @@
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
+                                        DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                        DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                         DownsampleToViewSize="True"
-                                        Source="{Binding Thumbnail}"/>
+                                        Source="{Binding MediaThumbnail, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
@@ -533,8 +547,8 @@
                                     HorizontalOptions="StartAndExpand"
                                     VerticalOptions="CenterAndExpand"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     CommandParameter="{Binding MediaUrl}"
                                     Command="{Binding Source={x:Reference Content}, Path=VideoShareCommand}"/>

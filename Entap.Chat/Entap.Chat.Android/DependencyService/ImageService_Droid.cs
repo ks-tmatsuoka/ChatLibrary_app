@@ -30,9 +30,11 @@ namespace Entap.Chat.Droid
                     {
                         //サーバの画像
                         var url = new Java.Net.URL(filePath);
-                        var istream = url.OpenStream();
-                        BitmapFactory.DecodeStream(istream, null, bmfOptions);
-                        istream.Close();
+                        using(var istream = url.OpenStream())
+                        {
+                            BitmapFactory.DecodeStream(istream, null, bmfOptions);
+                            istream.Close();
+                        }
                     }
                     else
                     {
@@ -43,7 +45,7 @@ namespace Entap.Chat.Droid
                     // サイズ取得し縮小するscaleを求める
                     if ((bmfOptions.OutWidth * bmfOptions.OutHeight) > limitSize)
                     {
-                        //１Mピクセル超えてる
+                        //limitSize超えてる
                         double outArea = (double)(bmfOptions.OutWidth * bmfOptions.OutHeight) / limitSize;
                         sampleSize = (int)(Math.Sqrt(outArea) + 1);
                     }
@@ -65,9 +67,11 @@ namespace Entap.Chat.Droid
                     {
                         //サーバの画像
                         var url = new Java.Net.URL(filePath);
-                        var istream = url.OpenStream();
-                        orgBitmap = BitmapFactory.DecodeStream(istream, null, bmfOptions);
-                        istream.Close();
+                        using(var istream = url.OpenStream())
+                        {
+                            orgBitmap = BitmapFactory.DecodeStream(istream, null, bmfOptions);
+                            istream.Close();
+                        }
                     }
                     else
                     {
@@ -93,6 +97,9 @@ namespace Entap.Chat.Droid
                             bytes = stream.ToArray();
                             var imagsource = ImageSource.FromStream(() => new MemoryStream(bytes));
                             taskCmp.SetResult(imagsource);
+
+                            orgBitmap = null;
+                            bytes = null;
                         }
                     }
                 }

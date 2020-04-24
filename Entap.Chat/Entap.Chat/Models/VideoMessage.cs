@@ -12,7 +12,8 @@ namespace Entap.Chat
         public VideoMessage()
         {
             PropertyChanged += VideoMessagePropertyChanged;
-            CreateThumbnail();
+            CreateMediaThumbnail();
+            //CreateUserIconThumbnail();
         }
 
         public VideoMessage(MessageBase messageBase)
@@ -31,18 +32,23 @@ namespace Entap.Chat
             NotSendId = messageBase.NotSendId;
             DateVisible = messageBase.DateVisible;
 
-            CreateThumbnail();
+            CreateMediaThumbnail();
+            //CreateUserIconThumbnail();
         }
 
         private void VideoMessagePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(MediaUrl))
             {
-                CreateThumbnail();
+                CreateMediaThumbnail();
             }
+            //else if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(UserIcon))
+            //{
+            //    CreateUserIconThumbnail();
+            //}
         }
 
-        void CreateThumbnail()
+        void CreateMediaThumbnail()
         {
             if (!string.IsNullOrEmpty(MediaUrl))
             {
@@ -51,26 +57,57 @@ namespace Entap.Chat
                     // サムネイルを生成
                     // ValueConverterだとTaskで処理できないのでここで処理している
                     var source = DependencyService.Get<IVideoService>().GenerateThumbImage(MediaUrl);
-                    Thumbnail = source;
+                    MediaThumbnail = source;
                 });
             }
         }
 
-        private ImageSource thumbnail;
-        public ImageSource  Thumbnail
+        //void CreateUserIconThumbnail()
+        //{
+        //    if (!string.IsNullOrEmpty(UserIcon) && SendUserId != Settings.Current.ChatService.GetUserId())
+        //    {
+        //        Task.Run(() =>
+        //        {
+        //            //サイズを落とした画像をサムネイルとして表示
+        //            //ValueConverterだとTaskで処理できないのでここで処理している
+        //            //var source = DependencyService.Get<IImageService>().DownSizeImage(UserIcon);
+        //            UserIconThumbnail = UserIcon;
+        //        });
+        //    }
+        //}
+
+        private ImageSource mediaThumbnail;
+        public ImageSource MediaThumbnail
         {
             get
             {
-                return thumbnail;
+                return mediaThumbnail;
             }
             set
             {
-                if (thumbnail != value)
+                if (mediaThumbnail != value)
                 {
-                    thumbnail = value;
-                    OnPropertyChanged("Thumbnail");
+                    mediaThumbnail = value;
+                    OnPropertyChanged("MediaThumbnail");
                 }
             }
         }
+
+        //private ImageSource userIconThumbnail;
+        //public ImageSource UserIconThumbnail
+        //{
+        //    get
+        //    {
+        //        return userIconThumbnail;
+        //    }
+        //    set
+        //    {
+        //        if (userIconThumbnail != value)
+        //        {
+        //            userIconThumbnail = value;
+        //            OnPropertyChanged("UserIconThumbnail");
+        //        }
+        //    }
+        //}
     }
 }

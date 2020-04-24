@@ -15,7 +15,7 @@ namespace Entap.Chat.Android
         public ImageSource GenerateThumbImage(string url, long usecond)
         {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            Bitmap bitmap;
+            Bitmap bitmap = null;
             if (url.Contains("http"))
             {
                 retriever.SetDataSource(url, new Dictionary<string, string>());
@@ -30,10 +30,12 @@ namespace Entap.Chat.Android
             }
             if (bitmap != null)
             {
-                MemoryStream stream = new MemoryStream();
-                bitmap.Compress(Bitmap.CompressFormat.Png, 0, stream);
-                byte[] bitmapData = stream.ToArray();
-                return ImageSource.FromStream(() => new MemoryStream(bitmapData));
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    bitmap.Compress(Bitmap.CompressFormat.Png, 0, stream);
+                    byte[] bitmapData = stream.ToArray();
+                    return ImageSource.FromStream(() => new MemoryStream(bitmapData));
+                }
             }
             return null;
         }

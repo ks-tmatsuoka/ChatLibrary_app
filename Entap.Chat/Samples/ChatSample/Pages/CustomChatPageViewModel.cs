@@ -91,7 +91,7 @@ namespace ChatSample
             {
                 if (string.IsNullOrEmpty(EditorText))
                     return;
-                msg = new MessageBase { MessageId = ChatListView.NotSendMessageId, Text = EditorText, AlreadyReadCount = 0, MessageType = (int)MessageType.Text, SendUserId = Settings.Current.ChatService.GetUserId() };
+                msg = new TextMessage { MessageId = ChatListView.NotSendMessageId, Text = EditorText, AlreadyReadCount = 0, MessageType = (int)MessageType.Text, SendUserId = Settings.Current.ChatService.GetUserId() };
                 EditorText = "";
             }
             else
@@ -175,7 +175,7 @@ namespace ChatSample
                 });
                 return;
             }
-            var msg = new MessageBase { MessageId = ChatListView.NotSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+            var msg = new TextMessage { MessageId = ChatListView.NotSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
             await ChatAddImg(msg);
         }
 

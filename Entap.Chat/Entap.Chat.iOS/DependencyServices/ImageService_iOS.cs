@@ -37,7 +37,7 @@ namespace Entap.Chat.iOS
             int resize;
              if ((uiImage.Size.Width * uiImage.Size.Height) > limit)
             {
-                //１Mピクセル超えてる
+                //limit超えてる
                 double outArea = (double)(uiImage.Size.Width * uiImage.Size.Height) / limit;
                 resize = (int)(Math.Sqrt(outArea) + 1);
             }

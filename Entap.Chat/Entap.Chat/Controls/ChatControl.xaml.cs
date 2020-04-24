@@ -124,6 +124,22 @@ namespace Entap.Chat
             }
         }
 
+        public double UserIconSize
+        {
+            get
+            {
+                return 30;
+            }
+        }
+
+        public double ShareIconSize
+        {
+            get
+            {
+                return 30;
+            }
+        }
+
         public Command SendCommand => new Command((obj) =>
         {
             var msg = obj as MessageBase;
@@ -135,7 +151,7 @@ namespace Entap.Chat
             {
                 if (string.IsNullOrEmpty(Controller.EditorText))
                     return;
-                msg = new MessageBase { MessageId = ChatListView.NotSendMessageId, Text = Controller.EditorText, AlreadyReadCount = 0, MessageType = (int)MessageType.Text, SendUserId = Settings.Current.ChatService.GetUserId() };
+                msg = new TextMessage { MessageId = ChatListView.NotSendMessageId, Text = Controller.EditorText, AlreadyReadCount = 0, MessageType = (int)MessageType.Text, SendUserId = Settings.Current.ChatService.GetUserId() };
                 Controller.EditorText = "";
             }
             else
