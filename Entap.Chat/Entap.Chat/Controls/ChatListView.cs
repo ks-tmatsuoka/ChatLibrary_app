@@ -480,6 +480,11 @@ namespace Entap.Chat
         {
             if (msg is null)
                 return false;
+            if (_messages.Count < 1)
+            {
+                // 一番最初に送るメッセージは日付を表示させる
+                msg.DateVisible = true;
+            }
             if (Device.RuntimePlatform == Device.Android)
             {
                 var dummy = new MessageBase() { SendUserId= Settings.Current.ChatService.GetUserId(), MessageType=2};
