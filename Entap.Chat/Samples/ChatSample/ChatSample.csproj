@@ -19,6 +19,7 @@
     <PackageReference Include="WampSharp" Version="20.1.1" />
     <PackageReference Include="WampSharp.WAMP1.Default" Version="20.1.1" />
     <PackageReference Include="Polly" Version="7.2.0" />
+    <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Entap.Chat\Entap.Chat.csproj" />

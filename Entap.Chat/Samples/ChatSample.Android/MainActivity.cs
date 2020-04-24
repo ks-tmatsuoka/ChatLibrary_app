@@ -23,7 +23,9 @@ namespace ChatSample.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Entap.Chat.Android.Platform.Init(this);
-            //Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
+            
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
+
             LoadApplication(new App());
             CurrentActivity = this;
             // Webviewで入力箇所がキーボードに隠れないようにするのに必要な処理
