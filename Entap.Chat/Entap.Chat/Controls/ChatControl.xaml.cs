@@ -132,6 +132,14 @@ namespace Entap.Chat
             }
         }
 
+        public double ResendIconSize
+        {
+            get
+            {
+                return 25;
+            }
+        }
+
         public double ShareIconSize
         {
             get
