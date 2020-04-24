@@ -27,13 +27,13 @@
                             HasShadow="False"
                             CornerRadius="10"
                             IsVisible="{Binding DateVisible}"
-                            BackgroundColor="Black"
+                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBgColor}"
                             Padding="0">
                             <Label
                                 Margin="12,2"
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
-                                TextColor="White"
+                                TextColor="{Binding Source={x:Reference ViewModel}, Path=DateTextColor}"
                                 Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
@@ -65,7 +65,7 @@
                             <Frame
                                 HasShadow="False"
                                 CornerRadius="8"
-                                BackgroundColor="LightPink"
+                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=MyMessageBgColor}"
                                 Padding="0">
                                 <Label
                                     Margin="6"
@@ -80,8 +80,8 @@
                                 HorizontalOptions="End"
                                 VerticalOptions="CenterAndExpand"
                                 BackgroundColor="Transparent"
-                                WidthRequest="25"
-                                HeightRequest="25"
+                                WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ResendIconSize}"
+                                HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ResendIconSize}"
                                 Source="resend_icon.png"
                                 Aspect="AspectFit"
                                 CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
@@ -104,13 +104,13 @@
                             HasShadow="False"
                             CornerRadius="10"
                             IsVisible="{Binding DateVisible}"
-                            BackgroundColor="Black"
+                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBgColor}"
                             Padding="0">
                             <Label
                                 Margin="12,2"
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
-                                TextColor="White"
+                                TextColor="{Binding Source={x:Reference ViewModel}, Path=DateTextColor}"
                                 Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
@@ -126,10 +126,12 @@
                                 IsClippedToBounds="True"
                                 Padding="0">
                                 <ffimageloading:CachedImage
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     Source="{Binding UserIcon, Mode=TwoWay}"
                                     Aspect="AspectFill"
+                                    DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
+                                    DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
@@ -138,7 +140,7 @@
                                 HasShadow="False"
                                 CornerRadius="8"
                                 Padding="0"
-                                BackgroundColor="Aqua">
+                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=OtherMessageBgColor}">
                                 <Label
                                     Margin="6"
                                     BackgroundColor="Transparent"
@@ -170,13 +172,13 @@
                             HasShadow="False"
                             CornerRadius="10"
                             IsVisible="{Binding DateVisible}"
-                            BackgroundColor="Black"
+                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBgColor}"
                             Padding="0">
                             <Label
                                 Margin="12,2"
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
-                                TextColor="White"
+                                TextColor="{Binding Source={x:Reference ViewModel}, Path=DateTextColor}"
                                 Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
@@ -192,8 +194,8 @@
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="CenterAndExpand"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     Aspect="AspectFit"
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
@@ -224,7 +226,7 @@
                             <Frame
                                 HasShadow="False"
                                 CornerRadius="8"
-                                BackgroundColor="LightPink"
+                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=MyMessageBgColor}"
                                 Padding="0">
                                 <ffimageloading:CachedImage
                                     Margin="6"
@@ -246,8 +248,8 @@
                                 HorizontalOptions="End"
                                 VerticalOptions="CenterAndExpand"
                                 BackgroundColor="Transparent"
-                                WidthRequest="25"
-                                HeightRequest="25"
+                                WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ResendIconSize}"
+                                HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ResendIconSize}"
                                 Source="resend_icon.png"
                                 Aspect="AspectFit"
                                 CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
@@ -270,13 +272,13 @@
                             HasShadow="False"
                             CornerRadius="10"
                             IsVisible="{Binding DateVisible}"
-                            BackgroundColor="Black"
+                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBgColor}"
                             Padding="0">
                             <Label
                                 Margin="12,2"
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
-                                TextColor="White"
+                                TextColor="{Binding Source={x:Reference ViewModel}, Path=DateTextColor}"
                                 Text="{Binding SendDateTime, Converter={StaticResource dateConverter}}"
                                 FontSize="14"/>
                         </Frame>
@@ -293,8 +295,10 @@
                                 IsClippedToBounds="True"
                                 Padding="0">
                                 <ffimageloading:CachedImage
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
+                                    DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
+                                    DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     Aspect="AspectFill"
                                     Source="{Binding UserIcon, Mode=TwoWay}"
                                     DownsampleUseDipUnits="True"
@@ -304,7 +308,7 @@
                                 Margin="6,0,6,0"
                                 HasShadow="False"
                                 CornerRadius="8"
-                                BackgroundColor="Aqua"
+                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=OtherMessageBgColor}"
                                 Padding="0">
                                 <ffimageloading:CachedImage
                                     Margin="6"
@@ -327,8 +331,8 @@
                                     HorizontalOptions="StartAndExpand"
                                     VerticalOptions="CenterAndExpand"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     CommandParameter="{Binding MediaUrl}"
                                     Command="{Binding Source={x:Reference ViewModel}, Path=ImageShareCommand}"/>
@@ -362,7 +366,7 @@
                             HasShadow="False"
                             CornerRadius="10"
                             IsVisible="{Binding DateVisible}"
-                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBackgroundColor}"
+                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBgColor}"
                             Padding="0">
                             <Label
                                 Margin="12,2"
@@ -384,8 +388,8 @@
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="CenterAndExpand"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     Aspect="AspectFit"
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
@@ -416,7 +420,7 @@
                             <Frame
                                 HasShadow="False"
                                 CornerRadius="8"
-                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=MyMessageViewBackgroundColor}"
+                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=MyMessageBgColor}"
                                 Padding="0">
                                 <AbsoluteLayout
                                     Margin="6"
@@ -447,8 +451,8 @@
                                 HorizontalOptions="End"
                                 VerticalOptions="CenterAndExpand"
                                 BackgroundColor="Transparent"
-                                WidthRequest="25"
-                                HeightRequest="25"
+                                WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ResendIconSize}"
+                                HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ResendIconSize}"
                                 Source="resend_icon.png"
                                 Aspect="AspectFit"
                                 CommandParameter="{Binding Source={x:Reference Cell}, Path=BindingContext}"
@@ -471,7 +475,7 @@
                             HasShadow="False"
                             CornerRadius="10"
                             IsVisible="{Binding DateVisible}"
-                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBackgroundColor}"
+                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBgColor}"
                             Padding="0">
                             <Label
                                 Margin="12,2"
@@ -494,9 +498,11 @@
                                 IsClippedToBounds="True"
                                 Padding="0">
                                 <ffimageloading:CachedImage
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     Aspect="AspectFill"
+                                    DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
+                                    DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     Source="{Binding UserIcon, ModeTwoWay}"
                                     DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
@@ -505,7 +511,7 @@
                                 Margin="6,0,6,0"
                                 HasShadow="False"
                                 CornerRadius="8"
-                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=OtherMessageViewBackgroundColor}"
+                                BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=OtherMessageBgColor}"
                                 Padding="0">
                                 <AbsoluteLayout
                                     Margin="6"
@@ -536,8 +542,8 @@
                                     HorizontalOptions="StartAndExpand"
                                     VerticalOptions="CenterAndExpand"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="30"
-                                    HeightRequest="30"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     CommandParameter="{Binding MediaUrl}"
                                     Command="{Binding Source={x:Reference ViewModel}, Path=VideoShareCommand}"/>
@@ -569,7 +575,7 @@
                             VerticalOptions="Fill"
                             HasShadow="False"
                             CornerRadius="14"
-                            BackgroundColor="Black"
+                            BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=DateBgColor}"
                             Padding="0">
                             <StackLayout
                                 Margin="12,2"
@@ -577,7 +583,7 @@
                                 <Label
                                     HorizontalTextAlignment="Center"
                                     VerticalTextAlignment="Center"
-                                    TextColor="White"
+                                    TextColor="{Binding Source={x:Reference ViewModel}, Path=DateTextColor}"
                                     Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
                                     FontSize="10"/>
                                 <!-- MessageTypeをMemberInAndOutMessageConverterのMessageTypeにバインドする最善策がわからなかったので一旦このLabelを使ってバインドさせている -->
@@ -588,7 +594,7 @@
                                 <Label
                                     HorizontalTextAlignment="Center"
                                     VerticalTextAlignment="Center"
-                                    TextColor="White"
+                                    TextColor="{Binding Source={x:Reference ViewModel}, Path=DateTextColor}"
                                     FontSize="14">
                                     <Label.Text>
                                         <Binding Path="Text">

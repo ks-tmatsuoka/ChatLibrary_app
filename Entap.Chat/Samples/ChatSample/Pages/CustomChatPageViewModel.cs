@@ -139,47 +139,81 @@ namespace ChatSample
 
         async Task SendLibraryImage()
         {
+            string photoStr = "写真";
+            string VideoStr = "動画";
+            var selected = await App.Current.MainPage.DisplayActionSheet("選択してください", null, null, new string[2] { photoStr, VideoStr });
             var mg = new MediaPluginManager();
-            var paths = await mg.PickPhotoAsyncGetPathAndAlbumPath();
-            if (paths is null)
-                return;
-            byte[] bytes = null;
-            string extension = "";
-            string imgPath = "";
-            if (!string.IsNullOrEmpty(paths[0]))
+            if (selected == photoStr)
             {
-                imgPath = paths[0];
-                bytes = FileManager.ReadBytes(imgPath);
-                if ((bytes == null || bytes.Length < 1) && paths.Count > 1)
+                var paths = await mg.PickPhotoAsyncGetPathAndAlbumPath();
+                if (paths is null)
+                    return;
+                byte[] bytes = null;
+                string extension = "";
+                string imgPath = "";
+                if (!string.IsNullOrEmpty(paths[0]))
                 {
-                    imgPath = paths[1];
+                    imgPath = paths[0];
                     bytes = FileManager.ReadBytes(imgPath);
-                    extension = System.IO.Path.GetExtension(imgPath);
+                    if ((bytes == null || bytes.Length < 1) && paths.Count > 1)
+                    {
+                        imgPath = paths[1];
+                        bytes = FileManager.ReadBytes(imgPath);
+                        extension = System.IO.Path.GetExtension(imgPath);
+                    }
+                }
+
+                if (bytes == null || bytes.Length < 1)
+                {
+                    if (bytes != null && bytes.Length < 1)
+                        await App.Current.MainPage.DisplayAlert(null, "こちらの画像は送信できません", "閉じる");
+                    return;
+                }
+
+                extension = System.IO.Path.GetExtension(imgPath);
+                var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
+                if (!FileManager.FileCopy(imgPath, copyImgPath))
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
+                    });
+                    return;
+                }
+                var msg = new ImageMessage { MessageId = ChatListView.NotSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
+                await ChatAddMedia(msg);
+            }
+            else if (selected == VideoStr)
+            {
+                var videoPath = await mg.PickVideoAsync();
+                if (string.IsNullOrEmpty(videoPath))
+                    return;
+                byte[] bytes = FileManager.ReadBytes(videoPath);
+                string extension = ".mp4";
+                string name = Guid.NewGuid().ToString() + extension;
+                if (bytes == null || bytes.Length < 1)
+                {
+                    return;
+                }
+                var copyPath = Settings.Current.ChatService.GetSendVideoSaveFolderPath() + Guid.NewGuid() + extension;
+                bool result;
+                if (Device.RuntimePlatform == Device.iOS)
+                {
+                    result = DependencyService.Get<IVideoService>().ConvertMp4(videoPath, copyPath);
+                }
+                else
+                {
+                    result = FileManager.FileCopy(videoPath, copyPath);
+                }
+                if (result)
+                {
+                    var msg = new VideoMessage { MessageId = ChatListView.NotSendMessageId, MediaUrl = copyPath, MessageType = (int)MessageType.Video, SendUserId = Settings.Current.ChatService.GetUserId() };
+                    await ChatAddMedia(msg);
                 }
             }
-
-            if (bytes == null || bytes.Length < 1)
-            {
-                if (bytes != null && bytes.Length < 1)
-                    await App.Current.MainPage.DisplayAlert(null, "こちらの画像は送信できません", "閉じる");
-                return;
-            }
-
-            extension = System.IO.Path.GetExtension(imgPath);
-            var copyImgPath = Settings.Current.ChatService.GetSendImageSaveFolderPath() + Guid.NewGuid() + extension;
-            if (!FileManager.FileCopy(imgPath, copyImgPath))
-            {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    Application.Current.MainPage.DisplayAlert("", "画像の取得に失敗しました", "閉じる");
-                });
-                return;
-            }
-            var msg = new TextMessage { MessageId = ChatListView.NotSendMessageId, MediaUrl = copyImgPath, MessageType = (int)MessageType.Image, SendUserId = Settings.Current.ChatService.GetUserId() };
-            await ChatAddImg(msg);
         }
 
-        async Task ChatAddImg(MessageBase msg)
+        async Task ChatAddMedia(MessageBase msg)
         {
             AddMessageCommandParameter = msg;
             AddMessageCommand?.Execute(AddMessageCommandParameter);
@@ -227,6 +261,62 @@ namespace ChatSample
             }
         }
 
+        public double ShareIconSize
+        {
+            get
+            {
+                return 30;
+            }
+        }
+
+        public double UserIconSize
+        {
+            get
+            {
+                return 30;
+            }
+        }
+
+        public double ResendIconSize
+        {
+            get
+            {
+                return 25;
+            }
+        }
+
+        public Color MyMessageBgColor
+        {
+            get
+            {
+                return Color.LightPink;
+            }
+        }
+
+        public Color OtherMessageBgColor
+        {
+            get
+            {
+                return Color.White;
+            }
+        }
+
+        public Color DateBgColor
+        {
+            get
+            {
+                return Color.Black;
+            }
+        }
+
+        public Color DateTextColor
+        {
+            get
+            {
+                return Color.White;
+            }
+        }
+
         public Command ResendCommand => new Command(async(obj) =>
         {
             var msg = obj as MessageBase;
@@ -238,12 +328,12 @@ namespace ChatSample
                 {
                     await SendMessage(msg);
                 }
-                else if (msg.MessageType == (int)MessageType.Image)
+                else if (msg.MessageType == (int)MessageType.Image || msg.MessageType == (int)MessageType.Video)
                 {
                     var oldMsgIndex = ItemsSource.IndexOf(msg);
                     ItemsSource.RemoveAt(oldMsgIndex);
                     msg.ResendVisible = false;
-                    await ChatAddImg(msg);
+                    await ChatAddMedia(msg);
                 }
             }
             else if (result.Equals(button[1]))
@@ -264,6 +354,16 @@ namespace ChatSample
         {
             var imagePath = obj as string;
             App.Current.MainPage.Navigation.PushModalAsync(new ImagePreviewPage(imagePath));
+        });
+        public Command VideoShareCommand => new Command(async(obj) =>
+        {
+            var path = obj as string;
+            await MediaManager.VideoShare(path);
+        });
+        public Command VideoTapCommand => new Command((obj) =>
+        {
+            var videoPath = obj as string;
+            App.Current.MainPage.Navigation.PushModalAsync(new VideoPreviewPage(videoPath));
         });
         public Command SendCommand => new Command(async(obj) =>
         {
