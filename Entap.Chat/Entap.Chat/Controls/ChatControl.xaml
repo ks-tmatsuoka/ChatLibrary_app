@@ -212,9 +212,16 @@
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     Aspect="AspectFit"
-                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                     CommandParameter="{Binding MediaUrl}"
-                                    Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}"/>
+                                    Command="{Binding Source={x:Reference Content}, Path=ImageShareCommand}">
+                                    <ImageButton.IsVisible>
+                                        <Binding Path="ResendVisible">
+                                            <Binding.Converter>
+                                                <local:BoolReverseConverter MessageId="{Binding Source={x:Reference MessageId}, Path=Text}"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </ImageButton.IsVisible>
+                                </ImageButton>
                                 <StackLayout
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="End"
@@ -250,15 +257,36 @@
                                 CornerRadius="8"
                                 BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
                                 Padding="0">
-                                <ffimageloading:CachedImage
-                                    Margin="6"
+                                <AbsoluteLayout
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                    Aspect="AspectFit"
-                                    DownsampleUseDipUnits="True"
-                                    DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                    DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                    Source="{Binding MediaUrl, Mode=TwoWay}"/>
+                                    HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}">
+                                    <ffimageloading:CachedImage
+                                        Margin="6"
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Aspect="AspectFit"
+                                        DownsampleUseDipUnits="True"
+                                        DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                        DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                        Source="{Binding MediaUrl, Mode=TwoWay}"/>
+                                    <StackLayout
+                                        Spacing="0"
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        BackgroundColor="#B3000000"
+                                        IsVisible="{Binding ProgressVisible}">
+                                        <ProgressBar
+                                            Margin="16"
+                                            Progress="{Binding UploadProgress}"
+                                            HeightRequest="3"
+                                            BackgroundColor="#B3000000"
+                                            WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                            VerticalOptions="CenterAndExpand"
+                                            HorizontalOptions="CenterAndExpand"
+                                            ProgressColor="White"/>
+                                    </StackLayout>
+                                </AbsoluteLayout>
+                                
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -423,9 +451,16 @@
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     Aspect="AspectFit"
-                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                     CommandParameter="{Binding MediaUrl}"
-                                    Command="{Binding Source={x:Reference Content}, Path=VideoShareCommand}"/>
+                                    Command="{Binding Source={x:Reference Content}, Path=VideoShareCommand}">
+                                    <ImageButton.IsVisible>
+                                        <Binding Path="ResendVisible">
+                                            <Binding.Converter>
+                                                <local:BoolReverseConverter MessageId="{Binding Source={x:Reference MessageId}, Path=Text}"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </ImageButton.IsVisible>
+                                </ImageButton>
                                 <StackLayout
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="End"
@@ -462,22 +497,38 @@
                                 BackgroundColor="{Binding Source={x:Reference Content}, Path=MyMessageViewBackgroundColor}"
                                 Padding="0">
                                 <AbsoluteLayout
-                                    Margin="6"
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}">
                                     <ffimageloading:CachedImage
+                                        Margin="6"
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
-                                        DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                        DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                         DownsampleUseDipUnits="True"
+                                        DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                        DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                         Source="{Binding MediaThumbnail, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Source="start_icon.png"/>
+                                    <StackLayout
+                                        Spacing="0"
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        BackgroundColor="#B3000000"
+                                        IsVisible="{Binding ProgressVisible}">
+                                        <ProgressBar
+                                            Margin="16"
+                                            Progress="{Binding UploadProgress}"
+                                            HeightRequest="3"
+                                            BackgroundColor="#B3000000"
+                                            WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
+                                            VerticalOptions="CenterAndExpand"
+                                            HorizontalOptions="CenterAndExpand"
+                                            ProgressColor="White"/>
+                                    </StackLayout>
                                 </AbsoluteLayout>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer

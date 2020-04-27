@@ -53,7 +53,7 @@ namespace ChatSample
                 }
             }
 
-            var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, fileType);
+            var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, fileType, msg.HandleUploadProgress);
             var resp = JsonConvert.DeserializeObject<RespSendMessage>(json);
             if (resp.Status == APIManager.APIStatus.Succeeded)
                 return await Task.FromResult<SendMessageResponseBase>(resp.Data);

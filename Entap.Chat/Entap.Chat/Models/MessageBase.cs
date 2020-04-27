@@ -49,7 +49,10 @@ namespace Entap.Chat
                 if (messageId != value)
                 {
                     messageId = value;
+                    if (messageId != ChatListView.NotSendMessageId)
+                        ProgressVisible = false;
                     OnPropertyChanged("MessageId");
+                    OnPropertyChanged("ResendVisible");
                 }
             }
         }
@@ -163,6 +166,48 @@ namespace Entap.Chat
                 {
                     dateVisible = value;
                     OnPropertyChanged("DateVisible");
+                }
+            }
+        }
+
+        private double uploadProgress;
+        public double UploadProgress
+        {
+            get
+            {
+                return uploadProgress;
+            }
+            set
+            {
+                if (uploadProgress != value)
+                {
+                    uploadProgress = value;
+                    if (uploadProgress >= 1)
+                        ProgressVisible = false;
+                    OnPropertyChanged("UploadProgress");
+                }
+            }
+        }
+        public void HandleUploadProgress(long bytes, long totalBytes)
+        {
+            System.Diagnostics.Debug.WriteLine("Uploading {0}/{1}", bytes, totalBytes);
+            UploadProgress = (double)bytes / (double)totalBytes;
+        }
+        private bool progressVisible;
+        public bool ProgressVisible
+        {
+            get
+            {
+                return progressVisible;
+            }
+            set
+            {
+                if (progressVisible != value)
+                {
+                    progressVisible = value;
+                    if (!progressVisible)
+                        UploadProgress = 0;
+                    OnPropertyChanged("ProgressVisible");
                 }
             }
         }

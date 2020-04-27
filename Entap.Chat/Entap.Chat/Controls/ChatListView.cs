@@ -84,7 +84,11 @@ namespace Entap.Chat
                 _messages = new ObservableCollection<MessageBase>(messages);
                 if (messages.Count() < 1)
                 {
-                    ItemsSource = _messages;
+                    Device.BeginInvokeOnMainThread(async () =>
+                    {
+                        ItemsSource = _messages;
+                        Opacity = 1;
+                    });
                     return;
                 }
                 if (first != null)
@@ -489,6 +493,8 @@ namespace Entap.Chat
         {
             if (msg is null)
                 return false;
+            if (msg.MessageType == (int)MessageType.Image || msg.MessageType == (int)MessageType.Video)
+                msg.ProgressVisible = true;
             if (_messages.Count < 1)
             {
                 // 一番最初に送るメッセージは日付を表示させる

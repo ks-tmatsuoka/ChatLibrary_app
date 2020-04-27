@@ -241,7 +241,7 @@ namespace ChatSample
         }
 
 
-        public static async Task<string> PostFile(string url, byte[] fileData, string fileName, Dictionary<string, string> DictionaryData, string fileType = "file", Action errorCallback = null, int timeoutSecond = 30)
+        public static async Task<string> PostFile(string url, byte[] fileData, string fileName, Dictionary<string, string> DictionaryData, string fileType = "file", ProgressDelegate progressDelegate  = null, Action errorCallback = null, int timeoutSecond = 30)
         {
             var content = new MultipartFormDataContent();
 
@@ -250,7 +250,20 @@ namespace ChatSample
                 content.Add(new StringContent(pair.Value), pair.Key);
             }
             if (fileData != null && fileData.Length > 0)
-                content.Add(new StreamContent(new MemoryStream(fileData)), fileType, fileName);
+            {
+                
+                if (progressDelegate != null)
+                {
+                    var progressContent = new ProgressStreamContent(new MemoryStream(fileData));
+                    progressContent.Progress = progressDelegate;
+                    content.Add(progressContent, fileType, fileName);
+                }
+                else
+                {
+                    content.Add(new StreamContent(new MemoryStream(fileData)), fileType, fileName);   
+                }
+            }
+                
             return await PostBase(url, content, timeoutSecond);
         }
     }
