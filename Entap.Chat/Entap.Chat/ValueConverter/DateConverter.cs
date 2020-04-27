@@ -8,7 +8,7 @@ namespace Entap.Chat
     [Preserve(AllMembers = true)]
     public class DateConverter : IValueConverter
     {
-        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var dateTime = (DateTime)value;
             if (dateTime.ToString("yyyy/MM/dd") == DateTime.Now.ToString("yyyy/MM/dd"))

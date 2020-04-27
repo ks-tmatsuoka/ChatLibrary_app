@@ -43,6 +43,11 @@
                                 VerticalOptions="EndAndExpand"
                                 Spacing="0"
                                 Margin="0,0,6,0">
+                                <!-- MessageIdをTimeConverterのMessageIdにバインドする最善策がわからなかったので一旦このLabelを使ってバインドさせている -->
+                                <Label
+                                    x:Name="MessageId"
+                                    Text="{Binding MessageId}"
+                                    IsVisible="false"/>
                                 <Label
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                     FontSize="10">
@@ -56,8 +61,15 @@
                                 </Label>
                                 <Label
                                     IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
-                                    Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
-                                    FontSize="10"/>
+                                    FontSize="10">
+                                    <Label.Text>
+                                        <Binding Path="SendDateTime">
+                                            <Binding.Converter>
+                                                <local:TimeConverter MessageId="{Binding Source={x:Reference MessageId}, Path=Text}"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </Label.Text>
+                                </Label>
                             </StackLayout>
                             <Frame
                                 HasShadow="False"
@@ -187,6 +199,11 @@
                                 HorizontalOptions="EndAndExpand"
                                 Spacing="0"
                                 Margin="0,0,6,0">
+                                <!-- MessageIdをTimeConverterのMessageIdにバインドする最善策がわからなかったので一旦このLabelを使ってバインドさせている -->
+                                <Label
+                                    x:Name="MessageId"
+                                    Text="{Binding MessageId}"
+                                    IsVisible="false"/>
                                 <ImageButton
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="CenterAndExpand"
@@ -215,8 +232,16 @@
                                         </Label.Text>
                                     </Label>
                                     <Label
-                                        Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
-                                        FontSize="10"/>
+                                        IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
+                                        FontSize="10">
+                                        <Label.Text>
+                                            <Binding Path="SendDateTime">
+                                                <Binding.Converter>
+                                                    <local:TimeConverter MessageId="{Binding Source={x:Reference MessageId}, Path=Text}"/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Label.Text>
+                                    </Label>
                                 </StackLayout>
                             </StackLayout>
 
@@ -385,6 +410,11 @@
                                 HorizontalOptions="EndAndExpand"
                                 Spacing="0"
                                 Margin="0,0,6,0">
+                                <!-- MessageIdをTimeConverterのMessageIdにバインドする最善策がわからなかったので一旦このLabelを使ってバインドさせている -->
+                                <Label
+                                    x:Name="MessageId"
+                                    Text="{Binding MessageId}"
+                                    IsVisible="false"/>
                                 <ImageButton
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="CenterAndExpand"
@@ -413,8 +443,16 @@
                                         </Label.Text>
                                     </Label>
                                     <Label
-                                        Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
-                                        FontSize="10"/>
+                                        IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
+                                        FontSize="10">
+                                        <Label.Text>
+                                            <Binding Path="SendDateTime">
+                                                <Binding.Converter>
+                                                    <local:TimeConverter MessageId="{Binding Source={x:Reference MessageId}, Path=Text}"/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Label.Text>
+                                    </Label>
                                 </StackLayout>
                             </StackLayout>
 

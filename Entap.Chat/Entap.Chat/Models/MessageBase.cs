@@ -37,8 +37,23 @@ namespace Entap.Chat
             //NotSendId = notSendMessage.Id;
         }
 
-        public int MessageId { get; set; }
-        
+        private int messageId;
+        public int MessageId
+        {
+            get
+            {
+                return messageId;
+            }
+            set
+            {
+                if (messageId != value)
+                {
+                    messageId = value;
+                    OnPropertyChanged("MessageId");
+                }
+            }
+        }
+
         private DateTime sendDateTime;
         public DateTime SendDateTime
         {
