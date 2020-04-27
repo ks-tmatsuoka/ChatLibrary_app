@@ -49,7 +49,7 @@ namespace ChatSample
                 {
                     DefaultCamera = CameraDevice.Rear,
                     CompressionQuality = 80,
-                    SaveToAlbum = true,
+                    SaveToAlbum = false,
                     SaveMetaData = false
                 });
                 if (file != null)
@@ -75,8 +75,7 @@ namespace ChatSample
                 var file = await CrossMedia.Current.TakeVideoAsync(new StoreVideoOptions
                 {
                     DefaultCamera = CameraDevice.Rear,
-                    CompressionQuality = 80,
-                    SaveToAlbum = true,
+                    SaveToAlbum = false,
                     SaveMetaData = false
                 });
                 if (file != null)
