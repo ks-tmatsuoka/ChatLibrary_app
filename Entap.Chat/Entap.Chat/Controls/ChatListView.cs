@@ -54,10 +54,14 @@ namespace Entap.Chat
             Settings.Current.ChatService.Dispose();
         }
 
+        // ItemsSourceにデータ入れた後Task.Delayを挟まないとScrollToがうまく機能しない
+        // またTask.Delayした際どうしてもScrollする前のデータが一瞬現れてしまう
+        // そのためOpacity=0で消しておいて、Scroll終わってからOpacityを戻してリストを表示している
         void GetFirstDisplayMessage()
         {
             if (RoomId < 0 || RoomType < 1 || LastReadMessageId < 0)
                 return;
+            Opacity = 0;
             lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
             {
@@ -109,10 +113,14 @@ namespace Entap.Chat
 
                 SetNotSendMessage();
                 DateVisibleUpdate();
-                Device.BeginInvokeOnMainThread(async () =>
+                Device.BeginInvokeOnMainThread(() =>
                 {
                     ItemsSource = _messages;
-                    var lastReadMessage =_messages.Where(w => w.MessageId == LastReadMessageId).LastOrDefault();
+                });
+                await Task.Delay(1);
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    var lastReadMessage = _messages.Where(w => w.MessageId == LastReadMessageId).LastOrDefault();
                     if (lastReadMessage != null && _messages.Count > 0)
                     {
                         var index = _messages.IndexOf(lastReadMessage);
@@ -123,6 +131,7 @@ namespace Entap.Chat
                     }
                     _messages.CollectionChanged += OnMessagesCollectionChanged;
                     Settings.Current.ChatService.UpdateData(_messages, RoomId, chatMembers);
+                    Opacity = 1;
                 });
             });
         }
