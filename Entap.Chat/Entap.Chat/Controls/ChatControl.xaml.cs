@@ -252,12 +252,14 @@ namespace Entap.Chat
                 {
                     ChatList.Messages[index].MessageId = sendMessageResponseBase.MessageId;
                     ChatList.Messages[index].SendDateTime = sendMessageResponseBase.SendDateTime;
+                    ChatList.Messages[index].MediaThumbnailUrl = sendMessageResponseBase.MediaThumbnailUrl;
                 }
                 else
                 {
                     ChatList.Messages.RemoveAt(index);
                     msg.MessageId = sendMessageResponseBase.MessageId;
                     msg.SendDateTime = sendMessageResponseBase.SendDateTime;
+                    msg.MediaThumbnailUrl = sendMessageResponseBase.MediaThumbnailUrl;
                     ChatList.Messages.Add(msg);
                 }
                 ChatList.SendAlreadyRead(msg);

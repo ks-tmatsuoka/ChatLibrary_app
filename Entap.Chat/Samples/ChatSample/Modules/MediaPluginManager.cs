@@ -75,6 +75,7 @@ namespace ChatSample
                 var file = await CrossMedia.Current.TakeVideoAsync(new StoreVideoOptions
                 {
                     DefaultCamera = CameraDevice.Rear,
+                    Quality = VideoQuality.Medium,
                     SaveToAlbum = false,
                     SaveMetaData = false
                 });

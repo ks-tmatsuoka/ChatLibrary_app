@@ -94,6 +94,23 @@ namespace Entap.Chat
             }
         }
 
+        private string mediaThumbnailUrl;
+        public string MediaThumbnailUrl
+        {
+            get
+            {
+                return mediaThumbnailUrl;
+            }
+            set
+            {
+                if (mediaThumbnailUrl != value)
+                {
+                    mediaThumbnailUrl = value;
+                    OnPropertyChanged("MediaThumbnailUrl");
+                }
+            }
+        }
+
         private string userIcon;
         public string UserIcon
         {

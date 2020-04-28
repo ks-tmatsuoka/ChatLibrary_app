@@ -14,30 +14,40 @@ namespace Entap.Chat.Android
     {
         public ImageSource GenerateThumbImage(string url, long usecond)
         {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            Bitmap bitmap = null;
-            if (url.Contains("http"))
+            using(MediaMetadataRetriever retriever = new MediaMetadataRetriever())
             {
-                retriever.SetDataSource(url, new Dictionary<string, string>());
-                bitmap = retriever.GetFrameAtTime(usecond);
-            }
-            else
-            {
-                Java.IO.File file = new Java.IO.File(url);
-                var inputStream = new FileInputStream(file);
-                retriever.SetDataSource(inputStream.FD);
-                bitmap = retriever.GetFrameAtTime(usecond);   
-            }
-            if (bitmap != null)
-            {
-                using (MemoryStream stream = new MemoryStream())
+                //MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                Bitmap bitmap = null;
+                if (url.Contains("http"))
                 {
-                    bitmap.Compress(Bitmap.CompressFormat.Png, 0, stream);
-                    byte[] bitmapData = stream.ToArray();
-                    return ImageSource.FromStream(() => new MemoryStream(bitmapData));
+                    try
+                    {
+                        retriever.SetDataSource(url, new Dictionary<string, string>());
+                        bitmap = retriever.GetFrameAtTime(usecond);
+                    }
+                    catch(Exception e)
+                    {
+                        System.Diagnostics.Debug.WriteLine(e);
+                    }
                 }
+                else
+                {
+                    Java.IO.File file = new Java.IO.File(url);
+                    var inputStream = new FileInputStream(file);
+                    retriever.SetDataSource(inputStream.FD);
+                    bitmap = retriever.GetFrameAtTime(usecond);
+                }
+                if (bitmap != null)
+                {
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        bitmap.Compress(Bitmap.CompressFormat.Png, 0, stream);
+                        byte[] bitmapData = stream.ToArray();
+                        return ImageSource.FromStream(() => new MemoryStream(bitmapData));
+                    }
+                }
+                return null;
             }
-            return null;
         }
     }
 }

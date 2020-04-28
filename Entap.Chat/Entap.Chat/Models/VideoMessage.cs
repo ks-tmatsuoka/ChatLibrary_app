@@ -12,8 +12,7 @@ namespace Entap.Chat
         public VideoMessage()
         {
             PropertyChanged += VideoMessagePropertyChanged;
-            CreateMediaThumbnail();
-            //CreateUserIconThumbnail();
+            //CreateMediaThumbnail();
         }
 
         public VideoMessage(MessageBase messageBase)
@@ -31,81 +30,50 @@ namespace Entap.Chat
             ResendVisible = messageBase.ResendVisible;
             NotSendId = messageBase.NotSendId;
             DateVisible = messageBase.DateVisible;
-
-            CreateMediaThumbnail();
-            //CreateUserIconThumbnail();
+            MediaThumbnailUrl = messageBase.MediaThumbnailUrl;
+            //CreateMediaThumbnail();
         }
 
         private void VideoMessagePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(MediaUrl))
-            {
-                CreateMediaThumbnail();
-            }
-            //else if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(UserIcon))
+            //if (e.PropertyName == nameof(MediaUrl) && !string.IsNullOrEmpty(MediaUrl))
             //{
-            //    CreateUserIconThumbnail();
+            //    CreateMediaThumbnail();
             //}
         }
 
-        void CreateMediaThumbnail()
-        {
-            if (!string.IsNullOrEmpty(MediaUrl))
-            {
-                Task.Run(() =>
-                {
-                    // サムネイルを生成
-                    // ValueConverterだとTaskで処理できないのでここで処理している
-                    var source = DependencyService.Get<IVideoService>().GenerateThumbImage(MediaUrl);
-                    MediaThumbnail = source;
-                });
-            }
-        }
-
-        //void CreateUserIconThumbnail()
+        //bool RunningCreateMediaThumbnail = false;
+        //void CreateMediaThumbnail()
         //{
-        //    if (!string.IsNullOrEmpty(UserIcon) && SendUserId != Settings.Current.ChatService.GetUserId())
+        //    if (!string.IsNullOrEmpty(MediaUrl) && !RunningCreateMediaThumbnail)
         //    {
+        //        RunningCreateMediaThumbnail = true;
+        //        System.Diagnostics.Debug.WriteLine("Create start Thumbnail:" + MediaUrl);
         //        Task.Run(() =>
         //        {
-        //            //サイズを落とした画像をサムネイルとして表示
-        //            //ValueConverterだとTaskで処理できないのでここで処理している
-        //            //var source = DependencyService.Get<IImageService>().DownSizeImage(UserIcon);
-        //            UserIconThumbnail = UserIcon;
+        //            // サムネイルを生成
+        //            // ValueConverterだとTaskで処理できないのでここで処理している
+        //            var source = DependencyService.Get<IVideoService>().GenerateThumbImage(MediaUrl);
+        //            MediaThumbnail = source;
+        //            System.Diagnostics.Debug.WriteLine("Create end Thumbnail:" + MediaUrl);
+        //            RunningCreateMediaThumbnail = false;
         //        });
         //    }
         //}
 
-        private ImageSource mediaThumbnail;
-        public ImageSource MediaThumbnail
-        {
-            get
-            {
-                return mediaThumbnail;
-            }
-            set
-            {
-                if (mediaThumbnail != value)
-                {
-                    mediaThumbnail = value;
-                    OnPropertyChanged("MediaThumbnail");
-                }
-            }
-        }
-
-        //private ImageSource userIconThumbnail;
-        //public ImageSource UserIconThumbnail
+        //private ImageSource mediaThumbnail;
+        //public ImageSource MediaThumbnail
         //{
         //    get
         //    {
-        //        return userIconThumbnail;
+        //        return mediaThumbnail;
         //    }
         //    set
         //    {
-        //        if (userIconThumbnail != value)
+        //        if (mediaThumbnail != value)
         //        {
-        //            userIconThumbnail = value;
-        //            OnPropertyChanged("UserIconThumbnail");
+        //            mediaThumbnail = value;
+        //            OnPropertyChanged("MediaThumbnail");
         //        }
         //    }
         //}

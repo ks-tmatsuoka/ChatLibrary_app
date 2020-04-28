@@ -431,7 +431,7 @@
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
                                         DownsampleUseDipUnits="True"
-                                        Source="{Binding MediaThumbnail, Mode=TwoWay}"/>
+                                        Source="{Binding MediaThumbnailUrl, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
@@ -522,7 +522,7 @@
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
                                         DownsampleUseDipUnits="True"
-                                        Source="{Binding MediaThumbnail, Mode=TwoWay}"/>
+                                        Source="{Binding MediaThumbnailUrl, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"

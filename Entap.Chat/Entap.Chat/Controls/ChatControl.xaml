@@ -137,7 +137,7 @@
                                 <ffimageloading:CachedImage
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
-                                    Source="{Binding UserIcon, Mode=TwoWay}"
+                                    Source="{Binding UserIcon, Mode=OneTime}"
                                     Aspect="AspectFill"
                                     DownsampleUseDipUnits="True"
                                     DownsampleHeight="{Binding Source={x:Reference Content}, Path=UserIconSize}"
@@ -268,7 +268,7 @@
                                         DownsampleUseDipUnits="True"
                                         DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                         DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                        Source="{Binding MediaUrl, Mode=TwoWay}"/>
+                                        Source="{Binding MediaUrl, Mode=OneTime}"/>
                                     <StackLayout
                                         Spacing="0"
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
@@ -350,7 +350,7 @@
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     Aspect="AspectFill"
-                                    Source="{Binding UserIcon, Mode=TwoWay}"
+                                    Source="{Binding UserIcon, Mode=OneTime}"
                                     DownsampleUseDipUnits="True"
                                     DownsampleHeight="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     DownsampleWidth="{Binding Source={x:Reference Content}, Path=UserIconSize}"
@@ -371,7 +371,7 @@
                                     DownsampleUseDipUnits="True"
                                     DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                     DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                    Source="{Binding MediaUrl, Mode=TwoWay}"/>
+                                    Source="{Binding MediaUrl, Mode=OneTime}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -507,7 +507,7 @@
                                         DownsampleUseDipUnits="True"
                                         DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                         DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                        Source="{Binding MediaThumbnail, Mode=TwoWay}"/>
+                                        Source="{Binding MediaThumbnailUrl, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
@@ -593,7 +593,7 @@
                                     WidthRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     HeightRequest="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     Aspect="AspectFill"
-                                    Source="{Binding UserIcon, Mode=TwoWay}"
+                                    Source="{Binding UserIcon, Mode=OneTime}"
                                     DownsampleWidth="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     DownsampleHeight="{Binding Source={x:Reference Content}, Path=UserIconSize}"
                                     DownsampleUseDipUnits="True"
@@ -616,7 +616,7 @@
                                         DownsampleWidth="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                         DownsampleHeight="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
                                         DownsampleToViewSize="True"
-                                        Source="{Binding MediaThumbnail, Mode=TwoWay}"/>
+                                        Source="{Binding MediaThumbnailUrl, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
