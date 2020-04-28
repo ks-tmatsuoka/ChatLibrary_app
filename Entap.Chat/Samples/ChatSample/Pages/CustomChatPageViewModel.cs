@@ -245,12 +245,14 @@ namespace ChatSample
                 {
                     ItemsSource[index].MessageId = sendMessageResponseBase.MessageId;
                     ItemsSource[index].SendDateTime = sendMessageResponseBase.SendDateTime;
+                    ItemsSource[index].MediaThumbnailUrl = sendMessageResponseBase.MediaThumbnailUrl;
                 }
                 else
                 {
                     ItemsSource.RemoveAt(index);
                     msg.MessageId = sendMessageResponseBase.MessageId;
                     msg.SendDateTime = sendMessageResponseBase.SendDateTime;
+                    msg.MediaThumbnailUrl = sendMessageResponseBase.MediaThumbnailUrl;
                     ItemsSource.Add(msg);
                 }
 
@@ -258,6 +260,14 @@ namespace ChatSample
                 {
                     Settings.Current.ChatService.DeleteNotSendMessageData(msg.NotSendId);
                 }
+            }
+        }
+
+        public double ImageMessageSize
+        {
+            get
+            {
+                return 150;
             }
         }
 

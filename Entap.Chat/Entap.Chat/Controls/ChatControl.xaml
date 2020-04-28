@@ -286,7 +286,6 @@
                                             ProgressColor="White"/>
                                     </StackLayout>
                                 </AbsoluteLayout>
-                                
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"

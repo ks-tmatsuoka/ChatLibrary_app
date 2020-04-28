@@ -128,7 +128,7 @@
                                 <ffimageloading:CachedImage
                                     WidthRequest="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     HeightRequest="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
-                                    Source="{Binding UserIcon, Mode=TwoWay}"
+                                    Source="{Binding UserIcon, Mode=OneTime}"
                                     Aspect="AspectFill"
                                     DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
@@ -190,6 +190,11 @@
                                 HorizontalOptions="EndAndExpand"
                                 Spacing="0"
                                 Margin="0,0,6,0">
+                                <!-- MessageIdをTimeConverterのMessageIdにバインドする最善策がわからなかったので一旦このLabelを使ってバインドさせている -->
+                                <Label
+                                    x:Name="MessageId"
+                                    Text="{Binding MessageId}"
+                                    IsVisible="false"/>
                                 <ImageButton
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="CenterAndExpand"
@@ -198,9 +203,16 @@
                                     HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     Aspect="AspectFit"
-                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                     CommandParameter="{Binding MediaUrl}"
-                                    Command="{Binding Source={x:Reference ViewModel}, Path=ImageShareCommand}"/>
+                                    Command="{Binding Source={x:Reference ViewModel}, Path=ImageShareCommand}">
+                                    <ImageButton.IsVisible>
+                                        <Binding Path="ResendVisible">
+                                            <Binding.Converter>
+                                                <chat:BoolReverseConverter MessageId="{Binding Source={x:Reference MessageId}, Path=Text}"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </ImageButton.IsVisible>
+                                </ImageButton>
                                 <StackLayout
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="End"
@@ -218,8 +230,16 @@
                                         </Label.Text>
                                     </Label>
                                     <Label
-                                        Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
-                                        FontSize="10"/>
+                                        IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
+                                        FontSize="10">
+                                        <Label.Text>
+                                            <Binding Path="SendDateTime">
+                                                <Binding.Converter>
+                                                    <chat:TimeConverter MessageId="{Binding Source={x:Reference MessageId}, Path=Text}"/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Label.Text>
+                                    </Label>
                                 </StackLayout>
                             </StackLayout>
 
@@ -228,13 +248,35 @@
                                 CornerRadius="8"
                                 BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=MyMessageBgColor}"
                                 Padding="0">
-                                <ffimageloading:CachedImage
-                                    Margin="6"
-                                    WidthRequest="100"
-                                    HeightRequest="100"
-                                    Aspect="AspectFit"
-                                    DownsampleUseDipUnits="True"
-                                    Source="{Binding MediaUrl, Mode=TwoWay}"/>
+                                <AbsoluteLayout
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}">
+                                    <ffimageloading:CachedImage
+                                        Margin="6"
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Aspect="AspectFit"
+                                        DownsampleUseDipUnits="True"
+                                        DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                        DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                        Source="{Binding MediaUrl, Mode=OneTime}"/>
+                                    <StackLayout
+                                        Spacing="0"
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        BackgroundColor="#B3000000"
+                                        IsVisible="{Binding ProgressVisible}">
+                                        <ProgressBar
+                                            Margin="16"
+                                            Progress="{Binding UploadProgress}"
+                                            HeightRequest="3"
+                                            BackgroundColor="#B3000000"
+                                            WidthRequest="120"
+                                            VerticalOptions="CenterAndExpand"
+                                            HorizontalOptions="CenterAndExpand"
+                                            ProgressColor="White"/>
+                                    </StackLayout>
+                                </AbsoluteLayout>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -300,7 +342,7 @@
                                     DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     Aspect="AspectFill"
-                                    Source="{Binding UserIcon, Mode=TwoWay}"
+                                    Source="{Binding UserIcon, Mode=OneTime}"
                                     DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
@@ -313,11 +355,13 @@
                                 <ffimageloading:CachedImage
                                     Margin="6"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="100"
-                                    HeightRequest="100"
+                                    WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                    HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
                                     Aspect="AspectFit"
                                     DownsampleUseDipUnits="True"
-                                    Source="{Binding MediaUrl, Mode=TwoWay}"/>
+                                    DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                    DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                    Source="{Binding MediaUrl, Mode=OneTime}"/>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding MediaUrl}"
@@ -384,6 +428,11 @@
                                 HorizontalOptions="EndAndExpand"
                                 Spacing="0"
                                 Margin="0,0,6,0">
+                                <!-- MessageIdをTimeConverterのMessageIdにバインドする最善策がわからなかったので一旦このLabelを使ってバインドさせている -->
+                                <Label
+                                    x:Name="MessageId"
+                                    Text="{Binding MessageId}"
+                                    IsVisible="false"/>
                                 <ImageButton
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="CenterAndExpand"
@@ -392,9 +441,16 @@
                                     HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ShareIconSize}"
                                     Source="share_icon.png"
                                     Aspect="AspectFit"
-                                    IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
                                     CommandParameter="{Binding MediaUrl}"
-                                    Command="{Binding Source={x:Reference ViewModel}, Path=VideoShareCommand}"/>
+                                    Command="{Binding Source={x:Reference ViewModel}, Path=VideoShareCommand}">
+                                    <ImageButton.IsVisible>
+                                        <Binding Path="ResendVisible">
+                                            <Binding.Converter>
+                                                <chat:BoolReverseConverter MessageId="{Binding Source={x:Reference MessageId}, Path=Text}"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </ImageButton.IsVisible>
+                                </ImageButton>
                                 <StackLayout
                                     HorizontalOptions="EndAndExpand"
                                     VerticalOptions="End"
@@ -412,8 +468,16 @@
                                         </Label.Text>
                                     </Label>
                                     <Label
-                                        Text="{Binding SendDateTime, Converter={StaticResource timeConverter}}"
-                                        FontSize="10"/>
+                                        IsVisible="{Binding ResendVisible, Converter={StaticResource boolReverseConverter}}"
+                                        FontSize="10">
+                                        <Label.Text>
+                                            <Binding Path="SendDateTime">
+                                                <Binding.Converter>
+                                                    <chat:TimeConverter MessageId="{Binding Source={x:Reference MessageId}, Path=Text}"/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Label.Text>
+                                    </Label>
                                 </StackLayout>
                             </StackLayout>
 
@@ -423,20 +487,38 @@
                                 BackgroundColor="{Binding Source={x:Reference ViewModel}, Path=MyMessageBgColor}"
                                 Padding="0">
                                 <AbsoluteLayout
-                                    Margin="6"
                                     WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
                                     HeightRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}">
                                     <ffimageloading:CachedImage
+                                        Margin="6"
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
                                         DownsampleUseDipUnits="True"
+                                        DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                        DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
                                         Source="{Binding MediaThumbnailUrl, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
                                         AbsoluteLayout.LayoutBounds="0.5,0.5,0.3,0.3"
                                         AbsoluteLayout.LayoutFlags="All"
                                         Source="start_icon.png"/>
+                                    <StackLayout
+                                        Spacing="0"
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        BackgroundColor="#B3000000"
+                                        IsVisible="{Binding ProgressVisible}">
+                                        <ProgressBar
+                                            Margin="16"
+                                            Progress="{Binding UploadProgress}"
+                                            HeightRequest="3"
+                                            BackgroundColor="#B3000000"
+                                            WidthRequest="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                            VerticalOptions="CenterAndExpand"
+                                            HorizontalOptions="CenterAndExpand"
+                                            ProgressColor="White"/>
+                                    </StackLayout>
                                 </AbsoluteLayout>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -503,7 +585,7 @@
                                     Aspect="AspectFill"
                                     DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
                                     DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=UserIconSize}"
-                                    Source="{Binding UserIcon, ModeTwoWay}"
+                                    Source="{Binding UserIcon, Mode=OneTime}"
                                     DownsampleUseDipUnits="True"
                                     VerticalOptions="StartAndExpand"/>
                             </Frame>
@@ -522,6 +604,8 @@
                                         AbsoluteLayout.LayoutFlags="All"
                                         Aspect="AspectFit"
                                         DownsampleUseDipUnits="True"
+                                        DownsampleWidth="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
+                                        DownsampleHeight="{Binding Source={x:Reference ViewModel}, Path=ImageMessageSize}"
                                         Source="{Binding MediaThumbnailUrl, Mode=TwoWay}"/>
                                     <Image
                                         BackgroundColor="Transparent"
