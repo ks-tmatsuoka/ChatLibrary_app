@@ -63,7 +63,7 @@ namespace ChatSample
         }
         public static string BaseURL()
         {
-            return HostName() + "api/";
+            return HostName() + "chat_api/";
         }
         
         public static class EntapAPIName
@@ -169,7 +169,6 @@ namespace ChatSample
                     // 2 秒 * リトライ回数分ずつ待ち時間を増やす
                     .WaitAndRetryAsync(RetryCount, retryAttempt => TimeSpan.FromSeconds(retryAttempt * 2))
                     .ExecuteAsync(async () => await client.PostAsync(url, content, cts.Token));
-
                 if (!policyResult.IsSuccessStatusCode)
                 {
                     if (showError)
