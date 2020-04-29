@@ -275,6 +275,14 @@
                                         AbsoluteLayout.LayoutFlags="All"
                                         BackgroundColor="#B3000000"
                                         IsVisible="{Binding ProgressVisible}">
+                                        <Button
+                                            HorizontalOptions="CenterAndExpand"
+                                            VerticalOptions="EndAndExpand"
+                                            HeightRequest="35"
+                                            WidthRequest="35"
+                                            BackgroundColor="Transparent"
+                                            ImageSource="send_cancel.png"
+                                            Command="{Binding Source={x:Reference Content}, Path=MsgSendCancelCommand}"/>
                                         <ProgressBar
                                             Margin="16"
                                             Progress="{Binding UploadProgress}"
@@ -518,13 +526,21 @@
                                         AbsoluteLayout.LayoutFlags="All"
                                         BackgroundColor="#B3000000"
                                         IsVisible="{Binding ProgressVisible}">
+                                        <Button
+                                            HorizontalOptions="CenterAndExpand"
+                                            VerticalOptions="EndAndExpand"
+                                            HeightRequest="35"
+                                            WidthRequest="35"
+                                            BackgroundColor="Transparent"
+                                            ImageSource="send_cancel.png"
+                                            Command="{Binding Source={x:Reference Content}, Path=MsgSendCancelCommand}"/>
                                         <ProgressBar
                                             Margin="16"
                                             Progress="{Binding UploadProgress}"
                                             HeightRequest="3"
                                             BackgroundColor="#B3000000"
                                             WidthRequest="{Binding Source={x:Reference Content}, Path=ImageMessageSize}"
-                                            VerticalOptions="CenterAndExpand"
+                                            VerticalOptions="StartAndExpand"
                                             HorizontalOptions="CenterAndExpand"
                                             ProgressColor="White"/>
                                     </StackLayout>

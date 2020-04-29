@@ -14,6 +14,7 @@ namespace ChatSample
     public class APIManager
     {
         static HttpClient client;
+        static HttpClient infiniteTimeSpanClient;
 
         // Entap標準
         public class APIStatus
@@ -240,20 +241,21 @@ namespace ChatSample
         }
 
 
-        public static async Task<string> PostFile(string url, byte[] fileData, string fileName, Dictionary<string, string> DictionaryData, string fileType = "file", ProgressDelegate progressDelegate  = null, Action errorCallback = null, int timeoutSecond = 30)
+        public static async Task<string> PostFile(string url, byte[] fileData, string fileName, Dictionary<string, string> DictionaryData, CancellationTokenSource cancellationTokenSource, string fileType = "file", ProgressDelegate progressDelegate  = null, Action errorCallback = null)
         {
             var content = new MultipartFormDataContent();
-
             foreach (KeyValuePair<string, string> pair in DictionaryData)
             {
                 content.Add(new StringContent(pair.Value), pair.Key);
             }
+
+            ProgressStreamContent progressContent = null;
             if (fileData != null && fileData.Length > 0)
             {
                 
                 if (progressDelegate != null)
                 {
-                    var progressContent = new ProgressStreamContent(new MemoryStream(fileData));
+                    progressContent = new ProgressStreamContent(new MemoryStream(fileData));
                     progressContent.Progress = progressDelegate;
                     content.Add(progressContent, fileType, fileName);
                 }
@@ -262,8 +264,83 @@ namespace ChatSample
                     content.Add(new StreamContent(new MemoryStream(fileData)), fileType, fileName);   
                 }
             }
-                
-            return await PostBase(url, content, timeoutSecond);
+
+            bool isLoopRunning = true;
+            if (infiniteTimeSpanClient == null)
+            {
+                infiniteTimeSpanClient = new HttpClient() {Timeout= Timeout.InfiniteTimeSpan };
+            }
+            try
+            {
+                Task.Run(() =>
+                {
+                    while (isLoopRunning)
+                    {
+                        if (cancellationTokenSource.IsCancellationRequested)
+                        {
+                            if (progressContent != null)
+                            {
+                                progressContent.Dispose();
+                            }
+                        }
+                    }
+                    
+                });
+                var result =  await infiniteTimeSpanClient.PostAsync(url, content, cancellationTokenSource.Token);
+                isLoopRunning = false;
+                if (!result.IsSuccessStatusCode)
+                {
+                    return "{\"Status\":" + APIStatus.HttpConnectError + ",\"Message\": \"\",\"Data\": {}}";
+                }
+
+                var responseStr = await result.Content.ReadAsStringAsync();
+                var response = JsonConvert.DeserializeObject<ResponseBase>(responseStr);
+
+                switch (response.Status)
+                {
+                    case APIStatus.Succeeded:
+                        // 成功
+                        return responseStr;
+
+                    case APIStatus.FatalError:
+                        // 致命的なエラー：ErrorMessageを表示し、「再試行」・「キャンセル」の選択肢を表示
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            App.Current.MainPage.DisplayAlert("エラー", response.Message, "閉じる");
+                        });
+                        return responseStr;
+
+                    case APIStatus.ValidationError:
+                        // バリデーションエラー：ErrorMessageを表示
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            App.Current.MainPage.DisplayAlert("エラー", response.Message, "閉じる");
+                        });
+                        return responseStr;
+
+                    case APIStatus.UnderMaintenance:
+                        // メンテナンス中：ErrorMessageを表示。確認ボタンタップ後はタイトル画面に遷移
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            App.Current.MainPage.DisplayAlert("メンテナンス中", response.Message, "閉じる");
+                        });
+                        return responseStr;
+
+                    case APIStatus.SessionTimeOut:
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            App.Current.MainPage.DisplayAlert("エラー", "タイムアウトしました", "閉じる");
+                        });
+                        return responseStr;
+                }
+                return responseStr;
+            }
+            catch (Exception ex)
+            {
+                isLoopRunning = false;
+                Debug.WriteLine("API_PostError : " + ex.Message);
+                return "{\"Status\":" + APIStatus.Exception + ",\"Message\": \"" + ex.Message.Replace("\"", " ").Replace(":", " ") + "\",\"Data\": {}}";
+            }
         }
     }
 }

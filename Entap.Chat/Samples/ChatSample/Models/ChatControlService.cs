@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Entap.Chat;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ namespace ChatSample
         /// <param name="roomId"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public async Task<SendMessageResponseBase> SendMessage(int roomId, MessageBase msg, int notSendMessageId)
+        public async Task<SendMessageResponseBase> SendMessage(int roomId, MessageBase msg, int notSendMessageId, CancellationTokenSource cts=null)
         {
             var dic = new Dictionary<string, string>();
             dic["RoomId"] = roomId.ToString();
@@ -52,8 +53,13 @@ namespace ChatSample
                     return await Task.FromResult<SendMessageResponseBase>(new SendMessageResponseBase { MessageId = notSendMessageId });
                 }
             }
+            if (cts is null)
+            {
+                cts = new CancellationTokenSource();
+                cts.CancelAfter(TimeSpan.FromSeconds(15));
+            }
 
-            var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, fileType, msg.HandleUploadProgress);
+            var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.SendMessage), bytes, name, dic, cts, fileType, msg.HandleUploadProgress);
             var resp = JsonConvert.DeserializeObject<RespSendMessage>(json);
             if (resp.Status == APIManager.APIStatus.Succeeded)
                 return await Task.FromResult<SendMessageResponseBase>(resp.Data);

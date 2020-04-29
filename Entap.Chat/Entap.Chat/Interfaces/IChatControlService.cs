@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 
@@ -8,7 +9,7 @@ namespace Entap.Chat
     [Preserve(AllMembers = true)]
     public interface IChatControlService
     {
-        Task<SendMessageResponseBase> SendMessage(int roomId, MessageBase msg, int notSendMessageId);
+        Task<SendMessageResponseBase> SendMessage(int roomId, MessageBase msg, int notSendMessageId, CancellationTokenSource cts = null);
         Task<string> SelectImage();
         Task<string> TakePicture();
         Task ImageShare(string imagePath);

@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using ChatSample.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Threading;
 
 namespace ChatSample
 {
@@ -102,7 +103,6 @@ namespace ChatSample
             }
             AddMessageCommandParameter = msg;
             AddMessageCommand?.Execute(AddMessageCommandParameter);
-
             var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
             var index = ItemsSource.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
@@ -213,16 +213,25 @@ namespace ChatSample
             }
         }
 
+        CancellationTokenSource cancellationToken;
         async Task ChatAddMedia(MessageBase msg)
         {
             AddMessageCommandParameter = msg;
             AddMessageCommand?.Execute(AddMessageCommandParameter);
-
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
+            cancellationToken = new CancellationTokenSource();
+            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId, cancellationToken);
             var index = ItemsSource.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    msg.UploadProgress = 1;
+                    ItemsSource.RemoveAt(index);
+                    cancellationToken = null;
+                    return;
+                }
                 // 通信エラー
+                msg.UploadProgress = 1;
                 var delImgPath = msg.MediaUrl;
                 string delImgExtension = System.IO.Path.GetExtension(delImgPath);
                 var target = ItemsSource[index];
@@ -386,6 +395,12 @@ namespace ChatSample
             {
                 SendLibraryImage();
             }
+        });
+
+        public Command MsgSendCancelCommand => new Command(() =>
+        {
+            if (cancellationToken != null)
+                cancellationToken.Cancel();
         });
 
         private int roomId;

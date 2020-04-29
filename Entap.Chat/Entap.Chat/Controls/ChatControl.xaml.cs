@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using System.Linq;
 using Entap.Chat.Modules;
 using Xamarin.Forms.Internals;
+using System.Threading;
 
 namespace Entap.Chat
 {
@@ -169,7 +170,6 @@ namespace Entap.Chat
                 msg.ResendVisible = false;
             }
             ChatList.AddMessage(msg);
-
             var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
@@ -226,13 +226,22 @@ namespace Entap.Chat
             await ChatAddMedia(msg);
         }
 
+        CancellationTokenSource cancellationToken;
         async Task ChatAddMedia(MessageBase msg)
         {
             ChatList.AddMessage(msg);
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
+            cancellationToken = new CancellationTokenSource();
+            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId, cancellationToken);
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    msg.UploadProgress = 1;
+                    ChatList.Messages.RemoveAt(index);
+                    cancellationToken = null;
+                    return;
+                }
                 // 通信エラー
                 var delMediaPath = msg.MediaUrl;
                 string extension = System.IO.Path.GetExtension(delMediaPath);
@@ -266,6 +275,12 @@ namespace Entap.Chat
                 ChatList.NotSendMessageDeleteFromStorage(msg.NotSendId);
             }
         }
+
+        public Command MsgSendCancelCommand => new Command(() =>
+        {
+            if (cancellationToken != null)
+                cancellationToken.Cancel();
+        });
 
         public Command ImageTapCommand => new Command((pm) =>
         {

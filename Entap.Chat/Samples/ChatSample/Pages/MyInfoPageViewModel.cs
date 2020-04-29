@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Xamarin.Forms;
@@ -57,7 +58,9 @@ namespace ChatSample
                     return;
                 }
 
-                var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.RegistMyInfomation), bytes, name, dic, fileType);
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(TimeSpan.FromSeconds(30));
+                var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.RegistMyInfomation), bytes, name, dic, cts, fileType);
                 var resp = JsonConvert.DeserializeObject<ResponseBase>(json);
                 if (resp.Status == APIManager.APIStatus.Succeeded)
                 {
