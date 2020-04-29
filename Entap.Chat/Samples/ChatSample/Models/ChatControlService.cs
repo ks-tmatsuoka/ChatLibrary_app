@@ -191,9 +191,10 @@ namespace ChatSample
         {
             string photoStr = "写真";
             string VideoStr = "動画";
+            string cancelStr = "キャンセル";
             if (type == (int)BottomControllerMenuType.Camera)
             {
-                var selected = await App.Current.MainPage.DisplayActionSheet("選択してください", null, null, new string[2] { photoStr, VideoStr });
+                var selected = await App.Current.MainPage.DisplayActionSheet("選択してください", cancelStr, null, new string[2] { photoStr, VideoStr });
                 if (selected == photoStr)
                 {
                     var imgPath = await TakePicture();
@@ -251,7 +252,7 @@ namespace ChatSample
             }
             else if (type == (int)BottomControllerMenuType.Library)
             {
-                var selected = await App.Current.MainPage.DisplayActionSheet("選択してください", null, null, new string[2] { photoStr, VideoStr });
+                var selected = await App.Current.MainPage.DisplayActionSheet("選択してください", cancelStr, null, new string[2] { photoStr, VideoStr });
                 if (selected == photoStr)
                 {
                     var imgPath = await SelectImage();
