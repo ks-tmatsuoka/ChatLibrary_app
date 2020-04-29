@@ -19,11 +19,29 @@ namespace Entap.Chat
         public IChatService ChatService;
         public IChatControlService ChatControlService;
 
+        /// <summary>
+        /// チャットの各メッセージの送信時間の表示フォーマット
+        /// </summary>
         public string TimeFormat;
+        /// <summary>
+        /// チャット内の既読のテキスト
+        /// </summary>
         public string AlreadyReadText;
+        /// <summary>
+        /// チャット内の日付の今日のテキスト
+        /// </summary>
         public string TodayText;
+        /// <summary>
+        /// チャット内の日付のテキストフォーマット
+        /// </summary>
         public string DateFormat;
+        /// <summary>
+        /// メンバー追加時の文言指定
+        /// </summary>
         public string MemberAddRoomText;
+        /// <summary>
+        /// メンバー退出時の文言指定
+        /// </summary>
         public string MemberLeaveRoomText;
 
         public void Init(IChatService chatService, IChatControlService chatControlService=null)

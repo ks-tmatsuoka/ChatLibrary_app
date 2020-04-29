@@ -180,7 +180,7 @@ namespace ChatSample
         }
 
         /// <summary>
-        /// BottomControllerの各メニュー押した際の動作指定
+        /// BottomControllerのMenuViewの各メニュー押した際の動作指定
         /// </summary>
         /// <param name="notSendMessageId"></param>
         /// <param name="type"></param>
