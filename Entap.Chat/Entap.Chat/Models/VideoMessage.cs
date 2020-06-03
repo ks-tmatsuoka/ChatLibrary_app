@@ -11,6 +11,7 @@ namespace Entap.Chat
     {
         public VideoMessage()
         {
+            MessageType = (int)Chat.MessageType.Video;
             PropertyChanged += VideoMessagePropertyChanged;
             //CreateMediaThumbnail();
         }

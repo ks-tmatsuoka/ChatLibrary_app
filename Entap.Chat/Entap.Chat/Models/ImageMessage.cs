@@ -10,6 +10,7 @@ namespace Entap.Chat
     {
         public ImageMessage()
         {
+            MessageType = (int)Chat.MessageType.Image;
             //PropertyChanged += ImageMessagePropertyChanged;
             //CreateMediaThumbnail();
             //CreateUserIconThumbnail();

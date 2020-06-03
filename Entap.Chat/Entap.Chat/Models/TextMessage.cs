@@ -10,6 +10,7 @@ namespace Entap.Chat
     {
         public TextMessage()
         {
+            MessageType = (int)Chat.MessageType.Text;
             //PropertyChanged += TextMessagePropertyChanged;
             //CreateThumbnail();
         }
