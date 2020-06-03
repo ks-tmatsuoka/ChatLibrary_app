@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 
@@ -12,6 +13,7 @@ namespace Entap.Chat
         Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId, int messageDirection, List<ChatMemberBase> members);
         Task<bool> SendAlreadyRead(int roomId, int messageId);
         Task<List<ChatMemberBase>> GetRoomMembers(int roomId);
+        Task<SendMessageResponseBase> SendMessage(int roomId, MessageBase msg, int notSendMessageId, CancellationTokenSource cts = null);
         void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId, List<ChatMemberBase> members);
         void Dispose();
         void AddNotSendMessages(int roomId, ObservableCollection<MessageBase> messageBases);

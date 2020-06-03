@@ -103,7 +103,7 @@ namespace ChatSample
             }
             AddMessageCommandParameter = msg;
             AddMessageCommand?.Execute(AddMessageCommandParameter);
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
+            var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
             var index = ItemsSource.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
@@ -219,7 +219,7 @@ namespace ChatSample
             AddMessageCommandParameter = msg;
             AddMessageCommand?.Execute(AddMessageCommandParameter);
             cancellationToken = new CancellationTokenSource();
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId, cancellationToken);
+            var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId, cancellationToken);
             var index = ItemsSource.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {

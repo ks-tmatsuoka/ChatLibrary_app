@@ -32,6 +32,9 @@ namespace Entap.Chat
 
         void Init()
         {
+            if (Entap.Chat.Settings.Current.ChatService is null)
+                throw new ArgumentNullException($"{typeof(Settings).FullName}.{nameof(Settings.ChatService)}");
+
             HasUnevenRows = true;
             SelectionMode = ListViewSelectionMode.None;
             SeparatorVisibility = SeparatorVisibility.None;
@@ -65,7 +68,7 @@ namespace Entap.Chat
             lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
             {
-                chatMembers = await Settings.Current.ChatService.GetRoomMembers(RoomId);
+                //chatMembers = await Settings.Current.ChatService.GetRoomMembers(RoomId);
                 IEnumerable<MessageBase> messages;
                 if (lastReadMessageId == 0)
                 {

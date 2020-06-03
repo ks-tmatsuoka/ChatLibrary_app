@@ -16,6 +16,9 @@ namespace Entap.Chat
         {
             InitializeComponent();
 
+            if (Entap.Chat.Settings.Current.ChatControlService is null)
+                throw new ArgumentNullException($"{typeof(Settings).FullName}.{nameof(Settings.ChatControlService)}");
+
             var safearea = DependencyService.Get<IDisplayService>().GetSafeArea();
             this.Controller.Padding = new Thickness(0, 0, 0, safearea.Bottom);
 
@@ -170,7 +173,7 @@ namespace Entap.Chat
                 msg.ResendVisible = false;
             }
             ChatList.AddMessage(msg);
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
+            var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId);
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
@@ -231,7 +234,7 @@ namespace Entap.Chat
         {
             ChatList.AddMessage(msg);
             cancellationToken = new CancellationTokenSource();
-            var sendMessageResponseBase = await Settings.Current.ChatControlService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId, cancellationToken);
+            var sendMessageResponseBase = await Settings.Current.ChatService.SendMessage(RoomId, msg, ChatListView.NotSendMessageId, cancellationToken);
             var index = ChatList.Messages.IndexOf(msg);
             if (sendMessageResponseBase.MessageId < 0)
             {
