@@ -20,7 +20,7 @@
             </Grid.ColumnDefinitions>
             <chat:ChatControl
                 RoomId="{Binding RoomId}"
-                RoomType="{Binding RoomType}"
+                IsGroupChat="{Binding IsGroupChat}"
                 LastReadMessageId="{Binding LastReadMessageId}"
                 BottomControllerMenuView="{Binding BottomControllerMenuView}"
                 HorizontalOptions="FillAndExpand"

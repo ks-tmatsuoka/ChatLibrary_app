@@ -107,11 +107,11 @@ namespace ChatSample
                 {
                     UserId = UserDataManager.Instance.UserId,
                     RoomName = EditorText,
-                    RoomType = 3,
+                    RoomType = RoomTypes.UserDirect,
                     InvitationUserIds = InvitationUserIds
                 };
                 if (data.InvitationUserIds.Count > 1)
-                    data.RoomType = 4;
+                    data.RoomType = RoomTypes.UserGroup;
 
                 var reqJson = JsonConvert.SerializeObject(data);
                 var json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.CreateRoom), new ReqCreateRoom { Data = reqJson });

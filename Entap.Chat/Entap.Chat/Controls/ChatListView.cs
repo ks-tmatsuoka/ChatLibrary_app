@@ -62,7 +62,7 @@ namespace Entap.Chat
         // そのためOpacity=0で消しておいて、Scroll終わってからOpacityを戻してリストを表示している
         void GetFirstDisplayMessage()
         {
-            if (RoomId < 0 || RoomType < 1 || LastReadMessageId < 0)
+            if (RoomId < 0 || LastReadMessageId < 0)
                 return;
             Opacity = 0;
             lastReadMessageId = LastReadMessageId;
@@ -159,10 +159,6 @@ namespace Entap.Chat
                 GetFirstDisplayMessage();
             }
             else if (propertyName == RoomIdProperty.PropertyName)
-            {
-                GetFirstDisplayMessage();
-            }
-            else if (propertyName == RoomTypeProperty.PropertyName)
             {
                 GetFirstDisplayMessage();
             }
@@ -580,17 +576,21 @@ namespace Entap.Chat
             set { SetValue(RoomIdProperty, value); }
         }
 
-        /// <summary>
-        /// チャットのルームタイプ
-        /// </summary>
-        public static readonly BindableProperty RoomTypeProperty =
-            BindableProperty.Create(nameof(RoomType), typeof(int), typeof(ChatListView), 0,
-                propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((ChatListView)bindable).RoomType = (int)newValue);
-        public int RoomType
+        ///// <summary>
+        ///// グループチャットか
+        ///// </summary>
+        public static readonly BindableProperty IsGroupChatProperty = BindableProperty.Create(
+            nameof(IsGroupChat),
+            typeof(bool),
+            typeof(ChatListView),
+            false,
+            defaultBindingMode: BindingMode.TwoWay,
+            propertyChanged: (bindable, oldValue, newValue) =>
+            ((ChatListView)bindable).IsGroupChat = (bool)newValue);
+        public bool IsGroupChat
         {
-            get { return (int)GetValue(RoomTypeProperty); }
-            set { SetValue(RoomTypeProperty, value); }
+            get { return (bool)GetValue(IsGroupChatProperty); }
+            set { SetValue(IsGroupChatProperty, value); }
         }
 
         /// <summary>

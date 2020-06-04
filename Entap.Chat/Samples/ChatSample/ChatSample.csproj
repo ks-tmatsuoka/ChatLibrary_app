@@ -34,5 +34,6 @@
     <Folder Include="Interfaces\" />
     <Folder Include="Behavior\" />
     <Folder Include="Views\" />
+    <Folder Include="Constants\" />
   </ItemGroup>
 </Project>

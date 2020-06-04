@@ -52,7 +52,7 @@
                                     <Label.Text>
                                         <Binding Path="AlreadyReadCount">
                                             <Binding.Converter>
-                                                <chat:AlreadyReadConverter RoomType="{Binding Source={x:Reference ViewModel}, Path=RoomType}"/>
+                                                <chat:AlreadyReadConverter IsGroupChat="{Binding Source={x:Reference ViewModel}, Path=IsGroupChat}"/>
                                             </Binding.Converter>
                                         </Binding>
                                     </Label.Text>
@@ -224,7 +224,7 @@
                                         <Label.Text>
                                             <Binding Path="AlreadyReadCount">
                                                 <Binding.Converter>
-                                                    <chat:AlreadyReadConverter RoomType="{Binding Source={x:Reference ViewModel}, Path=RoomType}"/>
+                                                    <chat:AlreadyReadConverter IsGroupChat="{Binding Source={x:Reference ViewModel}, Path=IsGroupChat}"/>
                                                 </Binding.Converter>
                                             </Binding>
                                         </Label.Text>
@@ -470,7 +470,7 @@
                                         <Label.Text>
                                             <Binding Path="AlreadyReadCount">
                                                 <Binding.Converter>
-                                                    <chat:AlreadyReadConverter RoomType="{Binding Source={x:Reference ViewModel}, Path=RoomType}"/>
+                                                    <chat:AlreadyReadConverter IsGroupChat="{Binding Source={x:Reference ViewModel}, Path=IsGroupChat}"/>
                                                 </Binding.Converter>
                                             </Binding>
                                         </Label.Text>
@@ -741,7 +741,7 @@
             </Grid.ColumnDefinitions>
             <chat:ChatListView
                 RoomId="{Binding RoomId}"
-                RoomType="{Binding RoomType}"
+                IsGroupChat="{Binding IsGroupChat}"
                 LastReadMessageId="{Binding LastReadMessageId}"
                 BackgroundColor="Lime"
                 HorizontalOptions="FillAndExpand"

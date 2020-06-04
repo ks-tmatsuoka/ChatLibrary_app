@@ -8,11 +8,18 @@ namespace Entap.Chat
     [Preserve(AllMembers = true)]
     public class AlreadyReadConverter : BindableObject, IValueConverter
     {
-        public static BindableProperty RoomTypeProperty = BindableProperty.Create("RoomType", typeof(int), typeof(AlreadyReadConverter));
-        public int RoomType
+        //public static BindableProperty RoomTypeProperty = BindableProperty.Create("RoomType", typeof(int), typeof(AlreadyReadConverter));
+        //public int RoomType
+        //{
+        //    get => (int)GetValue(RoomTypeProperty);
+        //    set => SetValue(RoomTypeProperty, value);
+        //}
+
+        public static BindableProperty IsGroupChatProperty = BindableProperty.Create("IsGroupChat", typeof(bool), typeof(AlreadyReadConverter));
+        public bool IsGroupChat
         {
-            get => (int)GetValue(RoomTypeProperty);
-            set => SetValue(RoomTypeProperty, value);
+            get => (bool)GetValue(IsGroupChatProperty);
+            set => SetValue(IsGroupChatProperty, value);
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -20,7 +27,7 @@ namespace Entap.Chat
             var count = (int)value;
             if (count > 1)
             {
-                if (RoomType == 2 || RoomType == 4)
+                if (IsGroupChat)
                     return Settings.Current.AlreadyReadText + " " + (count - 1);
                 return Settings.Current.AlreadyReadText;
             }

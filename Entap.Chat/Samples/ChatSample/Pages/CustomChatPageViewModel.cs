@@ -17,7 +17,7 @@ namespace ChatSample
         public CustomChatPageViewModel()
         {
             // サービス管理者との1対1のルームを強制表示している
-            RoomType = 1;
+            RoomType = RoomTypes.AdminDirect;
             RoomId = InitRoomData();
             
             var bottomMenuView = new CustomBottomMenuView();
@@ -433,9 +433,12 @@ namespace ChatSample
                 {
                     roomType = value;
                     OnPropertyChanged("RoomType");
+                    OnPropertyChanged("IsGroupChat");
                 }
             }
         }
+
+        public bool IsGroupChat => (RoomType == RoomTypes.AdminGroup || RoomType == RoomTypes.UserGroup);
 
         private int lastReadMessageId;
         public int LastReadMessageId

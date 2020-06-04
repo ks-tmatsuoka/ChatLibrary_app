@@ -70,10 +70,6 @@ namespace Entap.Chat
             {
                 ChatList.RoomId = RoomId;
             }
-            else if (propertyName == RoomTypeProperty.PropertyName)
-            {
-                ChatList.RoomType = RoomType;
-            }
             else if (propertyName == BottomControllerIconStyleProperty.PropertyName)
             {
                 Controller.BottomControllerIconStyle = BottomControllerIconStyle;
@@ -466,17 +462,34 @@ namespace Entap.Chat
             set { SetValue(RoomIdProperty, value); }
         }
 
-        /// <summary>
-        /// チャットのルームタイプ
-        /// </summary>
-        public static readonly BindableProperty RoomTypeProperty =
-            BindableProperty.Create(nameof(RoomType), typeof(int), typeof(ChatControl), 0,
-                propertyChanged: (bindable, oldValue, newValue) =>
-                                    ((ChatControl)bindable).RoomType = (int)newValue);
-        public int RoomType
+        ///// <summary>
+        ///// チャットのルームタイプ
+        ///// </summary>
+        //public static readonly BindableProperty RoomTypeProperty =
+        //    BindableProperty.Create(nameof(RoomType), typeof(int), typeof(ChatControl), 0,
+        //        propertyChanged: (bindable, oldValue, newValue) =>
+        //                            ((ChatControl)bindable).RoomType = (int)newValue);
+        //public int RoomType
+        //{
+        //    get { return (int)GetValue(RoomTypeProperty); }
+        //    set { SetValue(RoomTypeProperty, value); }
+        //}
+
+        ///// <summary>
+        ///// グループチャットか
+        ///// </summary>
+        public static readonly BindableProperty IsGroupChatProperty = BindableProperty.Create(
+            nameof(IsGroupChat),
+            typeof(bool),
+            typeof(ChatControl),
+            false,
+            defaultBindingMode: BindingMode.TwoWay,
+            propertyChanged: (bindable, oldValue, newValue) =>
+            ((ChatControl)bindable).IsGroupChat = (bool)newValue);
+        public bool IsGroupChat
         {
-            get { return (int)GetValue(RoomTypeProperty); }
-            set { SetValue(RoomTypeProperty, value); }
+            get { return (bool)GetValue(IsGroupChatProperty); }
+            set { SetValue(IsGroupChatProperty, value); }
         }
 
         /// <summary>

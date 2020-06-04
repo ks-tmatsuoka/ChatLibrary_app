@@ -54,7 +54,7 @@
                                     <Label.Text>
                                         <Binding Path="AlreadyReadCount">
                                             <Binding.Converter>
-                                                <local:AlreadyReadConverter RoomType="{Binding Source={x:Reference Content}, Path=RoomType}"/>
+                                                <local:AlreadyReadConverter IsGroupChat="{Binding Source={x:Reference Content}, Path=IsGroupChat}"/>
                                             </Binding.Converter>
                                         </Binding>
                                     </Label.Text>
@@ -233,7 +233,7 @@
                                         <Label.Text>
                                             <Binding Path="AlreadyReadCount">
                                                 <Binding.Converter>
-                                                    <local:AlreadyReadConverter RoomType="{Binding Source={x:Reference Content}, Path=RoomType}"/>
+                                                    <local:AlreadyReadConverter IsGroupChat="{Binding Source={x:Reference Content}, Path=IsGroupChat}"/>
                                                 </Binding.Converter>
                                             </Binding>
                                         </Label.Text>
@@ -479,7 +479,7 @@
                                         <Label.Text>
                                             <Binding Path="AlreadyReadCount">
                                                 <Binding.Converter>
-                                                    <local:AlreadyReadConverter RoomType="{Binding Source={x:Reference Content}, Path=RoomType}"/>
+                                                    <local:AlreadyReadConverter IsGroupChat="{Binding Source={x:Reference Content}, Path=IsGroupChat}"/>
                                                 </Binding.Converter>
                                             </Binding>
                                         </Label.Text>
