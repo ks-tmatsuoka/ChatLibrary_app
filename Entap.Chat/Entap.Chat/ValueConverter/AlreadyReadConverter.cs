@@ -8,13 +8,6 @@ namespace Entap.Chat
     [Preserve(AllMembers = true)]
     public class AlreadyReadConverter : BindableObject, IValueConverter
     {
-        //public static BindableProperty RoomTypeProperty = BindableProperty.Create("RoomType", typeof(int), typeof(AlreadyReadConverter));
-        //public int RoomType
-        //{
-        //    get => (int)GetValue(RoomTypeProperty);
-        //    set => SetValue(RoomTypeProperty, value);
-        //}
-
         public static BindableProperty IsGroupChatProperty = BindableProperty.Create("IsGroupChat", typeof(bool), typeof(AlreadyReadConverter));
         public bool IsGroupChat
         {

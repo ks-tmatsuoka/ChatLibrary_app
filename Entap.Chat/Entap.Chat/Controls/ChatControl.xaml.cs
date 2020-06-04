@@ -463,19 +463,6 @@ namespace Entap.Chat
         }
 
         ///// <summary>
-        ///// チャットのルームタイプ
-        ///// </summary>
-        //public static readonly BindableProperty RoomTypeProperty =
-        //    BindableProperty.Create(nameof(RoomType), typeof(int), typeof(ChatControl), 0,
-        //        propertyChanged: (bindable, oldValue, newValue) =>
-        //                            ((ChatControl)bindable).RoomType = (int)newValue);
-        //public int RoomType
-        //{
-        //    get { return (int)GetValue(RoomTypeProperty); }
-        //    set { SetValue(RoomTypeProperty, value); }
-        //}
-
-        ///// <summary>
         ///// グループチャットか
         ///// </summary>
         public static readonly BindableProperty IsGroupChatProperty = BindableProperty.Create(

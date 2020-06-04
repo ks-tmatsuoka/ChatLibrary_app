@@ -33,7 +33,7 @@ namespace ChatSample
                         var data = new ReqCreateRoomData()
                         {
                             UserId = UserDataManager.Instance.UserId,
-                            RoomType = RoomTypes.AdminDirect;
+                            RoomType = RoomTypes.AdminDirect
                         };
                         var reqJson = JsonConvert.SerializeObject(data);
                         json = await APIManager.PostAsync(APIManager.GetEntapAPI(APIManager.EntapAPIName.CreateRoom), new ReqCreateRoom { Data = reqJson });
