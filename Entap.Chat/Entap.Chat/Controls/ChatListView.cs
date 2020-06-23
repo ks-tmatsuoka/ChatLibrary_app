@@ -68,7 +68,7 @@ namespace Entap.Chat
             lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
             {
-                //chatMembers = await Settings.Current.ChatService.GetRoomMembers(RoomId);
+                chatMembers = await Settings.Current.ChatService.GetRoomMembers(RoomId);
                 IEnumerable<MessageBase> messages;
                 if (lastReadMessageId == 0)
                 {
