@@ -5,17 +5,25 @@
     x:Class="Entap.Chat.BottomController"
     xmlns:local="clr-namespace:Entap.Chat"
     x:Name="Controller">
-    <StackLayout
-        Spacing="0"
-        Orientation="Horizontal"
+    <Grid
+        ColumnSpacing="0"
+        RowSpacing="0"
         HorizontalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="48" />
+        </Grid.ColumnDefinitions>
         <StackLayout
             x:Name="Menu"
             Spacing="0"
             Orientation="Horizontal">
-        </StackLayout>
-            
+        </StackLayout>   
         <local:DynamicResizedEditor
+            Grid.Column="1"
             x:Name="MsgEditor"
             Margin="5,5,5,5"
             HorizontalOptions="FillAndExpand"
@@ -29,11 +37,12 @@
             MinimumHeightRequest="28"
         />
         <Button
+            Grid.Column="2"
             x:Name="SendButton"
             Margin="5,0,10,0"
             WidthRequest="48"
             HeightRequest="48"
             VerticalOptions="EndAndExpand"
             BackgroundColor="Transparent"/>
-    </StackLayout>
+    </Grid>
 </ContentView>
