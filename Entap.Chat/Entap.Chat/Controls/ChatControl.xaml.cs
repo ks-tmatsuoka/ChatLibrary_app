@@ -148,6 +148,14 @@ namespace Entap.Chat
             }
         }
 
+        public double DateTextWidth
+        {
+            get
+            {
+                return DependencyService.Get<IDisplayService>().GetDisplaySize().Width / 5 * 2;
+            }
+        }
+
         public Command SendCommand => new Command((obj) =>
         {
             var msg = obj as MessageBase;
