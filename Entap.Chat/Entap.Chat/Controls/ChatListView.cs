@@ -147,7 +147,21 @@ namespace Entap.Chat
         /// </summary>
         void SetNotSendMessage()
         {
+            RoomIdCheck();
             Settings.Current.ChatService.AddNotSendMessages(RoomId, _messages);
+        }
+
+        void RoomIdCheck()
+        {
+            if (RoomId < 0)
+                throw new Exception($"RoomId is -1. RoomId is a mandatory property");
+            LastReadMessageIdCheck();
+        }
+
+        void LastReadMessageIdCheck()
+        {
+            if (LastReadMessageId < 0)
+                throw new Exception($"LastReadMessageId is -1. LastReadMessageId is a mandatory property");
         }
 
         protected override void OnPropertyChanged(string propertyName = null)
@@ -284,6 +298,7 @@ namespace Entap.Chat
         /// <param name="messageId"></param>
         void LoadMessages(int messageId)
         {
+            RoomIdCheck();
             Task.Run(async () =>
             {
                 var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.Old);
@@ -319,6 +334,7 @@ namespace Entap.Chat
         /// <param name="messageId"></param>
         void LoadNewMessages(int messageId)
         {
+            RoomIdCheck();
             Task.Run(async () =>
             {
                 var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.New);
@@ -409,6 +425,7 @@ namespace Entap.Chat
             var userId = Settings.Current.ChatService.GetUserId();
             if (messageBase != null && lastReadMessageId < messageBase.MessageId)
             {
+                RoomIdCheck();
                 System.Diagnostics.Debug.WriteLine("SendAlreadyRead: " + messageBase.MessageId);
                 var result = await Settings.Current.ChatService.SendAlreadyRead(RoomId, messageBase.MessageId);
                 if (result)
@@ -489,6 +506,7 @@ namespace Entap.Chat
         /// <returns></returns>
         public bool AddMessage(MessageBase msg)
         {
+            RoomIdCheck();
             if (msg is null)
                 return false;
             if (msg.MessageType == (int)MessageType.Image || msg.MessageType == (int)MessageType.Video)
@@ -528,6 +546,7 @@ namespace Entap.Chat
         {
             if (messageBase.NotSendId < 1)
             {
+                RoomIdCheck();
                 Settings.Current.ChatService.SaveNotSendMessageData(RoomId, messageBase, fileName);
             }
         }
