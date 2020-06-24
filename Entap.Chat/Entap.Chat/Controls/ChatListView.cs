@@ -17,7 +17,6 @@ namespace Entap.Chat
         public static int NotSendMessageId = -1;
         int lastReadMessageId;
         ObservableCollection<MessageBase> _messages;
-        List<ChatMemberBase> chatMembers = new List<ChatMemberBase>();
         public ObservableCollection<MessageBase> Messages => _messages;
 
         public ChatListView() : base(ListViewCachingStrategy.RecycleElement)
@@ -68,17 +67,17 @@ namespace Entap.Chat
             lastReadMessageId = LastReadMessageId;
             Task.Run(async () =>
             {
-                chatMembers = await Settings.Current.ChatService.GetRoomMembers(RoomId);
+                await Settings.Current.ChatService.SetRoomMembers(RoomId);
                 IEnumerable<MessageBase> messages;
                 if (lastReadMessageId == 0)
                 {
-                    messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId + 1, (int)MessageDirection.New, chatMembers);
+                    messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId + 1, (int)MessageDirection.New);
                     if (messages is null)
                         messages = new List<MessageBase>();
                 }
                 else
                 {
-                    messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId, (int)MessageDirection.Old, chatMembers);
+                    messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, lastReadMessageId, (int)MessageDirection.Old);
                     if (messages is null)
                         messages = new List<MessageBase>();
                     messages = messages.Reverse();
@@ -96,7 +95,7 @@ namespace Entap.Chat
                 }
                 if (first != null)
                 {
-                    var messageList = await Settings.Current.ChatService.GetMessagesAsync(RoomId, first.MessageId - 1, (int)MessageDirection.Old, chatMembers);
+                    var messageList = await Settings.Current.ChatService.GetMessagesAsync(RoomId, first.MessageId - 1, (int)MessageDirection.Old);
                     if (messageList != null)
                     {
                         foreach (var msg in messageList)
@@ -108,7 +107,7 @@ namespace Entap.Chat
                 var last = _messages.LastOrDefault();
                 if (last != null)
                 {
-                    var messageList = await Settings.Current.ChatService.GetMessagesAsync(RoomId, last.MessageId + 1, (int)MessageDirection.New, chatMembers);
+                    var messageList = await Settings.Current.ChatService.GetMessagesAsync(RoomId, last.MessageId + 1, (int)MessageDirection.New);
                     if (messageList != null)
                     {
                         foreach (var msg in messageList)
@@ -137,7 +136,7 @@ namespace Entap.Chat
                             ScrollTo(_messages[index + 1], ScrollToPosition.End, false);
                     }
                     _messages.CollectionChanged += OnMessagesCollectionChanged;
-                    Settings.Current.ChatService.UpdateData(_messages, RoomId, chatMembers);
+                    Settings.Current.ChatService.UpdateData(_messages, RoomId);
                     Opacity = 1;
                 });
             });
@@ -287,7 +286,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.Old, chatMembers);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.Old);
                 if (messages is null)
                 {
                     // 通信エラー時
@@ -322,7 +321,7 @@ namespace Entap.Chat
         {
             Task.Run(async () =>
             {
-                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.New, chatMembers);
+                var messages = await Settings.Current.ChatService.GetMessagesAsync(RoomId, messageId, (int)MessageDirection.New);
                 if (messages is null)
                 {
                     // 通信エラー時

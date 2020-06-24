@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reactive.Subjects;
 using WampSharp.V1;
-using WebSocket4Net.Command;
 using System.Threading;
 
 namespace ChatSample
@@ -17,6 +16,16 @@ namespace ChatSample
     public class ChatService : IChatService
     {
         const int LoadCount = 20;
+        List<ChatMemberBase> members = new List<ChatMemberBase>();
+
+        public async Task SetRoomMembers(int roomId)
+        {
+            members = await GetRoomMembers(roomId);
+        }
+        void ExitRoom()
+        {
+            members.Clear();
+        }
 
         /// <summary>
         /// メッセージ取得
@@ -26,7 +35,7 @@ namespace ChatSample
         /// <param name="messageDirection"></param>
         /// <param name="members"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId, int messageDirection, List<ChatMemberBase> members)
+        public async Task<IEnumerable<MessageBase>> GetMessagesAsync(int roomId, int messageId, int messageDirection)
         {
             var req = new ReqGetMessage
             {
@@ -44,6 +53,8 @@ namespace ChatSample
                 {
                     // もし既読の表示をつけたくない時はここで0を強制的に入れる
                     //val.AlreadyReadCount = 0;
+                    if (members is null || members.Count < 1 || val.MessageType == (int)MessageType.MemberAddRoom)
+                        members = await GetRoomMembers(roomId);
                     val.UserIcon = members.Where(w => w.UserId == val.SendUserId).LastOrDefault()?.UserIcon;
                     if (val.MessageType == (int)MessageType.Video)
                     {
@@ -182,7 +193,7 @@ namespace ChatSample
         /// データの更新
         /// </summary>
         public IDisposable subscription;
-        public void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId, List<ChatMemberBase> members)
+        public void UpdateData(ObservableCollection<MessageBase> messageBases, int roomId)
         {
             DefaultWampChannelFactory channelFactory = new DefaultWampChannelFactory();
 
@@ -192,7 +203,7 @@ namespace ChatSample
 
             // PubSub subscription:
             ISubject<JToken> subject = channel.GetSubject<JToken>(roomId.ToString());
-            subscription = subject.Subscribe(x =>
+            subscription = subject.Subscribe(async x =>
             {
                 System.Diagnostics.Debug.WriteLine(x);
                 var data = JsonConvert.DeserializeObject<WebSocketReceiveDataBase>(x.ToString());
@@ -204,6 +215,8 @@ namespace ChatSample
 
                     // もし既読の表示をつけたくない時はここで0を強制的に入れる
                     //msg.AlreadyReadCount = 0;
+                    if (members is null || members.Count < 1 || msg.MessageType == (int)MessageType.MemberAddRoom)
+                        members = await GetRoomMembers(roomId);
                     msg.UserIcon = members.Where(w => w.UserId == msg.SendUserId)?.LastOrDefault()?.UserIcon;
 
                     if (msg.MessageType == (int)MessageType.Video)
@@ -236,6 +249,7 @@ namespace ChatSample
 
         public void Dispose()
         {
+            ExitRoom();
             if (subscription is null)
                 return;
             subscription.Dispose();
