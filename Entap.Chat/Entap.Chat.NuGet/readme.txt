@@ -22,6 +22,9 @@ Entap.Chat.Settings.Current.Init(new ChatService(), new ChatControlService());
 
 ・ChatListView
 チャットのリスト部分のコントロール。各リスト内のViewCellは利用者が定義する
+RoomIdとIsGroupChatとLastReadMessageIdはバインド必須
+ChatListViewを単体で使用する際はAddMessageCommandをMode=OneWayToSource、AddMessageCommandParameterをMode=TwoWayでバインドする必要があるので注意
+
 
 ・BottomController
 画面下に配置するメッセージの入力送信を行うコントローラ
@@ -31,6 +34,7 @@ Entap.Chat.Settings.Current.Init(new ChatService(), new ChatControlService());
 ・ChatControl
 ChatListViewとBottomControllerを合わせたコントロールで各メッセージのViewCellも定義済みのもの
 BottomControllerのMenuView部分はカスタムできるようになっている
+RoomIdとIsGroupChatとLastReadMessageIdはバインド必須
 
 
 
