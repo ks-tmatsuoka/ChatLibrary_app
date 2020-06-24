@@ -44,8 +44,38 @@ BottomControllerのMenuView部分はカスタムできるようになってい�
 ChatControlを使う際、必ず処理を書く必要のあるもの
 
 
+
 [Entap.Chat.Settingsについて]
 ここでチャット内で使う文言のフォーマットの設定などを変更できる
 
 
-その他処理につては、サンプルプロジェクトを参考にしてください
+
+[外部ライブラリについて]
+・Entap.Chatで使用しているライブラリ一覧
+
+Entap.Chat
+    Xamarin.FFImageLoading.Forms
+
+Entap.Chat.Android
+    Xamarin.FFImageLoading.Forms
+
+Entap.Chat.iOS
+    Xamarin.FFImageLoading.Forms
+
+
+・このライブラリを組み込む際にプロジェクトに追加が必要なライブラリ一覧
+sqlite-net-pcl 
+Xamarin.FFImageLoading.Forms
+
+
+・WebSocket関連のライブラリについて
+サーバ側がRatchetを使ってWebSocket実装を行っている場合、アプリ側は以下２つの外部ライブラリを使用
+    WampSharp
+    WampSharp.WAMP1.Default
+※実装方法ははサンプルプロジェクトのコードを参照
+
+
+
+
+
+その他処理については、サンプルプロジェクトを参考にしてください
