@@ -106,7 +106,30 @@ namespace ChatSample
         async public static Task<string> PostAsync(string apiUrl, object obj, Action errorCallback = null, int timeoutSecond = DefaultTimeoutSecond, bool showError = true)
         {
             var data = ToDictionary(obj);
-            return await PostBase(apiUrl, new FormUrlEncodedContent(data), timeoutSecond, showError);
+            if (client == null)
+                client = new HttpClient();
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(timeoutSecond));
+            try
+            {
+                HttpResponseMessage policyResult = await Policy.HandleResult<HttpResponseMessage>(resp => resp.IsSuccessStatusCode == false || Validation(resp) == false)
+                    // 2 秒 * リトライ回数分ずつ待ち時間を増やす
+                    .WaitAndRetryAsync(RetryCount, retryAttempt => TimeSpan.FromSeconds(retryAttempt * 2))
+                    .ExecuteAsync(async () => await client.PostAsync(apiUrl, new FormUrlEncodedContent(data), cts.Token));
+                return await CheckPostResponse(apiUrl, policyResult, showError);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("API_PostError : " + ex.Message);
+                if (showError)
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        App.Current.MainPage.DisplayAlert("エラー", "Exception:" + ex.Message, "閉じる");
+                    });
+                }
+                return "{\"Status\":" + APIStatus.Exception + ",\"Message\": \"" + ex.Message.Replace("\"", " ").Replace(":", " ") + "\",\"Data\": {}}";
+            }
         }
 
         static bool Validation(HttpResponseMessage msg)
@@ -157,91 +180,67 @@ namespace ChatSample
             return comp.Task.Result;
         }
 
-        private async static Task<string> PostBase(string url, HttpContent content, int timeoutSeconds, bool showError = true)
+        private async static Task<string> CheckPostResponse(string url, HttpResponseMessage httpResponseMessage, bool showError = true)
         {
-            Debug.WriteLine("  api manager post  url   : " + url);
-            if (client == null)
-                client = new HttpClient();
-            try
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                var cts = new CancellationTokenSource();
-                cts.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
-                var policyResult = await Policy.HandleResult<HttpResponseMessage>(resp => resp.IsSuccessStatusCode == false || Validation(resp) == false)
-                    // 2 秒 * リトライ回数分ずつ待ち時間を増やす
-                    .WaitAndRetryAsync(RetryCount, retryAttempt => TimeSpan.FromSeconds(retryAttempt * 2))
-                    .ExecuteAsync(async () => await client.PostAsync(url, content, cts.Token));
-                if (!policyResult.IsSuccessStatusCode)
+                if (showError)
                 {
-                    if (showError)
+                    Device.BeginInvokeOnMainThread(() =>
                     {
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            App.Current.MainPage.DisplayAlert("通信エラー", policyResult.StatusCode.ToString(), "閉じる");
-                        });
-                    }
-                    return "{\"Status\":" + APIStatus.HttpConnectError + ",\"Message\": \"\",\"Data\": {}}";
+                        App.Current.MainPage.DisplayAlert("通信エラー", httpResponseMessage.StatusCode.ToString(), "閉じる");
+                    });
                 }
+                return "{\"Status\":" + APIStatus.HttpConnectError + ",\"Message\": \"\",\"Data\": {}}";
+            }
 
-                var responseStr = await policyResult.Content.ReadAsStringAsync();
-                var response = JsonConvert.DeserializeObject<ResponseBase>(responseStr);
-                if (!showError)
+            var responseStr = await httpResponseMessage.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<ResponseBase>(responseStr);
+            if (!showError)
+                return responseStr;
+
+            switch (response.Status)
+            {
+                case APIStatus.Succeeded:
+                    // 成功
                     return responseStr;
 
-                switch (response.Status)
-                {
-                    case APIStatus.Succeeded:
-                        // 成功
-                        return responseStr;
+                case APIStatus.FatalError:
+                    // 致命的なエラー：ErrorMessageを表示し、「再試行」・「キャンセル」の選択肢を表示
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        App.Current.MainPage.DisplayAlert("エラー", response.Message, "閉じる");
+                    });
+                    return responseStr;
 
-                    case APIStatus.FatalError:
-                        // 致命的なエラー：ErrorMessageを表示し、「再試行」・「キャンセル」の選択肢を表示
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            App.Current.MainPage.DisplayAlert("エラー", response.Message, "閉じる");
-                        });
-                        return responseStr;
+                case APIStatus.ValidationError:
+                    // バリデーションエラー：ErrorMessageを表示
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        App.Current.MainPage.DisplayAlert("エラー", response.Message, "閉じる");
+                    });
+                    return responseStr;
 
-                    case APIStatus.ValidationError:
-                        // バリデーションエラー：ErrorMessageを表示
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            App.Current.MainPage.DisplayAlert("エラー", response.Message, "閉じる");
-                        });
-                        return responseStr;
+                case APIStatus.UnderMaintenance:
+                    // メンテナンス中：ErrorMessageを表示。確認ボタンタップ後はタイトル画面に遷移
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        App.Current.MainPage.DisplayAlert("メンテナンス中", response.Message, "閉じる");
+                    });
+                    return responseStr;
 
-                    case APIStatus.UnderMaintenance:
-                        // メンテナンス中：ErrorMessageを表示。確認ボタンタップ後はタイトル画面に遷移
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            App.Current.MainPage.DisplayAlert("メンテナンス中", response.Message, "閉じる");
-                        });
-                        return responseStr;
-
-                    case APIStatus.SessionTimeOut:
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            App.Current.MainPage.DisplayAlert("エラー", "タイムアウトしました", "閉じる");
-                        });
-                        return responseStr;
-                }
-                return responseStr;
+                case APIStatus.SessionTimeOut:
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        App.Current.MainPage.DisplayAlert("エラー", "タイムアウトしました", "閉じる");
+                    });
+                    return responseStr;
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("API_PostError : " + ex.Message);
-                //if (showError)
-                //{
-                //    Device.BeginInvokeOnMainThread(() =>
-                //    {
-                //        App.Current.MainPage.DisplayAlert("エラー", "Exception:" + ex.Message, "閉じる");
-                //    });
-                //}
-                return "{\"Status\":" + APIStatus.Exception + ",\"Message\": \"" + ex.Message.Replace("\"", " ").Replace(":", " ") + "\",\"Data\": {}}";
-            }
+            return responseStr;
         }
 
 
-        public static async Task<string> PostFile(string url, byte[] fileData, string fileName, Dictionary<string, string> DictionaryData, CancellationTokenSource cancellationTokenSource, string fileType = "file", ProgressDelegate progressDelegate  = null, Action errorCallback = null)
+        public static async Task<string> PostMessage(string url, byte[] fileData, string fileName, Dictionary<string, string> DictionaryData, CancellationTokenSource cancellationTokenSource, string fileType = "file", ProgressDelegate progressDelegate  = null, Action errorCallback = null)
         {
             var content = new MultipartFormDataContent();
             foreach (KeyValuePair<string, string> pair in DictionaryData)
@@ -252,7 +251,6 @@ namespace ChatSample
             ProgressStreamContent progressContent = null;
             if (fileData != null && fileData.Length > 0)
             {
-                
                 if (progressDelegate != null)
                 {
                     progressContent = new ProgressStreamContent(new MemoryStream(fileData));
@@ -288,52 +286,7 @@ namespace ChatSample
                 });
                 var result =  await infiniteTimeSpanClient.PostAsync(url, content, cancellationTokenSource.Token);
                 isLoopRunning = false;
-                if (!result.IsSuccessStatusCode)
-                {
-                    return "{\"Status\":" + APIStatus.HttpConnectError + ",\"Message\": \"\",\"Data\": {}}";
-                }
-
-                var responseStr = await result.Content.ReadAsStringAsync();
-                var response = JsonConvert.DeserializeObject<ResponseBase>(responseStr);
-
-                switch (response.Status)
-                {
-                    case APIStatus.Succeeded:
-                        // 成功
-                        return responseStr;
-
-                    case APIStatus.FatalError:
-                        // 致命的なエラー：ErrorMessageを表示し、「再試行」・「キャンセル」の選択肢を表示
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            App.Current.MainPage.DisplayAlert("エラー", response.Message, "閉じる");
-                        });
-                        return responseStr;
-
-                    case APIStatus.ValidationError:
-                        // バリデーションエラー：ErrorMessageを表示
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            App.Current.MainPage.DisplayAlert("エラー", response.Message, "閉じる");
-                        });
-                        return responseStr;
-
-                    case APIStatus.UnderMaintenance:
-                        // メンテナンス中：ErrorMessageを表示。確認ボタンタップ後はタイトル画面に遷移
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            App.Current.MainPage.DisplayAlert("メンテナンス中", response.Message, "閉じる");
-                        });
-                        return responseStr;
-
-                    case APIStatus.SessionTimeOut:
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            App.Current.MainPage.DisplayAlert("エラー", "タイムアウトしました", "閉じる");
-                        });
-                        return responseStr;
-                }
-                return responseStr;
+                return await CheckPostResponse(url, result);
             }
             catch (Exception ex)
             {

@@ -60,7 +60,7 @@ namespace ChatSample
 
                 var cts = new CancellationTokenSource();
                 cts.CancelAfter(TimeSpan.FromSeconds(30));
-                var json = await APIManager.PostFile(APIManager.GetEntapAPI(APIManager.EntapAPIName.RegistMyInfomation), bytes, name, dic, cts, fileType);
+                var json = await APIManager.PostMessage(APIManager.GetEntapAPI(APIManager.EntapAPIName.RegistMyInfomation), bytes, name, dic, cts, fileType);
                 var resp = JsonConvert.DeserializeObject<ResponseBase>(json);
                 if (resp.Status == APIManager.APIStatus.Succeeded)
                 {
