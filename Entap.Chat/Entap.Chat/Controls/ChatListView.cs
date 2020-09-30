@@ -90,6 +90,7 @@ namespace Entap.Chat
                     {
                         ItemsSource = _messages;
                         Opacity = 1;
+                        Settings.Current.ChatService.UpdateData(_messages, RoomId);
                     });
                     return;
                 }
