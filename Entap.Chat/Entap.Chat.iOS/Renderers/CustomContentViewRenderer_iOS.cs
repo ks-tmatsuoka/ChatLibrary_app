@@ -27,6 +27,7 @@ namespace Entap.Chat.iOS
         NSObject _keyboardShownObserver;
         NSObject _keyboardHiddenObserver;
         double _translationY;
+        bool _hasShownKeyboard;
 
         void RegisterKeyboardObserver()
         {
@@ -56,14 +57,17 @@ namespace Entap.Chat.iOS
 
         void OnKeyboardShown(object sender, UIKeyboardEventArgs e)
         {
+            if (Element == null) return;
+
             // キーボード出現時に画面全体をずらす。
             NSValue result = (NSValue)e.Notification.UserInfo.ObjectForKey(new NSString(UIKeyboard.FrameEndUserInfoKey));
             CGSize keyboardSize = result.RectangleFValue.Size;
-            if (Element != null)
+            if (!_hasShownKeyboard)
             {
-                _translationY = -keyboardSize.Height;
-                Element.TranslationY = _translationY;
+                _hasShownKeyboard = true;
+                _translationY = Element.TranslationY;
             }
+            Element.TranslationY = -keyboardSize.Height;
         }
 
         void OnKeyboardHidden(object sender, UIKeyboardEventArgs e)
@@ -71,7 +75,7 @@ namespace Entap.Chat.iOS
             // キーボード消滅時に画面を元に戻す。
             if (Element != null)
             {
-                Element.TranslationY -= _translationY;
+                Element.TranslationY = _translationY;
             }
         }
     }
