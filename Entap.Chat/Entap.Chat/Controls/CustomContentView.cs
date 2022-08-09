@@ -9,6 +9,13 @@ namespace Entap.Chat
     {
         public CustomContentView()
         {
+            EnableKeyboardOverlappingEffect();
+        }
+
+        void EnableKeyboardOverlappingEffect()
+        {
+            SetValue(Entap.Forms.Effects.Platform.iOS.KeyboardOverlappingEffect.IsEnabledProperty, true);
+            SetValue(Entap.Forms.Effects.Platform.iOS.KeyboardOverlappingEffect.BottomMarginProperty, 0d);
         }
     }
 }

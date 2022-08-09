@@ -12,6 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
+    <PackageReference Include="Entap.Forms.Effects" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -21,5 +22,8 @@
     <Folder Include="Constants\" />
     <Folder Include="Modules\" />
     <Folder Include="ValueConverter\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Entap.Forms.Effects" />
   </ItemGroup>
 </Project>

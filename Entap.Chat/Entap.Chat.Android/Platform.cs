@@ -12,6 +12,7 @@ namespace Entap.Chat.Android
         public static void Init(Activity activity)
         {
             _activity = activity;
+            Entap.Froms.Effects.Android.Platform.Init();
         }
     }
 }

@@ -7,9 +7,10 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(CustomContentView), typeof(CustomContentViewRenderer_iOS))]
+//[assembly: ExportRenderer(typeof(CustomContentView), typeof(CustomContentViewRenderer_iOS))]
 namespace Entap.Chat.iOS
 {
+    [Obsolete]
     public class CustomContentViewRenderer_iOS : ViewRenderer
     {
         public CustomContentViewRenderer_iOS()
