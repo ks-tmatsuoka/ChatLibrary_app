@@ -7,7 +7,7 @@
     <ProjectGuid>{11148B82-9869-4397-B82A-9BF1B0BCACE5}</ProjectGuid>
     <Description>ChatLibrary</Description>
     <PackageId>Entap.Chat</PackageId>
-    <PackageVersion>0.2.5</PackageVersion>
+    <PackageVersion>0.2.6</PackageVersion>
     <Authors>Entap</Authors>
     <DevelopmentDependency>false</DevelopmentDependency>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -16,7 +16,7 @@
     <UsePartialTypes>false</UsePartialTypes>
     <AssemblyName>Entap.Chat.NuGet</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <PackageReleaseNotes>iOSでのキーボード表示時の表示改善</PackageReleaseNotes>
+    <PackageReleaseNotes>iOSでの新着メッセージ受信時に自動スクロールしない不具合対応</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
