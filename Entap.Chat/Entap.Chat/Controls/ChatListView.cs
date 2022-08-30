@@ -42,11 +42,6 @@ namespace Entap.Chat
             {
                 AddMessage(AddMessageCommandParameter);
             });
-            if (Device.RuntimePlatform == Device.iOS)
-            {
-                ItemAppearing += OnItemAppearing;
-                ItemDisappearing += OnItemDisappearing;
-            }
         }
 
         public void Dispose()
@@ -259,13 +254,13 @@ namespace Entap.Chat
         void ReplaceNotSendMessage(bool isScrolled)
         {
             var notSendList = _messages.Where(w => w.MessageId == NotSendMessageId && w.ResendVisible == true).ToList();
-            int notSendCount =notSendList.Count;
+            int notSendCount = notSendList.Count;
             if (notSendCount < 1)
                 return;
 
             // リストの末尾から見ていき、未送信のメッセージが送信済みのメッセージより前にある場合は置き換える
             bool replaceFlg = false;
-            for(int i= notSendCount; i >= 1; i--)
+            for (int i = notSendCount; i >= 1; i--)
             {
                 if (_messages[_messages.Count - i].MessageId != NotSendMessageId)
                 {
@@ -369,36 +364,6 @@ namespace Entap.Chat
         }
         ScrollDirection chatScrollDirection;
 
-        private void OnItemDisappearing(object sender, ItemVisibilityEventArgs e)
-        {
-            if (chatScrollDirection == ScrollDirection.Down)
-            {
-                lastVisibleItemIndex = e.ItemIndex;
-                lastVisibleItem = e.Item;
-            }
-            else if (chatScrollDirection == ScrollDirection.Up)
-            {
-                firstVisibleItemIndex = e.ItemIndex;
-                firstVisibleItem = e.Item;
-            }
-        }
-
-        private void OnItemAppearing(object sender, ItemVisibilityEventArgs e)
-        {
-            if (chatScrollDirection == ScrollDirection.Up)
-            {
-                firstVisibleItemIndex = e.ItemIndex;
-                firstVisibleItem = e.Item;
-                SendAlreadyRead(firstVisibleItem);
-            }
-            else if (chatScrollDirection == ScrollDirection.Down)
-            {
-                lastVisibleItemIndex = e.ItemIndex;
-                lastVisibleItem = e.Item;
-                SendAlreadyRead(lastVisibleItem);
-            }
-        }
-
         /// <summary>
         /// 表示中のメッセージの一番上のメッセージと一番下のメッセージを変数へ代入(Androidで使用)
         /// </summary>
@@ -412,6 +377,22 @@ namespace Entap.Chat
             firstVisibleItem = firstItem;
             lastVisibleItemIndex = lastIndex;
             lastVisibleItem = lastItem;
+            SendAlreadyRead(lastVisibleItem);
+        }
+
+        /// <summary>
+        /// 表示中のメッセージの一番上のメッセージと一番下のメッセージを変数へ代入(iOSで使用)
+        /// </summary>
+        public void VisibleItemUpdateForiOS(int firstIndex, int lastIndex)
+        {
+            if (firstVisibleItemIndex == firstIndex &&
+                lastVisibleItemIndex == lastIndex)
+                return;
+
+            firstVisibleItemIndex = firstIndex;
+            firstVisibleItem = Messages.ElementAt(firstIndex);
+            lastVisibleItemIndex = lastIndex;
+            lastVisibleItem = Messages.ElementAt(lastIndex);
             SendAlreadyRead(lastVisibleItem);
         }
 
@@ -487,7 +468,7 @@ namespace Entap.Chat
                     IsRunningGetNewMessage = false;
                     return;
                 }
-                last = _messages.Where(w=>w.NotSendId < 1 && w.MessageId > 0)?.Last();
+                last = _messages.Where(w => w.NotSendId < 1 && w.MessageId > 0)?.Last();
                 if (last.MessageId + 1 == lastNewRequestMessageId)
                 {
                     IsRunningGetNewMessage = false;
@@ -519,7 +500,7 @@ namespace Entap.Chat
             }
             if (Device.RuntimePlatform == Device.Android)
             {
-                var dummy = new MessageBase() { SendUserId= Settings.Current.ChatService.GetUserId(), MessageType= (int)MessageType.Image};
+                var dummy = new MessageBase() { SendUserId = Settings.Current.ChatService.GetUserId(), MessageType = (int)MessageType.Image };
                 _messages.Add(dummy);
                 _messages.Add(msg);
                 // ScrollTo(msg, ScrollToPosition.End, false) だけだと画像送信した際に追加したメッセージのViewが表示されない
@@ -543,7 +524,7 @@ namespace Entap.Chat
         /// 未送信メッセージをストレージに保存
         /// </summary>
         /// <param name="messageBase"></param>
-        public void NotSendMessageSaveInStorage(MessageBase messageBase, string fileName="")
+        public void NotSendMessageSaveInStorage(MessageBase messageBase, string fileName = "")
         {
             if (messageBase.NotSendId < 1)
             {

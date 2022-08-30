@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreAnimation;
@@ -26,6 +27,7 @@ namespace Entap.Chat.iOS
 
         protected override void Dispose(bool disposing)
         {
+            Element.Scrolled -= OnScrolled;
             var _ChatListView = Element as ChatListView;
             _ChatListView.Dispose();
             base.Dispose(disposing);
@@ -38,12 +40,45 @@ namespace Entap.Chat.iOS
             if (e.NewElement != null)
             {
                 SubscribeKeyboardObserver();
+                Element.Scrolled += OnScrolled;
             }
 
             if (e.OldElement != null)
             {
                 UnsubscribeKeyboardObserver();
             }
+        }
+
+        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.OnElementPropertyChanged(sender, e);
+            if (e.PropertyName == ChatListView.ItemsSourceProperty.PropertyName)
+                UpdateVisibleItem();
+        }
+
+        void OnScrolled(object sender, ScrolledEventArgs e)
+        {
+            UpdateVisibleItem();
+        }
+
+        void UpdateVisibleItem()
+        {
+            var _chatListView = Element as ChatListView;
+            if (_chatListView is null) return;
+            if (Control is null) return;
+
+            var firstVisibleCell = Control.VisibleCells?.FirstOrDefault();
+            var lastVisibleCell = Control.VisibleCells?.LastOrDefault();
+
+            _chatListView.VisibleItemUpdateForiOS(
+                GetCellIndex(firstVisibleCell),
+                GetCellIndex(lastVisibleCell));
+        }
+
+        int GetCellIndex(UITableViewCell cell)
+        {
+            var indexPath = Control.IndexPathForCell(cell);
+            return (int)indexPath.Row;
         }
 
         public override void WillMoveToWindow(UIWindow window)
