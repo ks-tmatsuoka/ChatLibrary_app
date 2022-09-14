@@ -67,8 +67,11 @@ namespace Entap.Chat.iOS
             if (_chatListView is null) return;
             if (Control is null) return;
 
-            var firstVisibleCell = Control.VisibleCells?.FirstOrDefault();
-            var lastVisibleCell = Control.VisibleCells?.LastOrDefault();
+            if (Control.VisibleCells?.Any() != true)
+                return;
+
+            var firstVisibleCell = Control.VisibleCells.First();
+            var lastVisibleCell = Control.VisibleCells.Last();
 
             _chatListView.VisibleItemUpdateForiOS(
                 GetCellIndex(firstVisibleCell),
