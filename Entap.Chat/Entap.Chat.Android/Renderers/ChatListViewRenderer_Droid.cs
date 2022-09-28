@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Android.Content;
 using Android.Runtime;
+using Android.Graphics.Drawables;
 
 [assembly: ExportRenderer(typeof(Entap.Chat.ChatListView), typeof(Entap.Chat.Android.ChatListViewRenderer_Droid))]
 namespace Entap.Chat.Android
@@ -27,8 +28,15 @@ namespace Entap.Chat.Android
 
             if (Control != null && e.NewElement != null)
             {
+                DisableHighlight();
                 Control.Scroll += Control_Scroll;
             }
+        }
+
+        private void DisableHighlight()
+        {
+            if (Control is null) return;
+            Control.Selector = new ColorDrawable(global::Android.Graphics.Color.Transparent);
         }
 
         private void Control_Scroll(object sender, global::Android.Widget.AbsListView.ScrollEventArgs e)
