@@ -17,6 +17,8 @@ namespace Entap.Chat.Android
 {
     public class DynamicResizedEditorRenderer_Droid : EditorRenderer
     {
+        const int HorizontalPadding = 12;
+
         DynamicResizedEditor _dynamicResizedEditor;
         int _lineCount;
         float _density;
@@ -77,7 +79,6 @@ namespace Entap.Chat.Android
                 _dynamicResizedEditor.Focused += OnFocused;
                 _dynamicResizedEditor.Unfocused += OnUnFocused;
                 SetOneLineSize();
-                Control.SetPadding(12, 0, 12, 0);
             }
         }
 
@@ -124,6 +125,12 @@ namespace Entap.Chat.Android
             }
         }
 
+        public override void Draw(Canvas canvas)
+        {
+            base.Draw(canvas);
+            SetPadding();
+        }
+
         void OnFocused(object sender, FocusEventArgs e)
         {
             // エディターのカーソルを末尾に
@@ -155,6 +162,17 @@ namespace Entap.Chat.Android
         void SetMultiLineSize()
         {
             _dynamicResizedEditor.HeightRequest = -1;
+        }
+
+        bool isSetPadding;
+        void SetPadding()
+        {
+            if (isSetPadding) return;
+            if (Control.Height <= 0) return;
+
+            var verticalPadding = (Control.Height - Control.LineHeight * Math.Min(Control.MaxLines, Control.LineCount)) / 2;
+            Control.SetPadding(HorizontalPadding, verticalPadding, HorizontalPadding, verticalPadding);
+            isSetPadding = true;
         }
     }
 }
