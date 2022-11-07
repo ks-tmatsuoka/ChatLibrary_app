@@ -385,7 +385,8 @@ namespace Entap.Chat
         /// </summary>
         public void VisibleItemUpdateForiOS(int firstIndex, int lastIndex)
         {
-            if (firstVisibleItemIndex == firstIndex &&
+            if (lastReadMessageId > 0 &&
+                firstVisibleItemIndex == firstIndex &&
                 lastVisibleItemIndex == lastIndex)
                 return;
 
