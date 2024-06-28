@@ -65,12 +65,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Entap.Chat\Entap.Chat.csproj">
-      <Project>{48B2D21A-33C7-4844-B07F-5D2536A49A90}</Project>
-      <Name>Entap.Chat</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BundleResource Include="Resources\send_icon%403x.png" />
     <BundleResource Include="Resources\send_icon%402x.png" />
     <BundleResource Include="Resources\send_icon.png" />
@@ -101,6 +95,11 @@
     <BundleResource Include="Resources\send_cancel%403x.png" />
     <BundleResource Include="Resources\send_cancel%402x.png" />
     <BundleResource Include="Resources\send_cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Entap.Chat\Entap.Chat.csproj">
+      <Name>Entap.Chat</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
