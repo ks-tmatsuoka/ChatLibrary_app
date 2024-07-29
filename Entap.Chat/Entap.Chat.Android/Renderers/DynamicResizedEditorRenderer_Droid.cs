@@ -4,6 +4,7 @@ using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
+using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Views.InputMethods;
@@ -43,7 +44,7 @@ namespace Entap.Chat.Android
             window.SetSoftInputMode(SoftInput.AdjustResize);
         }
 
-        protected override void OnFocusChanged(bool gainFocus, FocusSearchDirection direction, Rect previouslyFocusedRect)
+        protected override void OnFocusChanged(bool gainFocus, [GeneratedEnum] FocusSearchDirection direction, global::Android.Graphics.Rect previouslyFocusedRect)
         {
             Window window = Context.GetActivity().Window;
             if (gainFocus)
@@ -53,10 +54,9 @@ namespace Entap.Chat.Android
             }
             else
                 window.SetSoftInputMode(_startingMode);
-
             base.OnFocusChanged(gainFocus, direction, previouslyFocusedRect);
         }
-        
+
         protected override void OnElementChanged(ElementChangedEventArgs<Editor> e)
         {
             base.OnElementChanged(e); 

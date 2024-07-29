@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,13 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="4.5.0.356" />
-    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.5-dev.8">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+	  <PackageReference Include="Xamarin.Forms" Version="4.5.0.356" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
-    <PackageReference Include="Entap.Forms.Effects" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
@@ -25,5 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Entap.Forms.Effects" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Entap.Basic\Source\Entap.Basic.Forms\Entap.Basic.Forms\Entap.Basic.Forms.csproj" />
+    <ProjectReference Include="..\..\..\Entap.Forms.Effects\Entap.Forms.Effects\Entap.Forms.Effects\Entap.Forms.Effects.csproj" />
   </ItemGroup>
 </Project>
